@@ -1,0 +1,29 @@
+{
+  "name": "cinepass",
+  "version": "1.0.0",
+  "description": "Repositorio para la aplicación web de venta de entradas de funciones para cines desarrollada en la catedra de Seminario Integrador 2024",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ts-node": "ts-node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Laureano-GR/CinePass.git"
+  },
+  "author": "Laureano Gomez Redondo & Juan Cruz Toranzo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Laureano-GR/CinePass/issues"
+  },
+  "homepage": "https://github.com/Laureano-GR/CinePass#readme",
+  "devDependencies": {
+    "@types/node": "^22.5.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "axios": "^1.7.7"
+  }
+}
