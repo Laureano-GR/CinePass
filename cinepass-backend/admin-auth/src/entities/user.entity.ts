@@ -14,6 +14,8 @@ export class UserEntity extends BaseEntity implements UserI {
   firstName: string;
   @Column()
   lastName: string;
+  @Column()
+  subsidiaryCode: string; //codigo de linkeo con sucursal
   @ManyToMany(() => PermissionEntity, (permissions) => permissions.users)
   @JoinTable()
   permissions: PermissionEntity[];
