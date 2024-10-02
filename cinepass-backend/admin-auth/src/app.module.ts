@@ -18,6 +18,7 @@ import { PermissionsModule } from './permissions/permissions.module';
     }),
     JwtModule,
     PermissionsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AuthGuard],

@@ -26,6 +26,7 @@ export class UsersService {
     }
     return true
   }
+  
   async register(body: RegisterDTO) {
     try{
       const user = new UserEntity();

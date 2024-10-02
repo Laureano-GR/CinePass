@@ -13,4 +13,4 @@ import { SubsidiaryService } from './subsidiary.service';
   controllers: [CinemaController, AddressController, CityController, RoomController, SubsidiaryController],
   providers: [CinemaService, AddressService, CityService, RoomService, SubsidiaryService]
 })
-export class CinemasModule {}
+export class CinemaModule {}

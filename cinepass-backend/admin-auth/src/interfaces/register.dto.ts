@@ -3,4 +3,5 @@ export class RegisterDTO {
   password: string;
   firstName: string;
   lastName: string;
+  subsidiaryCode: string;
 }
