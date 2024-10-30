@@ -11,7 +11,6 @@ export class ShowTypeEntity extends BaseEntity {
   @Column()
   ticketPrice: number;
   @ManyToMany(() => RoomEntity, (rooms) => rooms.showTypes)
-  @JoinTable()
   rooms: RoomEntity[];
   @OneToMany(() => ShowEntity, (show) => show.showType)
   shows: ShowEntity[];

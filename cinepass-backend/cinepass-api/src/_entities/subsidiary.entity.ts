@@ -18,5 +18,4 @@ export class SubsidiaryEntity extends BaseEntity {
   rooms: RoomEntity[];
   @OneToMany(() => ShowEntity, (show) => show.subsidiary)
   shows: ShowEntity[];
-  
 }

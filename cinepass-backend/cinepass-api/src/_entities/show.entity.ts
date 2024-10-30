@@ -14,9 +14,8 @@ export class ShowEntity extends BaseEntity {
   id: number;
   @Column({ type: 'datetime' }) //FIXME tal vez no  funcione, probar
   dateAndTime: Date;
-  @ManyToMany(() => MovieEntity, (movies) => movies.shows)
-  @JoinTable()
-  movies: MovieEntity[];
+  @ManyToOne(() => MovieEntity, (movie) => movie.shows)
+  movie: MovieEntity;
   @ManyToOne(() => ShowTypeEntity, (showType) => showType.shows)
   showType: ShowTypeEntity;
   @ManyToOne(() => LanguageEntity, (language) => language.shows)
@@ -27,6 +26,4 @@ export class ShowEntity extends BaseEntity {
   subsidiary: SubsidiaryEntity;
   @OneToMany(() => TicketEntity, (ticket) => ticket.show)
   tickets: TicketEntity[];
-  @OneToMany(() => SaleEntity, (sale) => sale.show)
-  sales: SaleEntity[];
 }

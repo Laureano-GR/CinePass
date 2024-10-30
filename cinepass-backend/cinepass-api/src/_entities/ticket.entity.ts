@@ -6,6 +6,8 @@ import { ShowEntity } from './show.entity';
 export class TicketEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+  @Column()
+  ticketXShowNumber: number;
   @ManyToOne(() => SaleEntity, (sale) => sale.tickets)
   sale: SaleEntity;
   @ManyToOne(() => ShowEntity, (show) => show.tickets)

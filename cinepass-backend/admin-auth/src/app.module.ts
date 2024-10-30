@@ -11,7 +11,7 @@ import { PermissionsModule } from './permissions/permissions.module';
   imports: [
     UsersModule,
     TypeOrmModule.forRoot({
-      database: 'db.sqlite',
+      database: 'admins.db',
       entities,
       type: 'sqlite',
       synchronize: true,

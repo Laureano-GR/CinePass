@@ -16,7 +16,9 @@ export class SubsidiaryService {
 
   async findAll() {
     try {
-      return await this.repository.find();
+      return await this.repository.find({
+        relations: ['address']
+      });
     } catch (error) {
       throw new HttpException('Find subsidiaries error', 500);
     }
@@ -48,7 +50,8 @@ export class SubsidiaryService {
       const subsidiary = await this.repository.findOne({
         where: {
           id: subsidiaryId,
-        }
+        },
+        relations: ['address']
       });
       
       if (!subsidiary) {

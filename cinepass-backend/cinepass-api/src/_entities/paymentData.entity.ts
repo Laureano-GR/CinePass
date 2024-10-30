@@ -9,6 +9,8 @@ export class PaymentDataEntity extends BaseEntity {
   @Column()
   IDNumber: string;
   @Column()
+  name: string;
+  @Column()
   email: string;
   @ManyToOne(() => IDTypeEntity, (IDType) => IDType.paymentDatas)
   IDType: IDTypeEntity;

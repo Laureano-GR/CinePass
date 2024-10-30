@@ -9,16 +9,16 @@ import {
 import { RoomEntity } from 'src/_entities/room.entity';
 import { DeepPartial } from "typeorm";
 import { RoomService } from './room.service';
+import { CreateRoomDto } from 'src/_interfaces/createRoom.dto';
+import { UpdateRoomDto } from 'src/_interfaces/updateRoom.dto';
 
 @Controller('rooms')
 export class RoomController {
   constructor(private service: RoomService) {}
   
     @Post()
-    async createRoom(
-      @Body() room: DeepPartial<RoomEntity>,
-    ): Promise<RoomEntity> {
-      return await this.service.createRoom(room);
+    async createRoom(@Body() createRoomDto: CreateRoomDto): Promise<RoomEntity> {
+      return await this.service.createRoom(createRoomDto);
     }
   
     @Get()
@@ -29,10 +29,9 @@ export class RoomController {
     @Put('update/:id')
     async updateRoom(
       @Param('id') id: number,
-      @Body() room: DeepPartial<RoomEntity>,
+      @Body() updateRoomDto: UpdateRoomDto,
     ): Promise<RoomEntity> {
-      const updatedRoom = await this.service.updateRoom(id, room);
-      return updatedRoom;
+      return await this.service.updateRoom(id, updateRoomDto);
     }
     
     @Get(':id')

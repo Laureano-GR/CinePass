@@ -16,7 +16,9 @@ export class PaymentDataService {
 
   async findAll() {
     try {
-      return await this.repository.find();
+      return await this.repository.find({
+        relations:['IDType']
+      },);
     } catch (error) {
       throw new HttpException('Find payments data error', 500);
     }
@@ -48,7 +50,8 @@ export class PaymentDataService {
       const paymentData = await this.repository.findOne({
         where: {
           id: paymentDataId,
-        }
+        },
+          relations:['IDType'],
       });
       
       if (!paymentData) {

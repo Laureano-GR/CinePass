@@ -23,7 +23,6 @@ export class MovieEntity extends BaseEntity {
   contentRating: ContentRatingEntity;
   @ManyToOne(() => GenreEntity, (genre) => genre.movies)
   genre: GenreEntity;
-  @ManyToMany(() => ShowEntity, (shows) => shows.movies)
-  @JoinTable()
+  @OneToMany(() => ShowEntity, (shows) => shows.movie)
   shows: ShowEntity[];
 }

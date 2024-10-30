@@ -9,16 +9,16 @@ import {
 import { MovieEntity } from 'src/_entities/movie.entity';
 import { DeepPartial } from "typeorm";
 import { MovieService } from './movie.service';
+import { UpdateMovieDto } from 'src/_interfaces/updateMovie.dto';
+import { CreateMovieDto } from 'src/_interfaces/createMovie.dto';
 
 @Controller('movies')
 export class MovieController {
   constructor(private service: MovieService) {}
   
     @Post()
-    async createMovie(
-      @Body() movie: DeepPartial<MovieEntity>,
-    ): Promise<MovieEntity> {
-      return await this.service.createMovie(movie);
+    async createMovie(@Body() createMovieDto: CreateMovieDto): Promise<MovieEntity> {
+      return await this.service.createMovie(createMovieDto);
     }
   
     @Get()
@@ -29,10 +29,9 @@ export class MovieController {
     @Put('update/:id')
     async updateMovie(
       @Param('id') id: number,
-      @Body() movie: DeepPartial<MovieEntity>,
+      @Body() updateMovieDto: UpdateMovieDto 
     ): Promise<MovieEntity> {
-      const updatedMovie= await this.service.updateMovie(id, movie);
-      return updatedMovie;
+      return await this.service.updateMovie(id, updateMovieDto);
     }
     
     @Get(':id')

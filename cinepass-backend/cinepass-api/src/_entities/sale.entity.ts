@@ -7,12 +7,12 @@ import { ShowEntity } from './show.entity';
 export class SaleEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+  @Column({ type: 'datetime' })
+  dateAndTime: Date;
   @Column()
   ticketsAmount: number;
   @ManyToOne(() => PaymentDataEntity, (paymentData) => paymentData.sales)
   paymentData: PaymentDataEntity;
   @OneToMany(() => TicketEntity, (ticket) => ticket.sale)
   tickets: TicketEntity[];
-  @ManyToOne(() => ShowEntity, (show) => show.sales)
-  show: ShowEntity;
 }

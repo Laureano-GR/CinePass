@@ -9,7 +9,6 @@ export class LanguageEntity extends BaseEntity {
   @Column()
   name: string;
   @ManyToMany(() => MovieEntity, (movies) => movies.languages)
-  @JoinTable()
   movies: MovieEntity[];
   @OneToMany(() => ShowEntity, (show) => show.selectedLanguage)
   shows: ShowEntity[];

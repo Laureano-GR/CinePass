@@ -16,7 +16,9 @@ export class AddressService {
 
   async findAll() {
     try {
-      return await this.repository.find();
+      return await this.repository.find({
+        relations: ['city'],
+      });
     } catch (error) {
       throw new HttpException('Find addresses error', 500);
     }
@@ -27,7 +29,10 @@ export class AddressService {
     address: DeepPartial<AddressEntity>,
   ): Promise<AddressEntity> {
     try {
-      const existingAddress = await this.repository.findOne({where:{id:addressId}});
+      const existingAddress = await this.repository.findOne({
+        where:{
+        id:addressId
+      }});
       if (!existingAddress) {
         throw new HttpException('Address not found', 404);
       }
@@ -47,8 +52,10 @@ export class AddressService {
     try {
       const address = await this.repository.findOne({
         where: {
-          id: addressId,
-        }});
+          id: addressId
+        },
+          relations: ['city'],
+        });
       
       if (!address) {
         throw new HttpException('Address not found', 404);

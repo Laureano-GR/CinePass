@@ -16,7 +16,7 @@ export class ShowService {
 
   async findAll() {
     try {
-      return await this.repository.find();
+      return await this.repository.find({relations: ['movie','selectedLanguage','showType','room','subsidiary']});
     } catch (error) {
       throw new HttpException('Find shows error', 500);
     }
@@ -48,7 +48,8 @@ export class ShowService {
       const show = await this.repository.findOne({
         where: {
           id: showId,
-        }
+        },
+        relations: ['movie','selectedLanguage','showType','room','subsidiary']
       });
       
       if (!show) {

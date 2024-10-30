@@ -16,7 +16,7 @@ export class TicketService {
 
   async findAll() {
     try {
-      return await this.repository.find();
+      return await this.repository.find({relations: ['show']});
     } catch (error) {
       throw new HttpException('Find tickets error', 500);
     }
@@ -48,7 +48,8 @@ export class TicketService {
       const ticket = await this.repository.findOne({
         where: {
           id: ticketId,
-        }
+        },
+        relations: ['show']
       });
       
       if (!ticket) {

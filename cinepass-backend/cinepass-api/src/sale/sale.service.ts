@@ -16,7 +16,9 @@ export class SaleService {
 
   async findAll() {
     try {
-      return await this.repository.find();
+      return await this.repository.find({
+        relations:['paymentData','tickets']
+      });
     } catch (error) {
       throw new HttpException('Find sales error', 500);
     }
@@ -48,7 +50,8 @@ export class SaleService {
       const sale = await this.repository.findOne({
         where: {
           id: saleId,
-        }
+        },
+        relations:['paymentData','tickets']
       });
       
       if (!sale) {
