@@ -1,22 +1,22 @@
 import { Body, Controller, Get, Param, Post, Req, UseGuards, Put, Delete } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { AdminsService } from './admin.service';
 import { LoginDTO } from '../interfaces/login.dto';
 import { RegisterDTO } from '../interfaces/register.dto';
-import { RequestWithUser } from 'src/interfaces/request-user';
+import { RequestWithAdmin } from 'src/interfaces/request-admin';
 import { Request } from 'express';
-import { UserEntity } from 'src/entities/user.entity';
+import { AdminEntity } from 'src/entities/admin.entity';
 import { AuthGuard } from 'src/middlewares/auth.middleware';
 import { DeepPartial } from 'typeorm';
 import { CreatePermissionDto } from 'src/interfaces/create-permission.dto';
 
-@Controller('users')
-export class UsersController {
-  constructor(private service: UsersService) {}
+@Controller('admins')
+export class AdminsController {
+  constructor(private service: AdminsService) {}
 
   @UseGuards(AuthGuard)
   @Get('me')
-  me(@Req() req: Request & {user:UserEntity}){
-    return {firstName : req.user.firstName};
+  me(@Req() req: Request & {admin:AdminEntity}){
+    return {firstName : req.admin.firstName};
   }
   
   @Post('login')
@@ -32,10 +32,10 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Get('can-do/:permission')
   canDo(
-    @Req() request: RequestWithUser,
+    @Req() request: RequestWithAdmin,
     @Param('permission') permission: string,
   ) {
-    return this.service.canDo(request.user, permission);
+    return this.service.canDo(request.admin, permission);
   }
 
   @Get('refresh-token')
@@ -51,22 +51,22 @@ export class UsersController {
     }
 
   @Put('update/:id')
-    async updateUser(@Param('id') id: number,@Body() user: DeepPartial<UserEntity>): Promise<UserEntity> {
-      const updatedUser = await this.service.updateUser(id, user);
-      return updatedUser;
+    async updateAdmin(@Param('id') id: number,@Body() admin: DeepPartial<AdminEntity>): Promise<AdminEntity> {
+      const updatedAdmin = await this.service.updateAdmin(id, admin);
+      return updatedAdmin;
     }
     
   @Delete('delete/:id')
-    async deleteUser(@Param('id') id: number): Promise<void> {
-      return this.service.deleteUser(id);
+    async deleteAdmin(@Param('id') id: number): Promise<void> {
+      return this.service.deleteAdmin(id);
     }
     
   @Post(':id/permissions')
-  async assignPermissionToUser(
+  async assignPermissionToAdmin(
     @Param('id') id: number,
     @Body() createPermissionDto: CreatePermissionDto,
   ) {
-    return this.service.assignPermissionToUser(id, createPermissionDto);
+    return this.service.assignPermissionToAdmin(id, createPermissionDto);
   }
 
 }

@@ -2,14 +2,14 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { entities } from './entities';
-import { UsersModule } from './users/users.module';
+import { AdminsModule } from './admin/admin.module';
 import { JwtModule } from './jwt/jwt.module';
 import { AuthGuard } from './middlewares/auth.middleware';
 import { PermissionsModule } from './permissions/permissions.module';
 
 @Module({
   imports: [
-    UsersModule,
+    AdminsModule,
     TypeOrmModule.forRoot({
       database: 'admins.db',
       entities,
@@ -18,7 +18,7 @@ import { PermissionsModule } from './permissions/permissions.module';
     }),
     JwtModule,
     PermissionsModule,
-    UsersModule,
+    AdminsModule,
   ],
   controllers: [AppController],
   providers: [AuthGuard],

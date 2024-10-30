@@ -1,4 +1,4 @@
 import { PermissionEntity } from './permission.entity';
-import { UserEntity } from './user.entity';
+import { AdminEntity } from './admin.entity';
 
-export const entities = [UserEntity, PermissionEntity];
+export const entities = [AdminEntity, PermissionEntity];

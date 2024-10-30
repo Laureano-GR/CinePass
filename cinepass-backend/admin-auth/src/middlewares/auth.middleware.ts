@@ -1,18 +1,18 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
-import { UserEntity } from "src/entities/user.entity";
+import { AdminEntity } from "src/entities/admin.entity";
 import { JwtService } from "src/jwt/jwt.service";
-import { UsersService } from "src/users/users.service";
+import { AdminsService } from "src/admin/admin.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate{
     constructor(
         private jwtService: JwtService, 
-        private usersService: UsersService
+        private adminsService: AdminsService
     ){}
     async canActivate(context: ExecutionContext): Promise<boolean> {
         try {
-            const request : Request & {user: UserEntity} = context
+            const request : Request & {admin: AdminEntity} = context
             .switchToHttp()
             .getRequest();
             const token=request.headers.authorization;
@@ -21,9 +21,9 @@ export class AuthGuard implements CanActivate{
                 throw new UnauthorizedException('El token no existe')
             }
             const payload = this.jwtService.getPayload(token);
-            const user = await this.usersService.findByEmail(payload.email);
-            request.user = user;
-            console.log(user)
+            const admin = await this.adminsService.findByEmail(payload.email);
+            request.admin = admin;
+            console.log(admin)
             return true;
         }catch(error){
             console.log(error)

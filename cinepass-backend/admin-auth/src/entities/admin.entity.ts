@@ -1,9 +1,9 @@
-import { UserI } from '../interfaces/user.interface';
+import { AdminI } from 'src/interfaces/admin.interface';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
 import { PermissionEntity } from './permission.entity';
 
-@Entity('users')
-export class UserEntity extends BaseEntity implements UserI {
+@Entity('admins')
+export class AdminEntity extends BaseEntity implements AdminI {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
@@ -16,7 +16,7 @@ export class UserEntity extends BaseEntity implements UserI {
   lastName: string;
   @Column()
   subsidiaryCode: string; //codigo de linkeo con sucursal
-  @ManyToMany(() => PermissionEntity, (permissions) => permissions.users)
+  @ManyToMany(() => PermissionEntity, (permissions) => permissions.admins)
   @JoinTable()
   permissions: PermissionEntity[];
 

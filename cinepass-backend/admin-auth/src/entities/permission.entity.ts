@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
-import { UserEntity } from './user.entity';
+import { AdminEntity } from './admin.entity';
 
 @Entity('permissions')
 export class PermissionEntity extends BaseEntity {
@@ -7,6 +7,6 @@ export class PermissionEntity extends BaseEntity {
   id: number;
   @Column()
   name: string;
-  @ManyToMany(() => UserEntity, (users) => users.permissions)
-  users: UserEntity[];
+  @ManyToMany(() => AdminEntity, (admins) => admins.permissions)
+  admins: AdminEntity[];
 }
