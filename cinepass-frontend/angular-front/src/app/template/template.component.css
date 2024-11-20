@@ -1,0 +1,35 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+}
+
+.app-header nav ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  gap: 1rem;
+}
+
+.app-header nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.app-main {
+  flex-grow: 1;
+  padding: 1rem;
+}
+
+.app-footer {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}

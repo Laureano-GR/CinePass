@@ -1,0 +1,21 @@
+<div class="app-container">
+  <header class="app-header">
+    <nav>
+      <ul>
+        <li><a routerLink="/">Inicio</a></li>  <!-- Cambiar inicio por logo de CinePass -->
+      </ul>
+    </nav>
+    <div *ngIf="subsidiaryName$ | async as subsidiaryName">
+      Sucursal: {{ subsidiaryName }}
+      <button (click)="changeSubsidiary()">Cambiar Sucursal</button>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2024 CinePass. Todos los derechos reservados.</p>
+  </footer>
+</div>

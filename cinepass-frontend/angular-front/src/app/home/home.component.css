@@ -1,0 +1,12 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* Centra el contenido verticalmente */
+  align-items: center;      /* Centra el contenido horizontalmente */
+  height: 100vh;            /* Asegura que el contenedor tenga toda la altura de la ventana */
+  text-align: center;       /* Centra el texto */
+}
+
+h1, p {
+  margin: 10px 0;           /* Espaciado entre los elementos */
+}
