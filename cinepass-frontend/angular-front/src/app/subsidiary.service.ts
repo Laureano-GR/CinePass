@@ -28,6 +28,10 @@ export class SubsidiaryService {
     return this.subsidiarySubject.value;
   }
 
+  getSubsidiaryId(): number {
+    return this.subsidiarySubject.value?.id || 0;
+  }
+
   clearSubsidiary() {
     sessionStorage.removeItem('subsidiary');
     this.subsidiarySubject.next(null);

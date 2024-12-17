@@ -4,20 +4,21 @@ import { AppRoutingModule } from './app.routes';  // Asegúrate de importar AppR
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { TemplateComponent } from './template/template.component';
-import { RouterModule } from '@angular/router';   // Asegúrate de importar RouterModule aquí también
+import { RouterModule, RouterOutlet } from '@angular/router';   // Asegúrate de importar RouterModule aquí también
+import { bootstrapApplication } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-  ],
+  declarations: [ HomeComponent, AppComponent ],
   imports: [
     BrowserModule,
     AppRoutingModule,  
     RouterModule,
-    TemplateComponent     
+    TemplateComponent,
+    CommonModule,
+    RouterOutlet,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
