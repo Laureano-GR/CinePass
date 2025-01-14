@@ -1,21 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Observable, switchMap } from 'rxjs';
-import { SubsidiaryService } from '../subsidiary.service';
+import { Component } from '@angular/core';
 import { HomeService } from './home.service'; 
-import { MovieI } from '../interfaces/movie';
-import { ShowI } from '../interfaces/show';
+import { SubsidiaryService } from '../subsidiary.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  standalone: true,
-  imports: [CommonModule]
 })
-export class HomeComponent implements OnInit {
-  bannerImageUrl = 'assets/banners/banner.png'; // Ruta a la imagen de banner
+export class HomeComponent {
+  title = 'Bienvenido a nuestro Cine';
+  movies: any[] = [];
 
-  constructor() {}
-  ngOnInit(): void {}
+  constructor(
+    private homeService: HomeService,
+    private subsidiaryService: SubsidiaryService,
+  ) {}
+
+  ngOnInit() {
+    this.fetchMovies();
+  }
+
+  async fetchMovies(){
+    const subsidiaryId = this.subsidiaryService.getSubsidiaryId();
+    this.movies = await this.homeService.getMovies(subsidiaryId);
+  }
 }

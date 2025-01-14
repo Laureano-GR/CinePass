@@ -9,9 +9,18 @@ import { ShowI } from '../interfaces/show';
   providedIn: 'root'
 })
 export class HomeService {
-  private url = 'http://localhost:3001';  // Asegúrate de que la URL sea correcta.
+  private url = 'http://localhost:3001'; // Reemplaza con la URL de tu backend
 
-  constructor() {}
+  constructor() { }
 
-  // Método para obtener las películas filtradas por sucursal
+  async getMovies(subsidiaryId: number) {
+    try {
+      const response = await axios.get(`${this.url}/subsidiaries/movies/${subsidiaryId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching movies:', error);
+      throw error;
+    }
+  }
+  // Agrega más métodos según necesites para diferentes endpoints
 }

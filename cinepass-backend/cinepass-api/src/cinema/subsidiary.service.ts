@@ -1,4 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
+import { MovieEntity } from 'src/_entities/movie.entity';
 import { SubsidiaryEntity } from 'src/_entities/subsidiary.entity';
 import { DeepPartial } from "typeorm";
 
@@ -65,5 +66,29 @@ export class SubsidiaryService {
       }
       throw new HttpException('Find subsidiary by id error', 500);
     }
+  }
+
+  async findSubsidiaryMovies(subsidiaryId: number): Promise<MovieEntity[]> {
+    const subsidiary = await this.repository.findOne({
+      where: { id: subsidiaryId },
+      relations: ['shows', 'shows.movie', 'shows.movie.genre', 'shows.movie.contentRating'],
+    });
+
+    if (!subsidiary) {
+        throw new Error(`Subsidiary with ID ${subsidiaryId} not found.`);
+    }
+
+    const movieSet = new Set<number>();
+    const movies: MovieEntity[] = [];
+
+    for (const show of subsidiary.shows) {
+        const movie = show.movie;
+        if (movie && !movieSet.has(movie.id)) {
+            movieSet.add(movie.id);
+            movies.push(movie);
+        }
+    }
+
+    return movies;
   }
 }

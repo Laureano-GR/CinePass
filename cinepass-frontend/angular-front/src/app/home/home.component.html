@@ -1,9 +1,23 @@
 <div class="home-container">
   <div class="banner">
-    <img [src]="bannerImageUrl" alt="Banner de películas" class="banner-image">
+    <img src="assets/banner.jpg" alt="Banner de películas" class="banner-image">
   </div>
+  
+  <h1>{{ title }}</h1>
   
   <h2>Películas en Cartelera</h2>
   
-  <div class="movies-grid"></div>
+  <div class="movies-grid">
+    <div *ngFor="let movie of movies" class="movie-card">
+      <img [src]="movie.poster" [alt]="movie.name" class="movie-poster">
+      <h3>{{ movie.name }}</h3>
+      <p>Género: {{ movie.genre.name }}</p>
+      <p>Duración: {{ movie.duration }} minutos</p>
+      <p>Clasificación: {{ movie.contentRating.name }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="movies.length === 0" class="no-movies-message">
+    No hay películas disponibles para esta sucursal en este momento.
+  </div>
 </div>
