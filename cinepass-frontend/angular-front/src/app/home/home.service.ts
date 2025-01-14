@@ -1,23 +1,17 @@
 import { Injectable } from '@angular/core';
+import { Observable, from } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import axios from 'axios';
+import { MovieI } from '../interfaces/movie';
+import { ShowI } from '../interfaces/show';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApiService {
-  private url = 'http://localhost:3001'; // Reemplaza con la URL de tu backend
+export class HomeService {
+  private url = 'http://localhost:3001';  // Asegúrate de que la URL sea correcta.
 
-  constructor() { }
+  constructor() {}
 
-  async getMovies() {
-    try {
-      const response = await axios.get(`${this.url}/movies`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-      throw error;
-    }
-  }
-
-  // Agrega más métodos según necesites para diferentes endpoints
+  // Método para obtener las películas filtradas por sucursal
 }
