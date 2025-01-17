@@ -64,4 +64,27 @@ export class ShowService {
       throw new HttpException('Find show by id error', 500);
     }
   }
+
+  async findByMovieAndSubsidary(movieId: number, subsidiaryId: number): Promise<ShowEntity[]> {
+    try {
+      const shows = await this.repository.find({
+        where: {
+          movie: { id: movieId },
+          subsidiary: { id: subsidiaryId },
+        },
+        relations: ['movie', 'subsidiary', 'room', 'showType', 'selectedLanguage'],
+      });
+
+      if (!shows) {
+        throw new HttpException('Shows not found', 404);
+      }
+
+      return shows;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Find show by movie and subsidiary error', 500);
+    }
+  }
 }

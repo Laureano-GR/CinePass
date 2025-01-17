@@ -2,10 +2,10 @@
   <header class="app-header">
     <nav>
       <ul>
-        <li><a routerLink="/">Inicio</a></li>  <!-- Cambiar inicio por logo de CinePass -->
+        <li><a routerLink="/"><img src="assets/logo.png" alt="CinePass Logo" style="height: 40px;"></a></li> <!-- Cambiar inicio por logo de CinePass -->
       </ul>
     </nav>
-    <div *ngIf="subsidiaryName$ | async as subsidiaryName">
+    <div *ngIf="subsidiaryName$ | async as subsidiaryName" class="subsidiary-info">
       Sucursal: {{ subsidiaryName }}
       <button (click)="changeSubsidiary()">Cambiar Sucursal</button>
     </div>

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HomeService } from './home.service'; 
 import { SubsidiaryService } from '../subsidiary.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -14,10 +15,17 @@ export class HomeComponent {
   constructor(
     private homeService: HomeService,
     private subsidiaryService: SubsidiaryService,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.fetchMovies();
+  }
+
+  navigateToMovieDetails(movieId: number): void {
+    const subsidiaryId = this.subsidiaryService.getSubsidiaryId();
+    sessionStorage.setItem('subsidiaryId', subsidiaryId.toString()); // Guardar en sessionStorage
+    this.router.navigate(['/movie-details', movieId]);
   }
 
   async fetchMovies(){

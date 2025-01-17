@@ -1,0 +1,48 @@
+<div *ngIf="loading">Cargando...</div>
+<div *ngIf="!loading && movie" class="movie-details-container">
+  <div class="movie-banner">
+    <img [src]="movie.poster" [alt]="movie.name">
+  </div>
+  <div class="movie-info">
+    <h1>{{ movie.name }}</h1>
+    <p>{{ movie.description }}</p>
+  </div>
+  <div class="movie-details-grid">
+    <div>
+      <h2>Duración</h2>
+      <p>{{ movie.duration }} minutos</p>
+    </div>
+    <div>
+      <h2>Género</h2>
+      <p>{{ movie.genre.name }}</p>
+      <p class="text-sm text-gray-600">{{ movie.genre.description }}</p>
+    </div>
+    <div>
+      <h2>Clasificación</h2>
+      <p>{{ movie.contentRating.name }}</p>
+    </div>
+    <div>
+      <h2>Idiomas</h2>
+      <p>{{ getLanguages() }}</p>
+    </div>
+  </div>
+  <div class="showtimes">
+    <h2>Funciones en esta sucursal</h2>
+    <div *ngIf="shows.length === 0" class="text-center text-gray-600">
+      <p>No hay funciones disponibles para esta película en esta sucursal en este momento.</p>
+    </div>
+    <div *ngIf="shows.length > 0" class="overflow-x-auto">
+      <div class="days">
+        <button *ngFor="let day of objectKeys(showMatrix)" (click)="selectDay(day)" [class.selected]="selectedDay === day">
+          {{ formatDate(day) }}
+        </button>
+      </div>
+      <div *ngIf="selectedDay" class="shows">
+        <div *ngFor="let show of showMatrix[selectedDay]" (click)="navigateToShowDetails(show.id)" class="cursor-pointer">
+          {{ show.time }} - Sala: {{ show.room.roomNumber }} - {{ show.showType.name }} - {{ formatLanguage(show.selectedLanguage.name) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="!loading && error">{{ error }}</div>

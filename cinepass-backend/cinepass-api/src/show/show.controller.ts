@@ -39,4 +39,9 @@ export class ShowController {
     async findByID(@Param('id') id: number): Promise<ShowEntity> {
       return await this.service.findByID(id);
     }
+
+    @Get('filterShows/:movieId/:subsidiaryId')
+    async findByMovieAndSubsidary(@Param('movieId') movieId: number, @Param('subsidiaryId') subsidiaryId: number): Promise<ShowEntity[]> {
+      return await this.service.findByMovieAndSubsidary(movieId, subsidiaryId);
+    } 
 }

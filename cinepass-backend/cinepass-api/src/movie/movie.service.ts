@@ -115,17 +115,17 @@ export class MovieService {
         where: {
           id: movieId,
         },
-          relations: ['languages','contentRating','genre',],
+        relations: ['languages', 'contentRating', 'genre', 'shows'], // Incluir la relación 'shows' y 'subsidiary'
       });
-      
+
       if (!movie) {
         throw new HttpException('Movie not found', 404);
       }
-      
+
       return movie;
     } catch (error) {
       if (error instanceof HttpException) {
-        throw error; 
+        throw error;
       }
       throw new HttpException('Find movie by id error', 500);
     }
