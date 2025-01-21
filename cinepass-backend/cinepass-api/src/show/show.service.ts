@@ -49,7 +49,7 @@ export class ShowService {
         where: {
           id: showId,
         },
-        relations: ['movie','selectedLanguage','showType','room','subsidiary']
+        relations: ['movie','selectedLanguage','showType','room','subsidiary', 'tickets']
       });
       
       if (!show) {

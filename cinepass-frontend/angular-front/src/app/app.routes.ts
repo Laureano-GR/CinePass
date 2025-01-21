@@ -12,10 +12,10 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [SubsidiaryGuard],
-    component: TemplateComponent,  // Este componente será el contenedor para otras rutas
+    component: TemplateComponent,  // Este componente es el contenedor para otras rutas
     children: [
-      { path: '', component: HomeComponent },  // Página principal que se muestra en el <router-outlet>
-      { path: 'movie-details/:id', component: MovieDetailsComponent },  // Ruta con parámetro :id
+      { path: '', component: HomeComponent },
+      { path: 'movie-details/:id', component: MovieDetailsComponent },
       { path: 'show-details/:id', component: ShowDetailsComponent },
     ]
   },

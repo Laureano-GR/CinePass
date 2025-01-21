@@ -53,4 +53,13 @@ export class ShowService {
     return showMatrix;
   }
 
+  async getShow(showId: number): Promise<ShowI> {
+    return this.http.get<ShowI>(`${this.apiUrl}/${showId}`).toPromise().then(show => {
+      if (!show) {
+        throw new Error('Show not found');
+      }
+      return show;
+    }); 
+  }
+
 }

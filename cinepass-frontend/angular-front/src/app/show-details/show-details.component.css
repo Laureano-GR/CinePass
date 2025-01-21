@@ -1,0 +1,83 @@
+.show-details-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.show-banner {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.show-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.show-info {
+  text-align: center;
+}
+
+.show-info h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.show-info p {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.ticket-selection {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.ticket-selection label {
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.ticket-selection input {
+  width: 60px;
+  padding: 5px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.buy-tickets {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.buy-tickets button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.buy-tickets button:hover {
+  background-color: #555;
+}
+
+.loading {
+  text-align: center;
+  font-size: 24px;
+  color: #666;
+}

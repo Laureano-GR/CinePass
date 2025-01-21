@@ -133,3 +133,31 @@
   overflow-x: auto;
   white-space: nowrap; /* Asegura que el contenido no se corte */
 }
+
+@media (max-width: 768px) {
+  .movie-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-info h1 {
+    font-size: 24px;
+  }
+
+  .movie-info p {
+    font-size: 16px;
+  }
+
+  .movie-details-grid div {
+    padding: 10px;
+  }
+
+  .movie-details-grid h2 {
+    font-size: 20px;
+  }
+
+  .movie-details-grid p {
+    font-size: 14px;
+  }
+}

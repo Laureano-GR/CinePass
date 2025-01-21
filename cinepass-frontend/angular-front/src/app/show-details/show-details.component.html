@@ -1,1 +1,22 @@
-<p>show-details works!</p>
+<div *ngIf="loading" class="loading">Cargando...</div>
+<div *ngIf="!loading && show" class="show-details-container">
+  <div class="show-banner">
+    <img [src]="show.movie.poster" [alt]="show.movie.name">
+  </div>
+  <div class="show-info">
+    <h1>{{ show.movie.name }}</h1>
+    <p><strong>Tipo de Show:</strong> {{ show.showType.name }}</p>
+    <p><strong>Horario:</strong> {{ show.dateAndTime | date: 'shortTime' }}</p>
+    <p><strong>Día: </strong> <span class="capitalize">{{ show.dateAndTime | date: 'EEEE, d MMMM' }}</span></p>
+    <p><strong>Idioma:</strong> {{ show.selectedLanguage.name }}</p>
+    <p><strong>Sala:</strong> {{ show.room.roomNumber }}</p>
+  </div>
+  <div class="ticket-selection">
+    <label for="ticketQuantity"><strong>Cantidad de entradas a comprar:</strong></label>
+    <input type="number" id="ticketQuantity" [(ngModel)]="ticketQuantity" [max]="availableTickets" min="1">
+  </div>
+  <div class="buy-tickets">
+    <button (click)="buyTickets()" [disabled]="ticketQuantity > availableTickets">Comprar Entradas</button>
+  </div>
+</div>
+<div *ngIf="!loading && error">{{ error }}</div>

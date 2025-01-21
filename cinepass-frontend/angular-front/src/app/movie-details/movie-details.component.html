@@ -39,7 +39,7 @@
       </div>
       <div *ngIf="selectedDay" class="shows">
         <div *ngFor="let show of showMatrix[selectedDay]" (click)="navigateToShowDetails(show.id)" class="cursor-pointer">
-          {{ show.time }} - Sala: {{ show.room.roomNumber }} - {{ show.showType.name }} - {{ formatLanguage(show.selectedLanguage.name) }}
+          {{ show.time }} - Sala: {{ show.room.roomNumber }} - {{ show.showType.name }} - {{ show.selectedLanguage.name }}
         </div>
       </div>
     </div>

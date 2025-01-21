@@ -1,19 +1,25 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app.routes';  // Asegúrate de importar AppRoutingModule
+import { AppRoutingModule } from './app.routes';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { TemplateComponent } from './template/template.component';
-import { RouterModule, RouterOutlet } from '@angular/router';   // Asegúrate de importar RouterModule aquí también
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http'; // Importar HttpClientModule
+import { ShowDetailsComponent } from './show-details/show-details.component';
 import { MovieDetailsComponent } from './movie-details/movie-details.component';
+import { TemplateComponent } from './template/template.component';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
+registerLocaleData(localeEs);
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    MovieDetailsComponent
+    ShowDetailsComponent,
+    MovieDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -23,8 +29,11 @@ import { MovieDetailsComponent } from './movie-details/movie-details.component';
     CommonModule,
     HttpClientModule,
     RouterOutlet,
+    FormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es' } // Configurar la aplicación para español
+  ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
