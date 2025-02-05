@@ -1,16 +1,47 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { ShowEntity } from 'src/_entities/show.entity';
+import { TicketEntity } from 'src/_entities/ticket.entity';
+import { TicketService } from 'src/sale/ticket.service';
 import { DeepPartial } from "typeorm";
 
 @Injectable()
 export class ShowService {
   repository = ShowEntity;
+  ticketService: TicketService;
   
   async createShow(show: DeepPartial<ShowEntity>): Promise<ShowEntity> {
     try {
       return await this.repository.save(show);
     } catch (error) {
       throw new HttpException('Create show error', 500);
+    }
+  }
+
+  async createTicketsForShow(showId: number, ticketAmount: number): Promise<number[]> {
+    try {
+      const show = await this.findByID(showId);
+
+      if (!show) {
+        throw new HttpException('Show not found', 404);
+      }
+
+      const newTickets: TicketEntity[] = [];
+      for (let i = 0; i < ticketAmount; i++) {
+        const ticket = new TicketEntity();
+        ticket.show = show;
+        newTickets.push(ticket);
+      }
+
+      const savedTickets = await this.ticketService.createTickets(newTickets);
+      show.tickets.push(...savedTickets);
+      await this.repository.save(show);
+
+      return savedTickets.map(ticket => ticket.id);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Error creating tickets', 500);
     }
   }
 

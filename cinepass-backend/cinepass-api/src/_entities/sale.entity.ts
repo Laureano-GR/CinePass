@@ -11,6 +11,8 @@ export class SaleEntity extends BaseEntity {
   dateAndTime: Date;
   @Column()
   ticketsAmount: number;
+  @Column()
+  totalPrice: number;
   @ManyToOne(() => PaymentDataEntity, (paymentData) => paymentData.sales)
   paymentData: PaymentDataEntity;
   @OneToMany(() => TicketEntity, (ticket) => ticket.sale)

@@ -11,7 +11,7 @@ export class ShowService {
   constructor(private http: HttpClient) {} // Inyectar el servicio ShowService
 
   async getShowsByMovieAndSubsidiary(movieId: number, subsidiaryId: number): Promise<ShowI[]> {
-    return this.http.get<ShowI[]>(`${this.apiUrl}/filterShows/${movieId}/${subsidiaryId}`).toPromise().then(shows => {
+    return this.http.get<ShowI[]>(`${this.apiUrl}/filter-shows/${movieId}/${subsidiaryId}`).toPromise().then(shows => {
       if (!shows) {
         throw new Error('Shows not found');
       }

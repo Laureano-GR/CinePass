@@ -14,6 +14,7 @@
   <div class="ticket-selection">
     <label for="ticketQuantity"><strong>Cantidad de entradas a comprar:</strong></label>
     <input type="number" id="ticketQuantity" [(ngModel)]="ticketQuantity" [max]="availableTickets" min="1">
+    <p><strong>Precio total:</strong> {{ ticketQuantity * ticketPrice | currency: 'ARS' }}</p>
   </div>
   <div class="buy-tickets">
     <button (click)="buyTickets()" [disabled]="ticketQuantity > availableTickets">Comprar Entradas</button>

@@ -16,6 +16,7 @@ export class ShowDetailsComponent {
   error: any | string ;
   ticketQuantity: number = 1;
   ticketsSold: number = 0;
+  ticketPrice: number = 0;
   availableTickets: number = 0;
 
   constructor(
@@ -50,6 +51,9 @@ export class ShowDetailsComponent {
       this.ticketsSold = this.show.tickets.length; // Suponiendo que `tickets` es un array de entradas vendidas
       this.availableTickets = this.show.room.capacity - this.ticketsSold;
 
+      // Asignar el precio de la entrada
+      this.ticketPrice = this.show.showType.ticketPrice;
+      
       this.loading = false;
     } catch (error) {
       console.error('Error loading show:', error);
@@ -64,7 +68,7 @@ export class ShowDetailsComponent {
 
   buyTickets() {
     console.log('Comprar entradas para el show:', this.show?.id, 'Cantidad:', this.ticketQuantity);
-    this.router.navigate(['/buy-tickets', this.show?.id, { quantity: this.ticketQuantity }]);
+    this.router.navigate(['/purchase', this.show?.id, { quantity: this.ticketQuantity, totalPrice: this.ticketQuantity * this.ticketPrice }]);
   }
 }
 

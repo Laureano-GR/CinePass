@@ -14,6 +14,14 @@ export class TicketService {
     }
   }
 
+  async createTickets(tickets: DeepPartial<TicketEntity>[]): Promise<TicketEntity[]> {
+    try {
+      return await this.repository.save(tickets);
+    } catch (error) {
+      throw new HttpException('Create tickets error', 500);
+    }
+  }
+
   async findAll() {
     try {
       return await this.repository.find({relations: ['show']});

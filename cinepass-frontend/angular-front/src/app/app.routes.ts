@@ -6,6 +6,7 @@ import { SubsidiaryGuard } from './subsidiary.guard';
 import { SelectSubsidiaryComponent } from './select-subsidiary/select-subsidiary.component';
 import { MovieDetailsComponent } from './movie-details/movie-details.component';
 import { ShowDetailsComponent } from './show-details/show-details.component';
+import { PurchaseDetailsComponent } from './purchase-details/purchase-details.component';
 
 export const routes: Routes = [
   { path: 'select-subsidiary', component: SelectSubsidiaryComponent },
@@ -17,6 +18,7 @@ export const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'movie-details/:id', component: MovieDetailsComponent },
       { path: 'show-details/:id', component: ShowDetailsComponent },
+      { path: 'purchase/:showId', component: PurchaseDetailsComponent },
     ]
   },
   { path: '**', redirectTo: '' }  // Redirigir a la ruta raíz en lugar de 'home'

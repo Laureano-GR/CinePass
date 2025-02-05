@@ -1,0 +1,47 @@
+<form #purchaseForm="ngForm" (ngSubmit)="onSubmit()">
+  <h2>Datos de responsable de compra</h2>
+  <div>
+    <label for="fullName">Nombre Completo:</label>
+    <input type="text" id="fullName" [(ngModel)]="purchase.name" name="name" required minlength="3" maxlength="50" placeholder="Pedro Gonzalez">
+  </div>
+  
+  <div>
+    <label for="idType">Tipo de Documento:</label>
+    <select id="idType" [(ngModel)]="purchase.idType" name="idType" required>
+      <option *ngFor="let type of idTypes" [value]="type.id" [title]="type.description">{{ type.name }}</option>
+    </select>
+  </div>
+  
+  <div>
+    <label for="idNumber">Número de Documento:</label>
+    <input type="text" id="idNumber" [(ngModel)]="purchase.idNumber" name="idNumber" required placeholder="Ingresar numero de documento sin puntos ni espacios">
+  </div>
+  
+  <div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" [(ngModel)]="purchase.email" name="email" required email placeholder="Email al cual se enviaran las entradas">
+  </div>
+  
+  <h2>Datos la tarjeta de débito</h2>
+  <div>
+    <label for="responsibleName">Nombre del Responsable:</label>
+    <input type="text" id="responsibleName" [(ngModel)]="purchase.responsibleName" name="responsibleName" required minlength="3" maxlength="50" placeholder="Nombre que aparece en la tarjeta">
+  </div>
+  
+  <div>
+    <label for="cardNumber">Número de Tarjeta:</label>
+    <input type="text" id="cardNumber" [(ngModel)]="purchase.cardNumber" name="cardNumber" required placeholder="Ingresar numero de la tarjeta sin guiones ni espacios">
+  </div>
+  
+  <div>
+    <label for="expiryDate">Fecha de Vencimiento:</label>
+    <input type="text" id="expiryDate" [(ngModel)]="purchase.expiryDate" name="expiryDate" placeholder="MM/YY" required pattern="^([0-9]{2})\/?([0-9]{2})$">
+  </div>
+  
+  <div>
+    <label for="cvv">CVV:</label>
+    <input type="text" id="cvv" [(ngModel)]="purchase.cvv" name="cvv" required pattern="^\d{3,}$" placeholder="Numero de 3 digitos ubicado al dorso de la tarjeta">
+  </div>
+  
+  <button type="submit" [disabled]="!purchaseForm.valid">Realizar Compra</button>
+</form>

@@ -17,8 +17,9 @@ export class PaymentDataController {
   @Post()
   async createPaymentData(
     @Body() paymentData: DeepPartial<PaymentDataEntity>,
-  ): Promise<PaymentDataEntity> {
-    return await this.service.createPaymentData(paymentData);
+  ): Promise<{ id: number }> {
+    const createdPaymentData = await this.service.createPaymentData(paymentData);
+    return { id: createdPaymentData.id };
   }
 
   @Get()

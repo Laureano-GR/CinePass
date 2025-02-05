@@ -9,5 +9,5 @@ export interface ShowI {
   selectedLanguage: string;
   room: string;
   subsidiary: SubsidiaryI;
-  tickets: string;
+  tickets: Object[];
 }

@@ -9,6 +9,7 @@ import {
 import { ShowEntity } from 'src/_entities/show.entity';
 import { DeepPartial } from "typeorm";
 import { ShowService } from './show.service';
+import { HttpException } from '@nestjs/common';
 
 @Controller('shows')
 export class ShowController {
@@ -40,8 +41,20 @@ export class ShowController {
       return await this.service.findByID(id);
     }
 
-    @Get('filterShows/:movieId/:subsidiaryId')
+    @Get('filter-shows/:movieId/:subsidiaryId')
     async findByMovieAndSubsidary(@Param('movieId') movieId: number, @Param('subsidiaryId') subsidiaryId: number): Promise<ShowEntity[]> {
       return await this.service.findByMovieAndSubsidary(movieId, subsidiaryId);
-    } 
+    }
+
+  @Post(':id/create-tickets')
+  async createTicketsForShow(
+    @Param('id') id: number,
+    @Body('ticketAmount') ticketAmount: number
+  ): Promise<number[]> {
+    if (!ticketAmount || ticketAmount <= 0) {
+      throw new HttpException('Invalid ticket amount', 400);
+    }
+    return await this.service.createTicketsForShow(id, ticketAmount);
+  }
+    
 }

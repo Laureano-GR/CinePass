@@ -7,12 +7,12 @@ import { ShowDetailsComponent } from './show-details/show-details.component';
 import { MovieDetailsComponent } from './movie-details/movie-details.component';
 import { TemplateComponent } from './template/template.component';
 import { CommonModule, registerLocaleData } from '@angular/common';
-import localeEs from '@angular/common/locales/es';
+import localeEsAr from '@angular/common/locales/es-AR';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-registerLocaleData(localeEs);
+registerLocaleData(localeEsAr);
 
 @NgModule({
   declarations: [
@@ -32,7 +32,7 @@ registerLocaleData(localeEs);
     FormsModule
   ],
   providers: [
-    { provide: LOCALE_ID, useValue: 'es' } // Configurar la aplicación para español
+    { provide: LOCALE_ID, useValue: 'es-AR' } // Configurar la aplicación para español
   ],
   bootstrap: [ AppComponent ]
 })

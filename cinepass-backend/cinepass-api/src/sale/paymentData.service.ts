@@ -8,7 +8,8 @@ export class PaymentDataService {
   
   async createPaymentData(paymentData: DeepPartial<PaymentDataEntity>): Promise<PaymentDataEntity> {
     try {
-      return await this.repository.save(paymentData);
+      const savedPaymentData = await this.repository.save(paymentData);
+      return savedPaymentData;
     } catch (error) {
       throw new HttpException('Create payment data error', 500);
     }
