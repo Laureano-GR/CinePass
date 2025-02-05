@@ -9,17 +9,17 @@ import {
 import { SaleEntity } from 'src/_entities/sale.entity';
 import { DeepPartial } from "typeorm";
 import { SaleService } from './sale.service';
+import { CreateSaleDTO } from 'src/_interfaces/createSale.dto';
+
 
 @Controller('sales')
 export class SaleController {
   constructor(private service: SaleService) {}
   
-    @Post()
-    async createSale(
-      @Body() sale: DeepPartial<SaleEntity>,
-    ): Promise<SaleEntity> {
-      return await this.service.createSale(sale);
-    }
+  @Post()
+  async createSale(@Body() createSaleDto: CreateSaleDTO) {
+    return await this.service.createSale(createSaleDto);
+  }
   
     @Get()
     async findAll() {

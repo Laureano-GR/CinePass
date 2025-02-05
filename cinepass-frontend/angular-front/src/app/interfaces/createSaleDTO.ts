@@ -1,7 +1,8 @@
+import { PaymentDataDTO } from './paymentDataDTO';
+
 export interface CreateSaleDTO {
-  date: Date,
-  paymentDataId: number,
-  ticketIds: number[],
-  ticketAmount: number,
-  totalPrice: number,
+  showId: number;
+  ticketsAmount: number;
+  paymentData: PaymentDataDTO;
+  totalPrice: number;
 }

@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 import { PurchaseService } from './purchase-details.service';
 import { PurchaseDTO } from '../interfaces/purchaseDTO';
 import { PaymentDataDTO } from '../interfaces/paymentDataDTO';
 import { IDTypeI } from '../interfaces/idType';
+import { CreateSaleDTO } from '../interfaces/createSaleDTO';
 
 @Component({
   selector: 'app-purchase-details',
@@ -23,15 +24,25 @@ export class PurchaseDetailsComponent implements OnInit {
   showId: number = 0;
   quantity: number = 0;
   totalPrice: number = 0;
+  showModal: boolean = false;
+  expiryDateError: string | null = null;
 
-  constructor(private purchaseService: PurchaseService, private route: ActivatedRoute) {}
+  constructor(
+    private purchaseService: PurchaseService,
+    private route: ActivatedRoute, 
+    private router: Router,
+  ) {}
 
   ngOnInit() {
     this.loadDocumentTypes();
-    this.route.queryParams.subscribe(params => {
+    
+    this.route.params.subscribe(params => {
       this.showId = +params['showId'];
-      this.quantity = +params['quantity'];
-      this.totalPrice = +params['totalPrice'];
+    });
+  
+    this.route.queryParams.subscribe(queryParams => {
+      this.quantity = +queryParams['quantity'];
+      this.totalPrice = +queryParams['totalPrice'];
     });
   }
 
@@ -42,19 +53,34 @@ export class PurchaseDetailsComponent implements OnInit {
   }
 
   onSubmit() {
-    this.paymentData.IDType = this.purchase.idType;
+
+    // Transferir datos de PurchaseDTO a PaymentDataDTO
     this.paymentData.name = this.purchase.name;
     this.paymentData.IDNumber = this.purchase.idNumber;
     this.paymentData.email = this.purchase.email;
+    this.paymentData.IDType = this.purchase.idType;
 
-    this.purchaseService.createSale(this.showId, this.quantity, this.paymentData.name, this.paymentData.IDNumber, this.paymentData.email, this.paymentData.IDType, this.totalPrice).subscribe(
+    const saleData: CreateSaleDTO = {
+      showId: this.showId,
+      ticketsAmount: this.quantity,
+      paymentData: this.paymentData,
+      totalPrice: this.totalPrice
+    };
+    console.log(saleData)
+    this.purchaseService.createSale(saleData).subscribe(
       response => {
         console.log('Sale created successfully:', response);
-        // Redireccionar a la pantalla de éxito
+        this.showModal = true;
       },
       error => {
         console.error('Error creating sale:', error);
       }
     );
   }
+
+  closeModal() {
+    this.showModal = false;
+    this.router.navigate(['/']);
+  }
+
 }

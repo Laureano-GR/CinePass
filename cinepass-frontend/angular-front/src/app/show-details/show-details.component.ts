@@ -68,7 +68,12 @@ export class ShowDetailsComponent {
 
   buyTickets() {
     console.log('Comprar entradas para el show:', this.show?.id, 'Cantidad:', this.ticketQuantity);
-    this.router.navigate(['/purchase', this.show?.id, { quantity: this.ticketQuantity, totalPrice: this.ticketQuantity * this.ticketPrice }]);
+    this.router.navigate(['/purchase', this.show?.id], {
+      queryParams: {
+        quantity: this.ticketQuantity,
+        totalPrice: this.ticketQuantity * this.ticketPrice
+      }
+    });
   }
 }
 
