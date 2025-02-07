@@ -7,6 +7,7 @@ import { ShowModule } from './show/show.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SaleModule } from './sale/sale.module';
 import { entities } from './_entities';
+import { EmailManagerModule } from './email-manager/email-manager.module';
 
 @Module({
   imports: [CinemaModule, MovieModule, ShowModule, SaleModule,
@@ -16,6 +17,7 @@ import { entities } from './_entities';
       entities,
       synchronize: true,
     }),
+    EmailManagerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

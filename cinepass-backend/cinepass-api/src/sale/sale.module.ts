@@ -13,10 +13,12 @@ import { TicketEntity } from 'src/_entities/ticket.entity';
 import { PaymentDataEntity } from 'src/_entities/paymentData.entity';
 import { IDTypeEntity } from 'src/_entities/IDType.entity';
 import { ShowEntity } from 'src/_entities/show.entity';
+import { EmailManagerModule } from 'src/email-manager/email-manager.module';
 
 
 @Module({
   imports: [
+    EmailManagerModule,
     TypeOrmModule.forFeature([SaleEntity, TicketEntity, PaymentDataEntity, IDTypeEntity, ShowEntity])
   ],
   controllers: [SaleController, TicketController, PaymentDataController, IDTypeController],

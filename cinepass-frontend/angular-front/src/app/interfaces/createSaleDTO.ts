@@ -1,7 +1,8 @@
 import { PaymentDataDTO } from './paymentDataDTO';
+import { ShowI } from './show';
 
 export interface CreateSaleDTO {
-  showId: number;
+  show: ShowI;
   ticketsAmount: number;
   paymentData: PaymentDataDTO;
   totalPrice: number;

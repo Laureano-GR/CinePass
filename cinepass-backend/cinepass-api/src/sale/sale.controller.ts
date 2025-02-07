@@ -17,26 +17,26 @@ export class SaleController {
   constructor(private service: SaleService) {}
   
   @Post()
-  async createSale(@Body() createSaleDto: CreateSaleDTO) {
-    return await this.service.createSale(createSaleDto);
+  async processSale(@Body() createSaleDto: CreateSaleDTO): Promise<string> {
+    return await this.service.processSale(createSaleDto);
   }
   
-    @Get()
-    async findAll() {
-      return await this.service.findAll();
-    }
+  @Get()
+  async findAll() {
+    return await this.service.findAll();
+  }
+
+  @Put('update/:id')
+  async updateSale(
+    @Param('id') id: number,
+    @Body() sale: DeepPartial<SaleEntity>,
+  ): Promise<SaleEntity> {
+    const updatedSale= await this.service.updateSale(id, sale);
+    return updatedSale;
+  }
   
-    @Put('update/:id')
-    async updateSale(
-      @Param('id') id: number,
-      @Body() sale: DeepPartial<SaleEntity>,
-    ): Promise<SaleEntity> {
-      const updatedSale= await this.service.updateSale(id, sale);
-      return updatedSale;
-    }
-    
-    @Get(':id')
-    async findByID(@Param('id') id: number): Promise<SaleEntity> {
-      return await this.service.findByID(id);
-    }
+  @Get(':id')
+  async findByID(@Param('id') id: number): Promise<SaleEntity> {
+    return await this.service.findByID(id);
+  }
 }

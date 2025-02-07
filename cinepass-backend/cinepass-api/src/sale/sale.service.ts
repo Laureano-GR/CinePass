@@ -6,22 +6,41 @@ import { PaymentDataEntity } from 'src/_entities/paymentData.entity';
 import { TicketEntity } from 'src/_entities/ticket.entity';
 import { ShowEntity } from 'src/_entities/show.entity';
 import { CreateSaleDTO } from 'src/_interfaces/createSale.dto';
+import * as QRCode from 'qrcode';
+import { EmailManagerService } from 'src/email-manager/email-manager.service';
 
 @Injectable()
 export class SaleService {
   constructor(
+    private readonly emailManagerService: EmailManagerService,
     @InjectRepository(SaleEntity)
     private readonly saleRepository: Repository<SaleEntity>,
-    @InjectRepository(PaymentDataEntity)
-    private readonly paymentDataRepository: Repository<PaymentDataEntity>,
-    @InjectRepository(TicketEntity)
-    private readonly ticketRepository: Repository<TicketEntity>,
-    @InjectRepository(ShowEntity)
-    private readonly showRepository: Repository<ShowEntity>,
   ) {}
 
+  async processSale(createSaleDto: CreateSaleDTO): Promise<string> {
+    const sale = await this.createSale(createSaleDto)
+    const codigoCompra = `CINEPASS-${sale.id}-${sale.paymentData.IDNumber}`;
+    const qrCodeBase64 = await QRCode.toDataURL(codigoCompra);
+    const contenidoHtml = `
+      <h2>¡Gracias por tu compra, ${sale.paymentData.name}!</h2>
+      <p>Has comprado ${sale.ticketsAmount} entradas para:</p>
+      <ul>
+        <li><b>Película:</b> ${createSaleDto.show.movie.name}</li>  
+        <li><b>Fecha y Hora:</b> ${this.formatDate(createSaleDto.show.dateAndTime)}</li>
+        <li><b>Idioma:</b> ${createSaleDto.show.selectedLanguage.name}</li>
+        <li><b>Tipo de función:</b> ${createSaleDto.show.showType.name}</li>
+        <li><b>Sala:</b> ${createSaleDto.show.room.roomNumber}</li>
+        <li><b>Sucursal:</b> ${createSaleDto.show.subsidiary.name}</li>
+      </ul>
+      <p><b>Código de compra:</b> ${codigoCompra}</p>
+      <p>Adjuntamos tu QR para ingresar al cine.</p>
+    `;
+    await this.emailManagerService.enviarCorreo(sale.paymentData.email, 'Tus entradas para el cine 🎟', contenidoHtml, qrCodeBase64)
+    return codigoCompra;
+  }
+
   async createSale(createSaleDto: CreateSaleDTO): Promise<SaleEntity> {
-    const { showId, ticketsAmount, paymentData, totalPrice } = createSaleDto;
+    const { show, ticketsAmount, paymentData, totalPrice } = createSaleDto;
 
     return await this.saleRepository.manager.transaction(async (manager: EntityManager) => {
       try {
@@ -38,7 +57,7 @@ export class SaleService {
         const tickets = [];
         for (let i = 0; i < ticketsAmount; i++) {
           const ticket = new TicketEntity();
-          ticket.show = { id: showId } as any; // Asignar directamente el ID del Show
+          ticket.show = { id: show.id } as any; // Asignar directamente el ID del Show
           ticket.ticketXShowNumber = i + 1; // Asignar un número de ticket
           tickets.push(ticket);
         }
@@ -111,6 +130,16 @@ export class SaleService {
       }
       throw new HttpException('Find sale by id error', 500);
     }
+  }
+
+  formatDate(date: string | Date): string {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    const day = dateObj.getDate().toString().padStart(2, '0');
+    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0'); // Los meses en JavaScript son 0-indexados
+    const year = dateObj.getFullYear();
+    const hours = dateObj.getHours().toString().padStart(2, '0');
+    const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+    return `${day}/${month}/${year} - ${hours}:${minutes}hs`;
   }
 }
 
