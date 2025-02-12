@@ -13,8 +13,6 @@ import { catchError, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-purchase-details',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './purchase-details.component.html',
   styleUrls: ['./purchase-details.component.css']
 })

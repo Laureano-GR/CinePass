@@ -9,6 +9,7 @@ import { DeepPartial } from 'typeorm';
 import { CreatePermissionDto } from 'src/interfaces/create-permission.dto';
 import { PermissionEntity } from 'src/entities/permission.entity';
 import * as moment from 'moment';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AdminsService {
@@ -17,6 +18,18 @@ export class AdminsService {
 
   async refreshToken(refreshToken: string) {
     return this.jwtService.refreshToken(refreshToken);
+  }
+
+  async validateAdmin(email: string, pass: string, subsidiaryCode: string): Promise<any> {
+    const admin = await this.findByEmail(email);
+    if (admin && await bcrypt.compare(pass, admin.password)) {
+      const isSubsidiaryCodeValid = await bcrypt.compare(subsidiaryCode, admin.subsidiaryCode);
+      if (isSubsidiaryCodeValid) {
+        const { password, ...result } = admin;
+        return result;
+      }
+    }
+    return null;
   }
 
   async canDo(admin: AdminI, permission: string) {
@@ -43,11 +56,15 @@ export class AdminsService {
   async login(body: LoginDTO) {
     const admin = await this.findByEmail(body.email);
     if (admin == null) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Administrador no encontrado');
     }
     const compareResult = compareSync(body.password, admin.password);
     if (!compareResult) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Contraseña incorrecta');
+    }
+    const isSubsidiaryCodeValid = await bcrypt.compare(body.subsidiaryCode, admin.subsidiaryCode);
+    if (!isSubsidiaryCodeValid) {
+      throw new UnauthorizedException('Sucursal o administrador incorrecto');
     }
     return {
       accessToken: this.jwtService.generateToken({ email: admin.email }, 'auth'),

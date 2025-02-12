@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { MovieEntity } from 'src/_entities/movie.entity';
 import { SubsidiaryEntity } from 'src/_entities/subsidiary.entity';
 import { DeepPartial } from "typeorm";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class SubsidiaryService {
@@ -9,6 +10,7 @@ export class SubsidiaryService {
   
   async createSubsidiary(subsidiary: DeepPartial<SubsidiaryEntity>): Promise<SubsidiaryEntity> {
     try {
+      subsidiary.subsidiaryCode = await bcrypt.hash(subsidiary.subsidiaryCode, 10);
       return await this.repository.save(subsidiary);
     } catch (error) {
       throw new HttpException('Create subsidiary error', 500);
@@ -33,6 +35,9 @@ export class SubsidiaryService {
       const existingSubsidiary = await this.repository.findOne({where:{id:subsidiaryId}});
       if (!existingSubsidiary) {
         throw new HttpException('Subsidiary not found', 404);
+      }
+      if (subsidiary.subsidiaryCode) {
+        subsidiary.subsidiaryCode = await bcrypt.hash(subsidiary.subsidiaryCode, 10);
       }
       Object.assign(existingSubsidiary, subsidiary);
 

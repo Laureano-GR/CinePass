@@ -10,7 +10,10 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AdminLoginComponent } from './admin-components/admin-login/admin-login.component';
+import { PurchaseDetailsComponent } from './purchase-details/purchase-details.component';
+import { AdminDashboardComponent } from './admin-components/admin-dashboard/admin-dashboard.component';
 
 registerLocaleData(localeEsAr);
 
@@ -20,6 +23,9 @@ registerLocaleData(localeEsAr);
     HomeComponent,
     ShowDetailsComponent,
     MovieDetailsComponent,
+    AdminLoginComponent,
+    PurchaseDetailsComponent,
+    AdminDashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +35,8 @@ registerLocaleData(localeEsAr);
     CommonModule,
     HttpClientModule,
     RouterOutlet,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-AR' } // Configurar la aplicación para español

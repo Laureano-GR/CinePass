@@ -15,7 +15,7 @@ export class SubsidiaryGuard implements CanActivate {
     if (this.subsidiaryService.getSubsidiaryCode()) {
       return true;
     } else {
-      return this.router.createUrlTree(['/select-subsidiary']);
+      return this.router.createUrlTree(['/select-subsidiary'], { queryParams: { returnUrl: state.url } });
     }
   }
 }

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { SubsidiaryService } from '../subsidiary.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 
 @Component({
   selector: 'app-select-subsidiary',
@@ -15,14 +14,17 @@ import { FormsModule } from '@angular/forms';
 export class SelectSubsidiaryComponent implements OnInit {
   subsidiaries: any[] = [];
   selectedSubsidiaryCode: string = '';
+  returnUrl: string = '';
 
   constructor(
     private subsidiaryService: SubsidiaryService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.fetchSubsidiaries();
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   onSubsidiarySelect(event: Event) {
@@ -32,7 +34,7 @@ export class SelectSubsidiaryComponent implements OnInit {
       const selectedSubsidiary = this.subsidiaries.find(sub => sub.subsidiaryCode === this.selectedSubsidiaryCode);
       if (selectedSubsidiary) {
         this.subsidiaryService.setSubsidiary(selectedSubsidiary);
-        this.router.navigate(['/']);
+        this.router.navigate([this.returnUrl]);
       }
     }
   }

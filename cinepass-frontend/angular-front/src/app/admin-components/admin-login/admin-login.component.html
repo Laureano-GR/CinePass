@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="card">
+    <div class="card-body">
+      <p class="text-center">Ingresa tus credenciales para administrar tu sucursal</p>
+      <h3 class="card-title">Login</h3>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="text" id="email" class="form-control" formControlName="email">
+          <div *ngIf="submitted && loginForm.get('email')?.errors" class="text-danger">
+            Email Invalido
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <input type="password" id="password" class="form-control" formControlName="password">
+          <div *ngIf="submitted && loginForm.get('password')?.errors" class="text-danger">
+            La contraseña debe tener al menos 6 caracteres
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="subsidiaryCode" class="form-label">Codigo de sucursal</label>
+          <input type="password" id="subsidiaryCode" class="form-control" formControlName="subsidiaryCode">
+          <div *ngIf="submitted && loginForm.get('subsidiaryCode')?.errors" class="text-danger">
+            Codigo de sucursal invalido
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+    </div>
+  </div>
+</div>

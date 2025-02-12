@@ -7,6 +7,8 @@ import { SelectSubsidiaryComponent } from './select-subsidiary/select-subsidiary
 import { MovieDetailsComponent } from './movie-details/movie-details.component';
 import { ShowDetailsComponent } from './show-details/show-details.component';
 import { PurchaseDetailsComponent } from './purchase-details/purchase-details.component';
+import { AdminLoginComponent } from './admin-components/admin-login/admin-login.component';
+import { AdminDashboardComponent } from './admin-components/admin-dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
   { path: 'select-subsidiary', component: SelectSubsidiaryComponent },
@@ -19,6 +21,9 @@ export const routes: Routes = [
       { path: 'movie-details/:id', component: MovieDetailsComponent },
       { path: 'show-details/:id', component: ShowDetailsComponent },
       { path: 'purchase/:showId', component: PurchaseDetailsComponent },
+      { path: 'admin-login', component: AdminLoginComponent },
+      { path: 'admin/dashboard', component: AdminDashboardComponent }
+
     ]
   },
   { path: '**', redirectTo: '' }  // Redirigir a la ruta raíz en lugar de 'home'
