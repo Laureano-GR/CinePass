@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MovieService } from '../movie-crud.service';
 import { MovieI } from '../../../interfaces/movie';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-movie-list',
@@ -15,8 +16,10 @@ export class MovieListComponent {
   subsidiaryId: number;
   sortColumn: string = 'id';
   sortDirection: 'asc' | 'desc' = 'asc';
+  selectedMovie: MovieI | null = null;
+  
 
-  constructor(private movieService: MovieService) {
+  constructor(private movieService: MovieService, private router: Router) {
     const subsidiary = sessionStorage.getItem('subsidiary');
     if (subsidiary) {
       this.subsidiaryId = JSON.parse(subsidiary).id;
@@ -37,6 +40,16 @@ export class MovieListComponent {
           console.error('Error al obtener las películas:', error);
         }
       );
+    }
+  }
+
+  selectMovie(movie: MovieI): void {
+      this.selectedMovie = movie;
+    }
+
+  editMovie(): void {
+    if (this.selectedMovie) {
+      this.router.navigate(['/admin/movies/update', this.selectedMovie.id]);
     }
   }
 

@@ -34,6 +34,7 @@ export class SubsidiaryService {
 
   clearSubsidiary() {
     sessionStorage.removeItem('subsidiary');
+    sessionStorage.removeItem('subsidiaryId');
     this.subsidiarySubject.next(null);
   }
 

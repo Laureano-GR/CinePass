@@ -1,6 +1,7 @@
 <div *ngIf="shows.length > 0; else noShows">
   <h1 class="title">Funciones</h1>
   <div class="table-responsive">
+    <button [disabled]="!selectedShow" (click)="editShow()" class="edit-button">Editar</button>
     <table class="show-table">
       <thead>
         <tr>
@@ -13,7 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let show of shows">
+        <tr *ngFor="let show of shows" (click)="selectShow(show)" [class.selected]="show === selectedShow">
           <td>{{ show.id }}</td>
           <td>{{ show.dateAndTime | date:'short' }}</td>
           <td>{{ show.movie.name }}</td>

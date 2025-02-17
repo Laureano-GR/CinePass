@@ -34,9 +34,11 @@ export const routes: Routes = [
           { path: 'movies/read', component: MovieListComponent },
           { path: 'movies/create', component: MovieFormComponent },
           { path: 'movies/update', component: MovieFormComponent },
+          { path: 'movies/update/:id', component: MovieFormComponent },
           { path: 'shows/read', component: ShowListComponent },
           { path: 'shows/create', component: ShowFormComponent },
-          { path: 'shows/update', component: ShowFormComponent }
+          { path: 'shows/update', component: ShowFormComponent },
+          { path: 'shows/update/:id', component: ShowFormComponent }
         ]
       },    
     ]

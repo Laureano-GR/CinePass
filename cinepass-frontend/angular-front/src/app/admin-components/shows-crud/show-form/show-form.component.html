@@ -1,1 +1,59 @@
-<p>show-form works!</p>
+<div class="show-form-container">
+  <h1>{{ isEditMode ? 'Actualizar Función' : 'Crear Función' }}</h1>
+  <form [formGroup]="showForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="isEditMode">
+      <label for="showId">ID de la Función</label>
+      <input id="showId" formControlName="showId" type="text" [readonly]="hasIdInUrl">
+      <button *ngIf="!hasIdInUrl" type="button" (click)="onLoadShow()">Cargar Función</button>
+    </div>
+    <div>
+      <label for="dateAndTime">Fecha y Hora</label>
+      <input id="dateAndTime" formControlName="dateAndTime" type="datetime-local">
+    </div>
+    <div>
+      <label for="movieId">Película</label>
+      <select id="movieId" formControlName="movieId">
+        <option *ngFor="let movie of movies" [value]="movie.id">{{ movie.name }}</option>
+      </select>
+    </div>
+    <div>
+      <label for="showTypeId">Tipo de Función</label>
+      <select id="showTypeId" formControlName="showTypeId">
+        <option *ngFor="let type of showTypes" [value]="type.id">{{ type.name }}</option>
+      </select>
+    </div>
+    <div>
+      <label for="languageId">Idioma</label>
+      <select id="languageId" formControlName="languageId">
+        <option *ngFor="let language of languages" [value]="language.id">{{ language.name }}</option>
+      </select>
+    </div>
+    <div>
+      <label for="roomId">Sala</label>
+      <select id="roomId" formControlName="roomId">
+        <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
+      </select>
+    </div>
+    <button type="submit">{{ isEditMode ? 'Actualizar' : 'Crear' }}</button>
+  </form>
+
+  <!-- Modal de éxito -->
+  <div *ngIf="showModal" class="modal">
+    <div class="modal-content">
+      <h2>
+        {{ isEditMode ? 'Función Actualizada' : 'Función Creada' }}
+      </h2>
+      <img src="assets/success-icon.png" alt="Success" class="success-icon">
+      <p *ngIf="isEditMode">
+        La función con ID: {{ updatedShowId }} ha sido actualizada exitosamente.
+      </p>
+      <p *ngIf="!isEditMode">
+        El ID de la función creada es: {{ createdShowId }}.
+      </p>
+      <button (click)="closeModal()">Cerrar</button>
+    </div>
+  </div>
+</div>

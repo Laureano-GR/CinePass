@@ -12,8 +12,8 @@ import { SaleEntity } from './sale.entity';
 export class ShowEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: 'datetime' }) //FIXME tal vez no  funcione, probar
-  dateAndTime: Date;
+  @Column({ type: 'datetime' }) 
+  dateAndTime: Date; //UTC
   @ManyToOne(() => MovieEntity, (movie) => movie.shows)
   movie: MovieEntity;
   @ManyToOne(() => ShowTypeEntity, (showType) => showType.shows)

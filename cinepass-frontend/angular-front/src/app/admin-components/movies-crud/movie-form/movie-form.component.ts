@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 export class MovieFormComponent implements OnInit {
   movieForm: FormGroup;
   isEditMode: boolean = false;
+  hasIdInUrl: boolean = false;
   movieId: number | null = null;
   languages: LanguageI[] = [];
   contentRatings: ContentRatingI[] = [];
@@ -51,14 +52,25 @@ export class MovieFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Determina el modo de operación según la URL
     this.route.url.subscribe(url => {
       this.isEditMode = url.some(segment => segment.path === 'update');
-      if (this.isEditMode) {
-        this.movieForm.get('movieId')?.setValidators([Validators.required]);
+    });
+
+    this.route.params.subscribe(params => {
+      const id = params['id'];
+      if (id) {
+        this.hasIdInUrl = true;
+        this.movieId = Number(id);
+        this.movieForm.get('movieId')?.setValue(this.movieId);
+        this.movieForm.get('movieId')?.disable(); // Deshabilitar el campo en modo edición
+        this.loadMovie();
       } else {
-        this.movieForm.get('movieId')?.clearValidators();
+        this.hasIdInUrl = false;
+        this.movieForm.get('movieId')?.enable(); // Habilitar el campo en modo creación
+        this.movieForm.get('movieId')?.setValidators([Validators.required]);
+        this.movieForm.get('movieId')?.updateValueAndValidity();
       }
-      this.movieForm.get('movieId')?.updateValueAndValidity();
     });
 
     this.loadLanguages();

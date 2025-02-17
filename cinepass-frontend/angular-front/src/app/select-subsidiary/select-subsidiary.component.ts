@@ -34,6 +34,8 @@ export class SelectSubsidiaryComponent implements OnInit {
       const selectedSubsidiary = this.subsidiaries.find(sub => sub.subsidiaryCode === this.selectedSubsidiaryCode);
       if (selectedSubsidiary) {
         this.subsidiaryService.setSubsidiary(selectedSubsidiary);
+        const subsidiaryId = this.subsidiaryService.getSubsidiaryId();
+        sessionStorage.setItem('subsidiaryId', subsidiaryId.toString()); // Guardar en sessionStorage
         this.router.navigate([this.returnUrl]);
       }
     }

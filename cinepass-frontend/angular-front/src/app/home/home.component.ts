@@ -23,8 +23,6 @@ export class HomeComponent {
   }
 
   navigateToMovieDetails(movieId: number): void {
-    const subsidiaryId = this.subsidiaryService.getSubsidiaryId();
-    sessionStorage.setItem('subsidiaryId', subsidiaryId.toString()); // Guardar en sessionStorage
     this.router.navigate(['/movie-details', movieId]);
   }
 

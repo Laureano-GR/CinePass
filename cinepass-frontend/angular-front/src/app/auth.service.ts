@@ -2,16 +2,27 @@ import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { LoginI, RegisterI, TokenI } from './interfaces/token';
 import { HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   url = 'http://localhost:3000';
+  private isLoggedInSubject: BehaviorSubject<boolean>;
 
-  constructor() {}
+  constructor() {
+    const token = localStorage.getItem('token');
+    this.isLoggedInSubject = new BehaviorSubject<boolean>(!!token);
+  }
+
+  get isLoggedIn$(): Observable<boolean> {
+    return this.isLoggedInSubject.asObservable();
+  }
 
   logout() {
     localStorage.removeItem('token');
+    this.isLoggedInSubject.next(false);
   }
 
   async login(body: LoginI): Promise<TokenI> {
@@ -23,6 +34,7 @@ export class AuthService {
 
       const response = (await axios.post(`${this.url}/admins/login`, body)).data;
       localStorage.setItem('token', JSON.stringify(response));
+      this.isLoggedInSubject.next(true);
       return response;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -60,5 +72,4 @@ export class AuthService {
       tokenObject.expirationTime=response.expirationTime
     localStorage.setItem('token', JSON.stringify(tokenObject));
   }
-
 }

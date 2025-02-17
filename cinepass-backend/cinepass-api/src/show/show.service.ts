@@ -2,16 +2,60 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { ShowEntity } from 'src/_entities/show.entity';
 import { TicketEntity } from 'src/_entities/ticket.entity';
 import { TicketService } from 'src/sale/ticket.service';
-import { DeepPartial } from "typeorm";
+import { DeepPartial, Repository } from "typeorm";
+import { MovieEntity } from 'src/_entities/movie.entity';
+import { ShowTypeEntity } from 'src/_entities/showType.entity';
+import { LanguageEntity } from 'src/_entities/language.entity';
+import { RoomEntity } from 'src/_entities/room.entity';
+import { SubsidiaryEntity } from 'src/_entities/subsidiary.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CreateShowDto } from 'src/_interfaces/createShowDTO';
+import { UpdateShowDto } from 'src/_interfaces/updateShowDTO';
 
 @Injectable()
 export class ShowService {
-  repository = ShowEntity;
-  ticketService: TicketService;
+  //repository = ShowEntity;
+   
+ //Se deberían inyectar o disponer métodos para obtener las entidades relacionadas.
+ //Por ejemplo, mediante inyección de repositorios:
+ constructor(
+   @InjectRepository(ShowEntity) private showRepo: Repository<ShowEntity>,
+   @InjectRepository(MovieEntity) private movieRepo: Repository<MovieEntity>,
+   @InjectRepository(ShowTypeEntity) private showTypeRepo: Repository<ShowTypeEntity>,
+   @InjectRepository(LanguageEntity) private languageRepo: Repository<LanguageEntity>,
+   @InjectRepository(RoomEntity) private roomRepo: Repository<RoomEntity>,
+   @InjectRepository(SubsidiaryEntity) private subsidiaryRepo: Repository<SubsidiaryEntity>,
+   private ticketService: TicketService, 
+  ) {}
   
-  async createShow(show: DeepPartial<ShowEntity>): Promise<ShowEntity> {
+  async createShow(createShowDto: CreateShowDto): Promise<ShowEntity> {
     try {
-      return await this.repository.save(show);
+      // Obtener las entidades relacionables
+      const movie = await this.movieRepo.findOne({ where: { id: createShowDto.movie } });
+      const showType = await this.showTypeRepo.findOne({ where: { id: createShowDto.showType } });
+      const language = await this.languageRepo.findOne({ where: { id: createShowDto.selectedLanguage } });
+      const room = await this.roomRepo.findOne({ where: { id: createShowDto.room } });
+      const subsidiary = await this.subsidiaryRepo.findOne({ where: { id: createShowDto.subsidiary } });
+
+      if (!movie || !showType || !language || !room || !subsidiary) {
+        throw new HttpException('Invalid relationship IDs', 400);
+      }
+
+      // Se asume que la fecha ya llega correctamente en UTC
+      const timestamp = new Date(createShowDto.dateAndTime);
+
+      // Crear la nueva función asignando las relaciones obtenidas
+      const newShow = this.showRepo.create({
+        dateAndTime: timestamp,
+        movie: movie,
+        showType: showType,
+        selectedLanguage: language,
+        room: room,
+        subsidiary: subsidiary,
+        tickets: [],
+      });
+
+      return await this.showRepo.save(newShow);
     } catch (error) {
       throw new HttpException('Create show error', 500);
     }
@@ -34,7 +78,7 @@ export class ShowService {
 
       const savedTickets = await this.ticketService.createTickets(newTickets);
       show.tickets.push(...savedTickets);
-      await this.repository.save(show);
+      await this.showRepo.save(show);
 
       return savedTickets.map(ticket => ticket.id);
     } catch (error) {
@@ -47,7 +91,7 @@ export class ShowService {
 
   async findAll() {
     try {
-      return await this.repository.find({relations: ['movie','selectedLanguage','showType','room','subsidiary']});
+      return await this.showRepo.find({relations: ['movie','selectedLanguage','showType','room','subsidiary']});
     } catch (error) {
       throw new HttpException('Find shows error', 500);
     }
@@ -55,20 +99,66 @@ export class ShowService {
 
   async updateShow(
     showId: number,
-    show: DeepPartial<ShowEntity>,
+    updateShowDto: UpdateShowDto,
   ): Promise<ShowEntity> {
     try {
-      const existingShow = await this.repository.findOne({where:{id:showId}});
+      // Buscar la función existente
+      const existingShow = await this.showRepo.findOne({ where: { id: showId } });
       if (!existingShow) {
         throw new HttpException('Show not found', 404);
       }
-      Object.assign(existingShow, show);
 
-      const updatedShow = await this.repository.save(existingShow);
+      // Actualizar la fecha si viene en el DTO (asumida en UTC)
+      if (updateShowDto.dateAndTime) {
+        existingShow.dateAndTime = new Date(updateShowDto.dateAndTime);
+      }
+
+      // Actualizar relaciones si vienen en el DTO
+      if (updateShowDto.movie) {
+        const movie = await this.movieRepo.findOne({ where: { id: updateShowDto.movie } });
+        if (!movie) {
+          throw new HttpException('Movie not found', 404);
+        }
+        existingShow.movie = movie;
+      }
+      
+      if (updateShowDto.showType) {
+        const showType = await this.showTypeRepo.findOne({ where: { id: updateShowDto.showType } });
+        if (!showType) {
+          throw new HttpException('Show type not found', 404);
+        }
+        existingShow.showType = showType;
+      }
+      
+      if (updateShowDto.selectedLanguage) {
+        const language = await this.languageRepo.findOne({ where: { id: updateShowDto.selectedLanguage } });
+        if (!language) {
+          throw new HttpException('Language not found', 404);
+        }
+        existingShow.selectedLanguage = language;
+      }
+      
+      if (updateShowDto.room) {
+        const room = await this.roomRepo.findOne({ where: { id: updateShowDto.room } });
+        if (!room) {
+          throw new HttpException('Room not found', 404);
+        }
+        existingShow.room = room;
+      }
+      
+      if (updateShowDto.subsidiary) {
+        const subsidiary = await this.subsidiaryRepo.findOne({ where: { id: updateShowDto.subsidiary } });
+        if (!subsidiary) {
+          throw new HttpException('Subsidiary not found', 404);
+        }
+        existingShow.subsidiary = subsidiary;
+      }
+
+      const updatedShow = await this.showRepo.save(existingShow);
       return updatedShow;
     } catch (error) {
       if (error instanceof HttpException) {
-        throw error; 
+        throw error;
       }
       throw new HttpException('Update show error', 500);
     }
@@ -76,7 +166,7 @@ export class ShowService {
 
   async findByID(showId: number): Promise<ShowEntity> {
     try {
-      const show = await this.repository.findOne({
+      const show = await this.showRepo.findOne({
         where: {
           id: showId,
         },
@@ -98,7 +188,7 @@ export class ShowService {
 
   async findByMovieAndSubsidary(movieId: number, subsidiaryId: number): Promise<ShowEntity[]> {
     try {
-      const shows = await this.repository.find({
+      const shows = await this.showRepo.find({
         where: {
           movie: { id: movieId },
           subsidiary: { id: subsidiaryId },

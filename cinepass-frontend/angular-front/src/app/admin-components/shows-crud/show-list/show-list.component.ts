@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ShowService } from '../show-crud.service';
 import { ShowI } from '../../../interfaces/show';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-show-list',
@@ -15,8 +16,10 @@ export class ShowListComponent implements OnInit {
   subsidiaryId: number;
   sortColumn: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
+  selectedShow: ShowI | null = null;
 
-  constructor(private showService: ShowService) {
+
+  constructor(private showService: ShowService, private router: Router) {
     const subsidiary = sessionStorage.getItem('subsidiary');
     if (subsidiary) {
       this.subsidiaryId = JSON.parse(subsidiary).id;
@@ -37,6 +40,16 @@ export class ShowListComponent implements OnInit {
           console.error('Error al obtener las funciones:', error);
         }
       );
+    }
+  }
+
+  selectShow(show: ShowI): void {
+    this.selectedShow = show;
+  }
+
+  editShow(): void {
+    if (this.selectedShow) {
+      this.router.navigate(['/admin/shows/update', this.selectedShow.id]);
     }
   }
 

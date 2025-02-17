@@ -1,4 +1,4 @@
-export class UpdateMovieDto {
+export interface UpdateMovieDto {
   name?: string;
   poster?: string; // URL o base64 del póster
   description?: string;
