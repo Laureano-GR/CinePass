@@ -1,6 +1,6 @@
 export interface CreateMovieDto {
   name: string;
-  poster: string; // Ruta del archivo
+  poster: string;
   description: string;
   duration: string;
   languageIds: number[];

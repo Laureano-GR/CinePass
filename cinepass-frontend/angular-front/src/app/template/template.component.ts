@@ -5,6 +5,7 @@ import { Observable, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SubsidiaryI } from '../interfaces/subsidiary';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-template',
@@ -18,6 +19,7 @@ export class TemplateComponent implements OnInit {
 
   constructor(
     private subsidiaryService: SubsidiaryService,
+    private authService: AuthService,
     private router: Router
   ) {
     this.subsidiaryName$ = this.subsidiaryService.subsidiary$.pipe(
@@ -31,6 +33,7 @@ export class TemplateComponent implements OnInit {
 
   changeSubsidiary(): void {
     this.subsidiaryService.clearSubsidiary();
+    this.authService.logout();
     this.router.navigate(['/select-subsidiary']);
   }
 }

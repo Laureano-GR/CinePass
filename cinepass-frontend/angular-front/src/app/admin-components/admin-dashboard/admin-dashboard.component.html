@@ -8,9 +8,8 @@
       <p>Gestionar películas</p>
       <div *ngIf="selectedCard === 'movies'" class="sub-options">
         <button (click)="navigateTo('/admin/movies/create')">Crear</button>
-        <button (click)="navigateTo('/admin/movies/read')">Leer</button>
+        <button (click)="navigateTo('/admin/movies/read')">Mostrar</button>
         <button (click)="navigateTo('/admin/movies/update')">Actualizar</button>
-        <button (click)="navigateTo('/admin/movies/delete')">Eliminar</button>
       </div>
     </div>
     <div class="dashboard-card" [class.selected]="selectedCard === 'shows'" (click)="selectCard('shows')">
@@ -18,9 +17,8 @@
       <p>Gestionar funciones</p>
       <div *ngIf="selectedCard === 'shows'" class="sub-options">
         <button (click)="navigateTo('/admin/shows/create')">Crear</button>
-        <button (click)="navigateTo('/admin/shows/read')">Leer</button>
+        <button (click)="navigateTo('/admin/shows/read')">Mostrar</button>
         <button (click)="navigateTo('/admin/shows/update')">Actualizar</button>
-        <button (click)="navigateTo('/admin/shows/delete')">Eliminar</button>
       </div>
     </div>
   </div>

@@ -1,0 +1,125 @@
+.movie-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.movie-form-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.movie-form-container div {
+  margin-bottom: 15px;
+}
+
+.movie-form-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.movie-form-container input,
+.movie-form-container textarea,
+.movie-form-container select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.movie-form-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.movie-form-container button:hover {
+  background-color: #555;
+}
+
+.movie-form-container button[type="button"] {
+  background-color: #333;
+}
+
+.movie-form-container button[type="button"]:hover {
+  background-color: #555;
+}
+
+.poster-container {
+  text-align: center;
+  position: relative;
+}
+
+.poster-label {
+  text-align: left;
+  display: block;
+  pointer-events: none;
+}
+
+.poster-preview {
+  display: inline-block;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.poster-preview img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-content button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #555;
+}
+
+.success-icon {
+  width: 100px;
+  height: 100px;
+}

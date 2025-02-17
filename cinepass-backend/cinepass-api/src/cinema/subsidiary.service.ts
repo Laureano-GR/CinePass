@@ -1,5 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { MovieEntity } from 'src/_entities/movie.entity';
+import { ShowEntity } from 'src/_entities/show.entity';
 import { SubsidiaryEntity } from 'src/_entities/subsidiary.entity';
 import { DeepPartial } from "typeorm";
 import * as bcrypt from 'bcrypt';
@@ -76,7 +77,7 @@ export class SubsidiaryService {
   async findSubsidiaryMovies(subsidiaryId: number): Promise<MovieEntity[]> {
     const subsidiary = await this.repository.findOne({
       where: { id: subsidiaryId },
-      relations: ['shows', 'shows.movie', 'shows.movie.genre', 'shows.movie.contentRating'],
+      relations: ['shows', 'shows.movie', 'shows.movie.genre', 'shows.movie.contentRating', 'shows.movie.languages'],
     });
 
     if (!subsidiary) {
@@ -95,5 +96,22 @@ export class SubsidiaryService {
     }
 
     return movies;
+  }
+
+  async findSubsidiaryShows(subsidiaryId: number): Promise<ShowEntity[]> {
+    try {
+      const subsidiary = await this.repository.findOne({
+        where: { id: subsidiaryId },
+        relations: ['shows', 'shows.movie', 'shows.room', 'shows.showType', 'shows.selectedLanguage'],
+      });
+
+      if (!subsidiary) {
+        throw new HttpException(`Subsidiary with ID ${subsidiaryId} not found`, 404);
+      }
+
+      return subsidiary.shows;
+    } catch (error) {
+      throw new HttpException('Find subsidiary shows error', 500);
+    }
   }
 }

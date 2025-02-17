@@ -10,6 +10,7 @@ import { SubsidiaryEntity } from 'src/_entities/subsidiary.entity';
 import { DeepPartial } from "typeorm";
 import { SubsidiaryService } from './subsidiary.service';
 import { MovieEntity } from 'src/_entities/movie.entity';
+import { ShowEntity } from 'src/_entities/show.entity';
 
 @Controller('subsidiaries')
 export class SubsidiaryController {
@@ -44,6 +45,11 @@ export class SubsidiaryController {
     @Get('movies/:id')
     async findSubsidiaryMovies(@Param('id') id: number): Promise <MovieEntity[]>{
       return await this.service.findSubsidiaryMovies(id);
+    }
+
+    @Get('shows/:id')
+    async findSubsidiaryShows(@Param('id') id: number): Promise<ShowEntity[]> {
+      return await this.service.findSubsidiaryShows(id);
     }
     
 }

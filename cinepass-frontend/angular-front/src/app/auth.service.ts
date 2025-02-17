@@ -10,6 +10,10 @@ export class AuthService {
 
   constructor() {}
 
+  logout() {
+    localStorage.removeItem('token');
+  }
+
   async login(body: LoginI): Promise<TokenI> {
     try {
       const subsidiary = sessionStorage.getItem('subsidiary');

@@ -8,6 +8,9 @@ import { GenreEntity } from 'src/_entities/genre.entity';
 import { CreateMovieDto } from 'src/_interfaces/createMovie.dto';
 import { DeepPartial } from "typeorm";
 import { UpdateMovieDto } from 'src/_interfaces/updateMovie.dto';
+import { join } from 'path';
+import { existsSync } from 'fs';
+
 
 @Injectable()
 export class MovieService {
@@ -24,7 +27,6 @@ export class MovieService {
     @InjectRepository(ContentRatingEntity)
     private contentRatingRepository: Repository<ContentRatingEntity>,
   ) {}
-
 
 
   async createMovie(createMovieDto: CreateMovieDto): Promise<MovieEntity> {
@@ -59,7 +61,6 @@ export class MovieService {
       throw new HttpException('Create movie error', 500);
     }
   }
-
 
   async findAll() {
     try {
@@ -128,6 +129,30 @@ export class MovieService {
         throw error;
       }
       throw new HttpException('Find movie by id error', 500);
+    }
+  }
+
+  async getPosterFile(movieId: number): Promise<string> {
+    try {
+      const movie = await this.movieRepository.findOne({
+        where: { id: movieId },
+      });
+
+      if (!movie) {
+        throw new HttpException('Movie not found', 404);
+      }
+
+      const posterPath = join(__dirname, '..', '..', 'uploads', 'posters', movie.poster);
+      if (!existsSync(posterPath)) {
+        throw new HttpException('Poster file not found', 404);
+      }
+
+      return posterPath;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Get poster file error', 500);
     }
   }
 }

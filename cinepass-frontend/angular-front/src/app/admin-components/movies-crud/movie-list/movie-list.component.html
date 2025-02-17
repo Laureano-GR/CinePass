@@ -1,0 +1,36 @@
+<div *ngIf="movies.length > 0; else noMovies">
+  <h1 class="title">Películas en cartelera</h1>
+  <div class="table-responsive">
+    <table class="movie-table">
+      <thead>
+        <tr>
+          <th (click)="sort('id')">ID <span [class]="getSortIcon('id')"></span></th>
+          <th>Póster</th>
+          <th (click)="sort('name')">Nombre <span [class]="getSortIcon('name')"></span></th>
+          <th>Descripción</th>
+          <th (click)="sort('duration')">Duración <span [class]="getSortIcon('duration')"></span></th>
+          <th (click)="sort('languages')">Idiomas <span [class]="getSortIcon('languages')"></span></th>
+          <th (click)="sort('contentRating')">Clasificación <span [class]="getSortIcon('contentRating')"></span></th>
+          <th (click)="sort('genre')">Género <span [class]="getSortIcon('genre')"></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let movie of movies">
+          <td>{{ movie.id }}</td>
+          <td class="movie-poster">
+            <img [src]="movie.poster" alt="{{ movie.name }}">
+          </td>
+          <td>{{ movie.name }}</td>
+          <td>{{ movie.description }}</td>
+          <td>{{ movie.duration }} minutos</td>
+          <td>{{ getLanguages(movie) }}</td>
+          <td>{{ movie.contentRating.name }}</td>
+          <td>{{ movie.genre.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<ng-template #noMovies>
+  <p>No hay películas disponibles para esta sucursal.</p>
+</ng-template>

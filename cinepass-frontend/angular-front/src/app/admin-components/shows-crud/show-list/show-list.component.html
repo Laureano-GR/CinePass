@@ -1,0 +1,30 @@
+<div *ngIf="shows.length > 0; else noShows">
+  <h1 class="title">Funciones</h1>
+  <div class="table-responsive">
+    <table class="show-table">
+      <thead>
+        <tr>
+          <th (click)="sort('id')">ID <span [class]="getSortIcon('id')"></span></th>
+          <th (click)="sort('dateAndTime')">Fecha y Hora <span [class]="getSortIcon('dateAndTime')"></span></th>
+          <th (click)="sort('name')">Película <span [class]="getSortIcon('name')"></span></th>
+          <th (click)="sort('showType')">Tipo de Función <span [class]="getSortIcon('showType')"></span></th>
+          <th (click)="sort('selectedLanguage')">Idioma <span [class]="getSortIcon('selectedLanguage')"></span></th>
+          <th (click)="sort('room')">Sala <span [class]="getSortIcon('room')"></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let show of shows">
+          <td>{{ show.id }}</td>
+          <td>{{ show.dateAndTime | date:'short' }}</td>
+          <td>{{ show.movie.name }}</td>
+          <td>{{ show.showType.name }}</td>
+          <td>{{ show.selectedLanguage.name }}</td>
+          <td>{{ show.room.roomNumber }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<ng-template #noShows>
+  <p>No hay funciones disponibles para esta sucursal.</p>
+</ng-template>

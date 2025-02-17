@@ -1,0 +1,65 @@
+.title {
+  text-align: center;
+  font-size: 2em;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.movie-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.movie-table th, .movie-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.movie-table th {
+  background-color: #f9f9f9;
+  cursor: pointer;
+  position: relative;
+  padding-right: 20px; /* Añadir padding adicional para el símbolo de ordenamiento */
+}
+
+.movie-table th:hover {
+  background-color: #e0e0e0;
+}
+
+.sort-asc::after {
+  content: '▲';
+  position: absolute;
+  right: 5px; /* Ajustar la posición del símbolo de ordenamiento */
+}
+
+.sort-desc::after {
+  content: '▼';
+  position: absolute;
+  right: 5px; /* Ajustar la posición del símbolo de ordenamiento */
+}
+
+.movie-poster img {
+  width: 50px;
+  height: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .movie-table th, .movie-table td {
+    padding: 8px;
+  }
+
+  .movie-table th {
+    font-size: 0.9em;
+  }
+
+  .movie-table td {
+    font-size: 0.9em;
+  }
+}

@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SaleModule } from './sale/sale.module';
 import { entities } from './_entities';
 import { EmailManagerModule } from './email-manager/email-manager.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
 
 @Module({
   imports: [CinemaModule, MovieModule, ShowModule, SaleModule,
@@ -18,6 +19,7 @@ import { EmailManagerModule } from './email-manager/email-manager.module';
       synchronize: true,
     }),
     EmailManagerModule,
+    FileUploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

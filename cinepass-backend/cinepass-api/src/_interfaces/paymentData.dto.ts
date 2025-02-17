@@ -1,6 +1,6 @@
 import { IDTypeEntity } from "src/_entities/IDType.entity";
 
-export class PaymentDataDTO {
+export interface PaymentDataDTO {
   IDNumber: string;
   name: string;
   IDType: IDTypeEntity;

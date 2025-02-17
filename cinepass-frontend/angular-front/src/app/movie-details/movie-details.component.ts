@@ -11,7 +11,7 @@ import { ShowI } from '../interfaces/show';
   styleUrls: ['./movie-details.component.css']
 })
 export class MovieDetailsComponent implements OnInit {
-  movie: any | MovieI;
+  movie: MovieI = {} as MovieI;
   shows: ShowI[] = [];
   loading: boolean = true;
   error: any | string ;

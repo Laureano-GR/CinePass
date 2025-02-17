@@ -1,0 +1,65 @@
+<div class="movie-form-container">
+  <h1>{{ isEditMode ? 'Actualizar Película' : 'Crear Película' }}</h1>
+  <form [formGroup]="movieForm" (ngSubmit)="onSubmit()">
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="isEditMode">
+      <label for="movieId">ID de la Película</label>
+      <input id="movieId" formControlName="movieId" type="text">
+      <button type="button" (click)="onLoadMovie()">Cargar Película</button>
+    </div>
+    <div>
+      <label for="name">Título</label>
+      <input id="name" formControlName="name" type="text">
+    </div>
+    <div class="poster-container">
+      <label for="poster" class="poster-label">Póster</label>
+      <input id="poster" #posterInput type="file" (change)="onFileChange($event)" style="display: none;">
+      <button type="button" (click)="posterInput.click()">Seleccionar Póster</button>
+      <div *ngIf="filePreview" class="poster-preview">
+        <img [src]="filePreview" alt="Vista previa del póster">
+      </div>
+      <div *ngIf="selectedFile && !filePreview">
+        <p>{{ selectedFile.name }}</p>
+      </div>
+    </div>
+    <div>
+      <label for="description">Descripción</label>
+      <textarea id="description" formControlName="description"></textarea>
+    </div>
+    <div>
+      <label for="duration">Duración (minutos)</label>
+      <input id="duration" formControlName="duration" type="text">
+    </div>
+    <div>
+      <label for="languages">Idiomas</label>
+      <select id="languages" formControlName="languageIds" multiple>
+        <option *ngFor="let language of languages" [value]="language.id">{{ language.name }}</option>
+      </select>
+    </div>
+    <div>
+      <label for="contentRating">Clasificación</label>
+      <select id="contentRating" formControlName="contentRatingId">
+        <option *ngFor="let rating of contentRatings" [value]="rating.id">{{ rating.name }}</option>
+      </select>
+    </div>
+    <div>
+      <label for="genre">Género</label>
+      <select id="genre" formControlName="genreId">
+        <option *ngFor="let genre of genres" [value]="genre.id">{{ genre.name }}</option>
+      </select>
+    </div>
+    <button type="submit">{{ isEditMode ? 'Actualizar' : 'Crear' }}</button>
+  </form>
+
+  <!-- Modal de éxito -->
+  <div *ngIf="showModal" class="modal">
+    <div class="modal-content">
+      <h2>{{ isEditMode ? 'Película Actualizada' : 'Película Creada' }}</h2>
+      <img src="assets/success-icon.png" alt="Success" class="success-icon">
+      <p>{{ isEditMode ? 'La película con ID: ' + updatedMovieId + ' ha sido actualizada con éxito.' : 'El ID de la película creada es: ' + createdMovieId }}</p>
+      <button (click)="closeModal()">Cerrar</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+.title {
+  text-align: center;
+  font-size: 2em;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.show-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.show-table th, .show-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.show-table th {
+  background-color: #f9f9f9;
+  cursor: pointer;
+  position: relative;
+  padding-right: 30px; /* Añadir padding adicional para el símbolo de ordenamiento */
+}
+
+.show-table th:hover {
+  background-color: #e0e0e0;
+}
+
+.sort-asc::after {
+  content: '▲';
+  position: absolute;
+  right: 10px; /* Ajustar la posición del símbolo de ordenamiento */
+}
+
+.sort-desc::after {
+  content: '▼';
+  position: absolute;
+  right: 10px; /* Ajustar la posición del símbolo de ordenamiento */
+}
+
+@media screen and (max-width: 768px) {
+  .show-table th, .show-table td {
+    padding: 8px;
+  }
+
+  .show-table th {
+    font-size: 0.9em;
+  }
+
+  .show-table td {
+    font-size: 0.9em;
+  }
+}
