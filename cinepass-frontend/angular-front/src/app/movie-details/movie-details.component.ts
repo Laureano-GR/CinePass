@@ -96,4 +96,8 @@ export class MovieDetailsComponent implements OnInit {
   navigateToShowDetails(showId: number) {
     this.router.navigate(['/show-details', showId]);
   }
+
+  loadPosterPreview(movieId: number): string {
+    return this.movieService.getMoviePosterUrl(movieId!);
+  }
 }

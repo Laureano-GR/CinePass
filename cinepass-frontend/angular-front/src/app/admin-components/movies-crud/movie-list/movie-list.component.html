@@ -19,7 +19,7 @@
         <tr *ngFor="let movie of movies" (click)="selectMovie(movie)" [class.selected]="movie === selectedMovie">
           <td>{{ movie.id }}</td>
           <td class="movie-poster">
-            <img [src]="movie.poster" alt="{{ movie.name }}">
+            <img [src]="loadPosterPreview(movie.id)" [alt]="movie.name">
           </td>
           <td>{{ movie.name }}</td>
           <td>{{ movie.description }}</td>

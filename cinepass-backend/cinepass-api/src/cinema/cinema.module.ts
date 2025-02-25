@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { CinemaController } from './cinema.controller';
-import { CinemaService } from './cinema.service';
 import { AddressController } from './address.controller';
 import { CityController } from './city.controller';
 import { RoomController } from './room.controller';
@@ -18,7 +16,7 @@ import { ShowTypeEntity } from 'src/_entities/showType.entity';
   imports: [
     TypeOrmModule.forFeature([RoomEntity, SubsidiaryEntity, ShowTypeEntity]),
   ],
-  controllers: [CinemaController, AddressController, CityController, RoomController, SubsidiaryController],
-  providers: [CinemaService, AddressService, CityService, RoomService, SubsidiaryService]
+  controllers: [AddressController, CityController, RoomController, SubsidiaryController],
+  providers: [AddressService, CityService, RoomService, SubsidiaryService]
 })
 export class CinemaModule {}

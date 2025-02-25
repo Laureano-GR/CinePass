@@ -56,7 +56,9 @@
   <!-- Modal de éxito -->
   <div *ngIf="showModal" class="modal">
     <div class="modal-content">
-      <img src="assets/success-icon.png" alt="Success" class="success-icon">
+      <div class="d-flex justify-content-center">
+        <img src="assets/success-icon.png" alt="Success" class="success-icon img-fluid">
+      </div>
       <h2>{{ isEditMode ? 'Película Actualizada' : 'Película Creada' }}</h2>
       <p>{{ isEditMode ? 'La película con ID: ' + updatedMovieId + ' ha sido actualizada con éxito.' : 'El ID de la película creada es: ' + createdMovieId }}</p>
       <button (click)="closeModal()">Cerrar</button>

@@ -1,27 +1,35 @@
-<div class="home-container">
-  <div class="banner">
-    <img src="assets/banners/banner.png" alt="Banner de películas" class="banner-image">
+<div class="container home-container py-4">
+  <!-- Banner -->
+  <div class="banner mb-4">
+    <img src="assets/banners/banner.png" alt="Banner de películas" class="img-fluid banner-image">
   </div>
-  
-  <h1>{{ title }}</h1>
-  
-  <h2>Películas en Cartelera</h2>
-  
-  <div class="movies-grid">
+
+  <!-- Título principal -->
+  <h1 class="text-center mb-4">{{ title }}</h1>
+
+  <!-- Subtítulo -->
+  <h2 class="text-center mb-4">Películas en Cartelera</h2>
+
+  <!-- Grid de películas -->
+  <div class="row g-4 movies-grid">
     <div 
       *ngFor="let movie of movies" 
-      class="movie-card" 
-      (click)="navigateToMovieDetails(movie.id)">
-      <img [src]="movie.poster" [alt]="movie.name" class="movie-poster">
-      <h3>{{ movie.name }}</h3>
-      <p>Género: {{ movie.genre.name }}</p>
-      <p>Duración: {{ movie.duration }} minutos</p>
-      <p>Clasificación: {{ movie.contentRating.name }}</p>
+      class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="card movie-card h-100 shadow-sm" (click)="navigateToMovieDetails(movie.id)" style="cursor: pointer;">
+        <img [src]="loadPosterPreview(movie.id)" [alt]="movie.name" class="card-img-top movie-poster">
+        <div class="card-body text-center">
+          <h3 class="card-title h5">{{ movie.name }}</h3>
+          <p class="card-text mb-1">Género: {{ movie.genre.name }}</p>
+          <p class="card-text mb-1">Duración: {{ movie.duration }} minutos</p>
+          <p class="card-text">Clasificación: {{ movie.contentRating.name }}</p>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- Mensaje en caso de no haber películas -->
   <ng-template #noMovies>
-    <div class="no-movies-message">
+    <div class="no-movies-message text-center mt-4">
       No hay películas disponibles para esta sucursal en este momento.
     </div>
   </ng-template>

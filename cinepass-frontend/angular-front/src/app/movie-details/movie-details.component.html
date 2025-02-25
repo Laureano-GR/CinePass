@@ -1,29 +1,31 @@
 <div *ngIf="loading">Cargando...</div>
 <div *ngIf="!loading && movie" class="movie-details-container">
-  <div class="movie-banner">
-    <img [src]="movie.poster" [alt]="movie.name">
-  </div>
-  <div class="movie-info">
-    <h1>{{ movie.name }}</h1>
-    <p>{{ movie.description }}</p>
-  </div>
-  <div class="movie-details-grid">
-    <div>
-      <h2>Duración</h2>
-      <p>{{ movie.duration }} minutos</p>
+  <div class="movie-details-content">
+    <div class="movie-banner">
+      <img [src]="loadPosterPreview(movie.id)" [alt]="movie.name">
     </div>
-    <div>
-      <h2>Género</h2>
-      <p>{{ movie.genre.name }}</p>
-      <p class="text-sm text-gray-600">{{ movie.genre.description }}</p>
-    </div>
-    <div>
-      <h2>Clasificación</h2>
-      <p>{{ movie.contentRating.name }}</p>
-    </div>
-    <div>
-      <h2>Idiomas</h2>
-      <p>{{ getLanguages() }}</p>
+    <div class="movie-info">
+      <h1 class="text-center">{{ movie.name }}</h1>
+      <p>{{ movie.description }}</p>
+      <div class="movie-details-grid">
+        <div>
+          <h2>Duración</h2>
+          <p>{{ movie.duration }} minutos</p>
+        </div>
+        <div>
+          <h2>Género</h2>
+          <p>{{ movie.genre.name }}</p>
+          <p class="text-sm text-gray-600">{{ movie.genre.description }}</p>
+        </div>
+        <div>
+          <h2>Clasificación</h2>
+          <p>{{ movie.contentRating.name }}</p>
+        </div>
+        <div>
+          <h2>Idiomas</h2>
+          <p>{{ getLanguages() }}</p>
+        </div>
+      </div>
     </div>
   </div>
   <div class="showtimes">

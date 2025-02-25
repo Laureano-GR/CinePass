@@ -104,4 +104,8 @@ export class MovieListComponent {
     }
     return '';
   }
+
+  loadPosterPreview(movieId: number): string {
+    return this.movieService.getPosterUrl(movieId!);
+  }
 }

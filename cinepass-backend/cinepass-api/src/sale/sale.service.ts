@@ -142,5 +142,3 @@ export class SaleService {
     return `${day}/${month}/${year} - ${hours}:${minutes}hs`;
   }
 }
-
-  

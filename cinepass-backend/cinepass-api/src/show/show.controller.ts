@@ -10,6 +10,8 @@ import { ShowEntity } from 'src/_entities/show.entity';
 import { DeepPartial } from "typeorm";
 import { ShowService } from './show.service';
 import { HttpException } from '@nestjs/common';
+import { CreateShowDto } from 'src/_interfaces/createShowDTO';
+import { UpdateShowDto } from 'src/_interfaces/updateShowDTO';
 
 @Controller('shows')
 export class ShowController {
@@ -17,7 +19,7 @@ export class ShowController {
   
     @Post()
     async createShow(
-      @Body() show: DeepPartial<ShowEntity>,
+      @Body() show: CreateShowDto,
     ): Promise<ShowEntity> {
       return await this.service.createShow(show);
     }
@@ -30,7 +32,7 @@ export class ShowController {
     @Put('update/:id')
     async updateShow(
       @Param('id') id: number,
-      @Body() show: DeepPartial<ShowEntity>,
+      @Body() show: UpdateShowDto,
     ): Promise<ShowEntity> {
       const updatedShow = await this.service.updateShow(id, show);
       return updatedShow;

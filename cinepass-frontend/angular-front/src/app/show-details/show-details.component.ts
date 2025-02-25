@@ -75,6 +75,8 @@ export class ShowDetailsComponent {
       }
     });
   }
+
+  loadPosterPreview(movieId: number): string {
+    return this.showService.getMoviePosterUrl(movieId!);
+  }
 }
-
-

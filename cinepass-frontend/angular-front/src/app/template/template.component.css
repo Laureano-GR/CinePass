@@ -1,14 +1,16 @@
+/* ===== ESTILOS GENERALES ===== */
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4;
+  font-family: var(--fuente-texto);
+  background-color: var(--color-fondo-claro);
 }
 
+/* ===== HEADER ===== */
 .app-header {
-  background-color: #333;
-  color: white;
+  background-color: var(--color-principal);
+  color: var(--color-texto-claro);
   padding: 1rem 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -17,19 +19,15 @@
 }
 
 .app-header nav ul {
-  list-style-type: none;
-  padding: 0;
+  list-style: none;
   margin: 0;
+  padding: 0;
   display: flex;
   gap: 1.5rem;
 }
 
-.app-header nav ul li {
-  display: inline;
-}
-
 .app-header nav ul li a {
-  color: white;
+  color: var(--color-texto-claro);
   text-decoration: none;
   font-size: 16px;
   transition: color 0.3s ease;
@@ -46,8 +44,8 @@
 }
 
 .app-header .subsidiary-info button {
-  background-color: #555;
-  color: white;
+  background-color: var(--color-boton);
+  color: var(--color-texto-claro);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 5px;
@@ -59,18 +57,19 @@
   background-color: #777;
 }
 
+/* ===== MAIN ===== */
 .app-main {
   flex-grow: 1;
   padding: 2rem;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-fondo-claro);
   margin: 1rem 2rem;
   border-radius: 8px;
 }
 
+/* ===== FOOTER ===== */
 .app-footer {
-  background-color: #333;
-  color: white;
+  background-color: var(--color-principal);
+  color: var(--color-texto-claro);
   text-align: center;
   padding: 1rem 2rem;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
@@ -82,7 +81,7 @@
   font-size: 14px;
 }
 
-/* Media Queries for Responsiveness */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .app-header {
     flex-direction: column;
@@ -103,7 +102,6 @@
 @media (max-width: 480px) {
   .app-header {
     padding: 0.5rem 1rem;
-    flex-direction: column;
     align-items: center;
   }
 
@@ -134,4 +132,59 @@
   .app-footer p {
     font-size: 12px;
   }
+}
+
+/* ===== ESTILOS DE NAVBAR (Bootstrap) ===== */
+.navbar {
+  width: 100%;
+  background-color: var(--color-principal);
+}
+
+.navbar .container-fluid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.navbar-collapse {
+  justify-content: flex-end;
+}
+
+/* Botones dentro de la navbar */
+.navbar .btn {
+  background-color: var(--color-boton);
+  border-color: var(--color-boton);
+  color: var(--color-texto-claro);
+  margin-left: 0.5rem;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.navbar .btn:hover {
+  background-color: var(--color-boton-hover);
+  border-color: var(--color-boton-hover);
+}
+
+/* Botón toggler */
+.navbar-toggler {
+  background-color: var(--color-boton);
+  border: 1px solid var(--color-boton-borde);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Estilo para la etiqueta de sucursal */
+.branch-label {
+  font-family: var(--fuente-titulos);
+  font-weight: 600;
+  color: var(--color-texto-claro);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.branch-label i {
+  color: var(--color-secundario);
 }

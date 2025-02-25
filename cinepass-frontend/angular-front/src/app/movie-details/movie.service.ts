@@ -18,4 +18,8 @@ export class MovieService {
       return movie;
     });
   }
+
+  getMoviePosterUrl(movieId: number): string {
+    return `${this.apiUrl}/${movieId}/poster`;
+  }
 }

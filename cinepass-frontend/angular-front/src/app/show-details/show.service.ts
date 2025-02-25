@@ -62,4 +62,8 @@ export class ShowService {
     }); 
   }
 
+  getMoviePosterUrl(movieId: number): string {
+    return `http://localhost:3001/movies/${movieId}/poster`;
+  }
+
 }

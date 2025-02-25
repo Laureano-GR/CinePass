@@ -1,15 +1,36 @@
 <div class="app-container">
   <header class="app-header">
-    <nav>
-      <ul>
-        <li><a routerLink="/"><img src="assets/logo.png" alt="CinePass Logo" style="height: 40px;"></a></li> <!-- Cambiar inicio por logo de CinePass -->
-      </ul>
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand" routerLink="/">
+          <img src="assets/logo.png" alt="CinePass Logo" style="height: 40px; color: white;">
+        </a>
+
+        <!-- Botón de Toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+          aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Contenido de la navbar -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item" style="align-self: center;" *ngIf="subsidiaryName$ | async as subsidiaryName">
+              <span class="branch-label">
+                <i class="fa-solid fa-map-marker-alt"></i> Sucursal: {{ subsidiaryName }}
+              </span>
+            </li>
+            <li class="nav-item" *ngIf="isLoggedIn">
+              <button class="btn btn-primary" (click)="goToAdminDashboard()">Admin Dashboard</button>
+            </li>
+            <li class="nav-item">
+              <button class="btn btn-secondary" (click)="changeSubsidiary()">Cambiar Sucursal</button>
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
-    <div *ngIf="subsidiaryName$ | async as subsidiaryName" class="subsidiary-info">
-      Sucursal: {{ subsidiaryName }}
-      <button *ngIf="isLoggedIn" (click)="goToAdminDashboard()">Admin Dashboard</button>
-      <button (click)="changeSubsidiary()">Cambiar Sucursal</button>
-    </div>
   </header>
 
   <main class="app-main">

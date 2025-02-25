@@ -1,7 +1,7 @@
 <div *ngIf="loading" class="loading">Cargando...</div>
 <div *ngIf="!loading && show" class="show-details-container">
-  <div class="show-banner">
-    <img [src]="show.movie.poster" [alt]="show.movie.name">
+  <div class="movie-banner">
+    <img [src]="loadPosterPreview(show.movie.id)" [alt]="show.movie.name">
   </div>
   <div class="show-info">
     <h1>{{ show.movie.name }}</h1>

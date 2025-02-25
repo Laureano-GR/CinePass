@@ -22,5 +22,9 @@ export class HomeService {
       throw error;
     }
   }
+
+  getMoviePosterUrl(movieId: number): string {
+    return `${this.url}/movies/${movieId}/poster`;
+  }
   // Agrega más métodos según necesites para diferentes endpoints
 }

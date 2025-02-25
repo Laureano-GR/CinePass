@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  /* Paleta de colores */
+  --color-principal: #333333;      /* Fondo principal (navbar, footer, etc.) */
+  --color-secundario: #E50914;       /* Llamados a la acción o acentos */
+  --color-fondo-claro: #F5F5F5;      /* Fondos claros */
+  --color-texto-claro: #FFFFFF;      /* Texto en fondos oscuros */
+  --color-texto-oscuro: #333333;     /* Texto en fondos claros */
+  --color-boton: #555;             /* Color de botones */
+  --color-boton-hover: #444;        /* Hover en botones */
+  --color-boton-borde: #777;        /* Borde del toggler */
+  --color-acento: #E50914;          /* Para íconos o acentos */
+
+  /* Fuentes */
+  --fuente-titulos: 'Montserrat', sans-serif;
+  --fuente-texto: 'Roboto', sans-serif;
+}

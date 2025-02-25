@@ -30,4 +30,8 @@ export class HomeComponent {
     const subsidiaryId = this.subsidiaryService.getSubsidiaryId();
     this.movies = await this.homeService.getMovies(subsidiaryId);
   }
+
+  loadPosterPreview(movieId: number): string {
+    return this.homeService.getMoviePosterUrl(movieId!);
+  }
 }

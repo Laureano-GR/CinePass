@@ -46,7 +46,9 @@
       <h2>
         {{ isEditMode ? 'Función Actualizada' : 'Función Creada' }}
       </h2>
-      <img src="assets/success-icon.png" alt="Success" class="success-icon">
+      <div class="d-flex justify-content-center">
+        <img src="assets/success-icon.png" alt="Success" class="success-icon img-fluid">
+      </div>
       <p *ngIf="isEditMode">
         La función con ID: {{ updatedShowId }} ha sido actualizada exitosamente.
       </p>
