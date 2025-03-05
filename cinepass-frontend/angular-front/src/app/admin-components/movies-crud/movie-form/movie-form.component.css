@@ -1,3 +1,10 @@
+.title {
+  text-align: center;
+  color: var(--color-texto-oscuro);
+  font-family: var(--fuente-titulos);
+  margin-bottom: 20px;
+}
+
 .movie-form-container {
   max-width: 600px;
   margin: 0 auto;
@@ -5,11 +12,7 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
-}
-
-.movie-form-container h1 {
-  text-align: center;
-  margin-bottom: 20px;
+  font-family: var(--fuente-texto);
 }
 
 .movie-form-container div {
@@ -40,15 +43,22 @@
 }
 
 .movie-form-container button:hover {
-  background-color: #555;
+  background-color: var(--color-boton); 
 }
 
-.movie-form-container button[type="button"] {
-  background-color: #333;
+.movie-form-container button {
+  width: 100%;
+  padding: 10px;background-color: var(--color-principal);
+  color: var(--color-texto-claro);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; 
+  text-align: center; 
 }
 
 .movie-form-container button[type="button"]:hover {
-  background-color: #555;
+  background-color: var(--color-boton); 
 }
 
 .poster-container {

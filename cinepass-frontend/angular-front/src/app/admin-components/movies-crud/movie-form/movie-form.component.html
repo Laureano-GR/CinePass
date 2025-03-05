@@ -1,5 +1,7 @@
+<app-loading-screen [loadingText]="'Procesando...'"></app-loading-screen>
+
 <div class="movie-form-container">
-  <h1>{{ isEditMode ? 'Actualizar Película' : 'Crear Película' }}</h1>
+  <h1 class="title">{{ isEditMode ? 'Actualizar Película' : 'Crear Película' }}</h1>
   <form [formGroup]="movieForm" (ngSubmit)="onSubmit()">
     <div *ngIf="errorMessage" class="error-message">
       {{ errorMessage }}

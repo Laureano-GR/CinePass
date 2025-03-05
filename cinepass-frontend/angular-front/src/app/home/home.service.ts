@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, from } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 import axios from 'axios';
 import { MovieI } from '../interfaces/movie';
-import { ShowI } from '../interfaces/show';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +23,17 @@ export class HomeService {
   getMoviePosterUrl(movieId: number): string {
     return `${this.url}/movies/${movieId}/poster`;
   }
-  // Agrega más métodos según necesites para diferentes endpoints
+
+  getMoviesWithShowsInNextTwoWeeks(movies: MovieI[]): MovieI[] {
+    const today = new Date();
+    const twoWeeksFromNow = new Date();
+    twoWeeksFromNow.setDate(today.getDate() + 14);
+
+    return movies.filter(movie => 
+      movie.shows && movie.shows.some(show => {
+        const showDate = new Date(show.dateAndTime);
+        return showDate >= today && showDate <= twoWeeksFromNow;
+      })
+    );
+  }
 }

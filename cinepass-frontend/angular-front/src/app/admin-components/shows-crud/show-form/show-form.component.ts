@@ -9,11 +9,10 @@ import { MovieI } from '../../../interfaces/movie';
 import { LanguageI } from '../../../interfaces/language';
 import { ShowTypeI } from '../../../interfaces/showType';
 import { RoomI } from '../../../interfaces/room';
+import { LoadingService } from '../../../loading-screen/loading.service';
 
 @Component({
   selector: 'app-show-form',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './show-form.component.html',
   styleUrls: ['./show-form.component.css']
 })
@@ -36,7 +35,8 @@ export class ShowFormComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private service: ShowService
+    private service: ShowService,
+    private loadingService: LoadingService
   ) {
     this.showForm = this.fb.group({
       showId: [''], // Campo para el ID de la función
@@ -66,7 +66,7 @@ export class ShowFormComponent implements OnInit {
       } else {
         this.hasIdInUrl = false;
         this.showForm.get('showId')?.enable(); // Habilitar el campo en modo creación
-        this.showForm.get('showId')?.setValidators([Validators.required]);
+        this.showForm.get('showId')?.clearValidators(); // Eliminar validadores en modo creación
         this.showForm.get('showId')?.updateValueAndValidity();
       }
     });
@@ -162,19 +162,36 @@ export class ShowFormComponent implements OnInit {
 
     console.log('Payload a enviar:', payload);
 
+    // Mostrar la pantalla de carga
+    this.loadingService.show();
+
     if (this.isEditMode) {
       if (this.showId) {
         this.service.updateShow(this.showId, payload as UpdateShowDto).subscribe(() => {
+          // Ocultar la pantalla de carga
+          this.loadingService.hide();
           this.updatedShowId = this.showId;
           this.showModal = true;
+        }, error => {
+          // Ocultar la pantalla de carga en caso de error
+          this.loadingService.hide();
+          this.errorMessage = 'Error al actualizar la función.';
+          console.error(error);
         });
       } else {
         this.errorMessage = 'Por favor, ingresa el ID de la función a actualizar.';
       }
     } else {
       this.service.createShow(payload as CreateShowDto).subscribe((response: any) => {
+        // Ocultar la pantalla de carga
+        this.loadingService.hide();
         this.createdShowId = response.id;
         this.showModal = true;
+      }, error => {
+        // Ocultar la pantalla de carga en caso de error
+        this.loadingService.hide();
+        this.errorMessage = 'Error al crear la función.';
+        console.error(error);
       });
     }
   }

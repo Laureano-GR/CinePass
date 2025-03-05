@@ -17,26 +17,15 @@ export class EmailManagerService {
     });
   }
 
-  async enviarCorreo(destinatario: string, asunto: string, contenidoHtml: string, qrCodeBase64?: string) {
+  async enviarCorreo(recipient: string, asunto: string, htmlContent: string, attachments: any[] = []) {
     const mailOptions: any = {
       from: "cinepass2024@gmail.com",
-      to: destinatario,
+      to: recipient,
       subject: asunto,
-      html: contenidoHtml,
+      html: htmlContent,
+      attachments: attachments
     };
-
-    // Si hay un QR, lo adjuntamos
-    if (qrCodeBase64) {
-      mailOptions.attachments = [
-        {
-          filename: 'qrcode.png',
-          content: qrCodeBase64.split(';base64,').pop(),
-          encoding: 'base64'
-        }
-      ];
-    }
 
     await this.transporter.sendMail(mailOptions);
   }
 }
-

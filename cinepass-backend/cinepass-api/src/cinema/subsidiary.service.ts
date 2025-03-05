@@ -77,7 +77,7 @@ export class SubsidiaryService {
   async findSubsidiaryMovies(subsidiaryId: number): Promise<MovieEntity[]> {
     const subsidiary = await this.repository.findOne({
       where: { id: subsidiaryId },
-      relations: ['shows', 'shows.movie', 'shows.movie.genre', 'shows.movie.contentRating', 'shows.movie.languages'],
+      relations: ['shows', 'shows.movie', 'shows.movie.genre', 'shows.movie.contentRating', 'shows.movie.languages','shows.movie.shows'],
     });
 
     if (!subsidiary) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService } from '../movie-crud.service';
 import { MovieI } from '../../../interfaces/movie';
@@ -8,12 +8,10 @@ import { ContentRatingI } from '../../../interfaces/contentRating';
 import { GenreI } from '../../../interfaces/genre';
 import { CreateMovieDto } from '../../../interfaces/createMovieDTO';
 import { UpdateMovieDto } from '../../../interfaces/updateMovieDTO';
-import { CommonModule } from '@angular/common';
+import { LoadingService } from '../../../loading-screen/loading.service';
 
 @Component({
   selector: 'app-movie-form',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './movie-form.component.html',
   styleUrls: ['./movie-form.component.css']
 })
@@ -38,6 +36,7 @@ export class MovieFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private service: MovieService,
+    private loadingService: LoadingService
   ) {
     this.movieForm = this.fb.group({
       movieId: [''], // Campo para el ID de la película
@@ -68,7 +67,7 @@ export class MovieFormComponent implements OnInit {
       } else {
         this.hasIdInUrl = false;
         this.movieForm.get('movieId')?.enable(); // Habilitar el campo en modo creación
-        this.movieForm.get('movieId')?.setValidators([Validators.required]);
+        this.movieForm.get('movieId')?.clearValidators(); // Eliminar validadores en modo creación
         this.movieForm.get('movieId')?.updateValueAndValidity();
       }
     });
@@ -149,6 +148,9 @@ export class MovieFormComponent implements OnInit {
       return;
     }
 
+    // Mostrar la pantalla de carga
+    this.loadingService.show();
+
     // Primero, sube el archivo con el mismo nombre si hay un archivo seleccionado
     if (this.selectedFile) {
       this.service.uploadPoster(this.selectedFile, this.selectedFile.name).subscribe((response: any) => {
@@ -158,6 +160,11 @@ export class MovieFormComponent implements OnInit {
 
         // Guarda la película con el nombre del archivo
         this.saveMovie(movieData);
+      }, error => {
+        // Ocultar la pantalla de carga en caso de error
+        this.loadingService.hide();
+        this.errorMessage = 'Error al subir el póster.';
+        console.error(error);
       });
     } else {
       const movieData: CreateMovieDto | UpdateMovieDto = this.movieForm.value;
@@ -171,16 +178,30 @@ export class MovieFormComponent implements OnInit {
       const movieId = this.movieForm.get('movieId')?.value;
       if (movieId) {
         this.service.updateMovie(movieId, movieData as UpdateMovieDto).subscribe(() => {
+          // Ocultar la pantalla de carga
+          this.loadingService.hide();
           this.updatedMovieId = movieId; // Almacenar el ID de la película actualizada
           this.showModal = true;
+        }, error => {
+          // Ocultar la pantalla de carga en caso de error
+          this.loadingService.hide();
+          this.errorMessage = 'Error al actualizar la película.';
+          console.error(error);
         });
       } else {
         this.errorMessage = 'Por favor, ingresa el ID de la película a actualizar.';
       }
     } else {
       this.service.createMovie(movieData as CreateMovieDto).subscribe((response: any) => {
+        // Ocultar la pantalla de carga
+        this.loadingService.hide();
         this.createdMovieId = response.id; // Almacenar el ID de la película creada
         this.showModal = true;
+      }, error => {
+        // Ocultar la pantalla de carga en caso de error
+        this.loadingService.hide();
+        this.errorMessage = 'Error al crear la película.';
+        console.error(error);
       });
     }
   }

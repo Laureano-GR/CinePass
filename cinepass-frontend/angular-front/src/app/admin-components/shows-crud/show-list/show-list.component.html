@@ -1,16 +1,18 @@
-<div *ngIf="shows.length > 0; else noShows">
+<div class="container-fluid" *ngIf="shows.length > 0; else noShows">
   <h1 class="title">Funciones</h1>
   <div class="table-responsive">
-    <button [disabled]="!selectedShow" (click)="editShow()" class="edit-button">Editar</button>
-    <table class="show-table">
+    <button [disabled]="!selectedShow" (click)="editShow()" class="edit-button">
+      <i class="fas fa-edit"></i> Actualizar
+    </button>
+    <table class="show-table table-hover align-middle">
       <thead>
         <tr>
-          <th (click)="sort('id')">ID <span [class]="getSortIcon('id')"></span></th>
-          <th (click)="sort('dateAndTime')">Fecha y Hora <span [class]="getSortIcon('dateAndTime')"></span></th>
-          <th (click)="sort('name')">Película <span [class]="getSortIcon('name')"></span></th>
-          <th (click)="sort('showType')">Tipo de Función <span [class]="getSortIcon('showType')"></span></th>
-          <th (click)="sort('selectedLanguage')">Idioma <span [class]="getSortIcon('selectedLanguage')"></span></th>
-          <th (click)="sort('room')">Sala <span [class]="getSortIcon('room')"></span></th>
+          <th (click)="sort('id')">ID <span [class]="getSortIcon('id')" class="sortable"></span></th>
+          <th (click)="sort('dateAndTime')">Fecha y Hora <span [class]="getSortIcon('dateAndTime')" class="sortable"></span></th>
+          <th (click)="sort('name')">Película <span [class]="getSortIcon('name')" class="sortable"></span></th>
+          <th (click)="sort('showType')">Tipo de Función <span [class]="getSortIcon('showType')" class="sortable"></span></th>
+          <th (click)="sort('selectedLanguage')">Idioma <span [class]="getSortIcon('selectedLanguage')" class="sortable"></span></th>
+          <th (click)="sort('room')">Sala <span [class]="getSortIcon('room')" class="sortable"></span></th>
         </tr>
       </thead>
       <tbody>
@@ -27,5 +29,7 @@
   </div>
 </div>
 <ng-template #noShows>
-  <p>No hay funciones disponibles para esta sucursal.</p>
+  <div class="alert alert-warning text-center" role="alert">
+    <i class="fas fa-exclamation-triangle"></i> No hay funciones disponibles para esta sucursal.
+  </div>
 </ng-template>

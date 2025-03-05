@@ -14,6 +14,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminLoginComponent } from './admin-components/admin-login/admin-login.component';
 import { PurchaseDetailsComponent } from './purchase-details/purchase-details.component';
 import { AdminDashboardComponent } from './admin-components/admin-dashboard/admin-dashboard.component';
+import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
+import { ShowFormComponent } from './admin-components/shows-crud/show-form/show-form.component';
+import { MovieFormComponent } from './admin-components/movies-crud/movie-form/movie-form.component';
 
 registerLocaleData(localeEsAr);
 
@@ -25,7 +28,10 @@ registerLocaleData(localeEsAr);
     MovieDetailsComponent,
     AdminLoginComponent,
     PurchaseDetailsComponent,
-    AdminDashboardComponent
+    AdminDashboardComponent,
+    LoadingScreenComponent,
+    ShowFormComponent,
+    MovieFormComponent
   ],
   imports: [
     BrowserModule,

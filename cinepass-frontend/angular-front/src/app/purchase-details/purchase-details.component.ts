@@ -10,6 +10,7 @@ import { IDTypeI } from '../interfaces/idType';
 import { ShowI } from '../interfaces/show';
 import { CreateSaleDTO } from '../interfaces/createSaleDTO';
 import { catchError, Observable, of } from 'rxjs';
+import { LoadingService } from '../loading-screen/loading.service';
 
 @Component({
   selector: 'app-purchase-details',
@@ -31,6 +32,7 @@ export class PurchaseDetailsComponent implements OnInit {
     private purchaseService: PurchaseService,
     private route: ActivatedRoute, 
     private router: Router,
+    private loadingService: LoadingService
   ) {}
 
   ngOnInit() {
@@ -82,8 +84,11 @@ export class PurchaseDetailsComponent implements OnInit {
       totalPrice: this.totalPrice
     };
   
+    this.loadingService.show();
+
     this.purchaseService.createSale(saleData)
       .then(response => {
+        this.loadingService.hide();
         if (response && response.trim() !== '') {
           console.log('Sale created successfully:', response);
           this.showModal = true;
@@ -92,6 +97,7 @@ export class PurchaseDetailsComponent implements OnInit {
         }
       })
       .catch(error => {
+        this.loadingService.hide();
         console.error('Error creating sale:', error);
       });
   }

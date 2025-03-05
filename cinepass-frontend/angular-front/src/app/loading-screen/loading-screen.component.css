@@ -1,0 +1,32 @@
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5)/*otra opcion: rgba(245, 245, 245, 0.8)*/;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner-border {
+  width: 6rem; 
+  height: 6rem; 
+  border-width: 0.7rem; 
+  border-color: var(--color-secundario) transparent transparent transparent;
+}
+
+.loading-text {
+  margin-top: 10px;
+  font-size: 1.2em;
+  color: var(--color-texto-claro);
+}

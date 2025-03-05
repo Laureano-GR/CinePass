@@ -8,6 +8,7 @@ import { ShowEntity } from 'src/_entities/show.entity';
 import { CreateSaleDTO } from 'src/_interfaces/createSale.dto';
 import * as QRCode from 'qrcode';
 import { EmailManagerService } from 'src/email-manager/email-manager.service';
+import * as path from 'path';
 
 @Injectable()
 export class SaleService {
@@ -21,21 +22,27 @@ export class SaleService {
     const sale = await this.createSale(createSaleDto)
     const codigoCompra = `CINEPASS-${sale.id}-${sale.paymentData.IDNumber}`;
     const qrCodeBase64 = await QRCode.toDataURL(codigoCompra);
-    const contenidoHtml = `
-      <h2>¡Gracias por tu compra, ${sale.paymentData.name}!</h2>
-      <p>Has comprado ${sale.ticketsAmount} entradas para:</p>
-      <ul>
-        <li><b>Película:</b> ${createSaleDto.show.movie.name}</li>  
-        <li><b>Fecha y Hora:</b> ${this.formatDate(createSaleDto.show.dateAndTime)}</li>
-        <li><b>Idioma:</b> ${createSaleDto.show.selectedLanguage.name}</li>
-        <li><b>Tipo de función:</b> ${createSaleDto.show.showType.name}</li>
-        <li><b>Sala:</b> ${createSaleDto.show.room.roomNumber}</li>
-        <li><b>Sucursal:</b> ${createSaleDto.show.subsidiary.name}</li>
-      </ul>
-      <p><b>Código de compra:</b> ${codigoCompra}</p>
-      <p>Adjuntamos tu QR para ingresar al cine.</p>
-    `;
-    await this.emailManagerService.enviarCorreo(sale.paymentData.email, 'Tus entradas para el cine 🎟', contenidoHtml, qrCodeBase64)
+
+    // Generar el contenido del email
+    const htmlContent = this.generarContenidoEmailVenta(sale, createSaleDto, codigoCompra);
+
+    // Adjuntos
+    const attachments = [
+      {
+        filename: 'qrcode.png',
+        content: qrCodeBase64.split(';base64,').pop(),
+        encoding: 'base64',
+        cid: 'qrcode@cinepass' // Identificador único para la imagen QR
+      },
+      {
+        filename: 'logo.png',
+        path: path.join(__dirname, '..', '..', 'uploads', 'logo.png'),
+        cid: 'logo@cinepass' // Identificador único para la imagen del logo
+      }
+    ];
+
+    await this.emailManagerService.enviarCorreo(sale.paymentData.email, 'Tus entradas para el cine 🎟', htmlContent, attachments);
+
     return codigoCompra;
   }
 
@@ -130,6 +137,60 @@ export class SaleService {
       }
       throw new HttpException('Find sale by id error', 500);
     }
+  }
+
+  generarContenidoEmailVenta(sale: SaleEntity, createSaleDto: CreateSaleDTO, codigoCompra: string): string {
+    return `
+    <!DOCTYPE html>
+    <html lang="es">
+      <head>
+        <meta charset="UTF-8" />
+        <title>Confirmación de Compra - CinePass</title>
+      </head>
+      <body style="margin:0; padding:0; background-color:#ffffff; font-family:Roboto, sans-serif; color:#333333;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff; padding:20px 0;">
+          <tr>
+            <td align="center">
+              <table width="600" border="0" cellspacing="0" cellpadding="20" style="border: 1px solid #ddd; border-radius: 8px; overflow:hidden; font-family:Roboto, sans-serif;">
+                <tr>
+                  <td style="background-color:#333333; text-align:center; padding: 20px;">
+                    <img src="cid:logo@cinepass" alt="CinePass Logo" style="max-width:150px;">
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align:left; padding: 20px; font-size:16px; line-height:1.5;">
+                    <h2 style="font-family:'Montserrat', sans-serif; color:#E50914; font-size:22px;">¡Gracias por tu compra, ${sale.paymentData.name}!</h2>
+                    <p>Has comprado <strong>${sale.ticketsAmount}</strong> entradas para:</p>
+                    <table border="0" cellspacing="0" cellpadding="5" style="font-size:16px; margin-bottom: 10px;">
+                      <tr><td style="font-weight:bold;">Película:</td><td>${createSaleDto.show.movie.name}</td></tr>
+                      <tr><td style="font-weight:bold;">Fecha y Hora:</td><td>${new Date(createSaleDto.show.dateAndTime).toLocaleString()}</td></tr>
+                      <tr><td style="font-weight:bold;">Idioma:</td><td>${createSaleDto.show.selectedLanguage.name}</td></tr>
+                      <tr><td style="font-weight:bold;">Tipo de función:</td><td>${createSaleDto.show.showType.name}</td></tr>
+                      <tr><td style="font-weight:bold;">Sala:</td><td>${createSaleDto.show.room.roomNumber}</td></tr>
+                      <tr><td style="font-weight:bold;">Sucursal:</td><td>${createSaleDto.show.subsidiary.name}</td></tr>
+                    </table>
+                    <p><strong>Código de compra:</strong> ${codigoCompra}</p>
+                    <p>Adjuntamos tu QR para ingresar al cine.</p>
+                    <div style="text-align:center; margin-top:20px;">
+                      <img src="cid:qrcode@cinepass" alt="Código QR" style="max-width:200px; display:block; margin:0 auto;">
+                    </div>
+                    <p style="margin-top:20px; font-size:14px; text-align:center; color:#999;">
+                      Si tienes alguna duda, contáctanos en <a href="mailto:cinepass2024@gmail.com" style="color:#E50914; text-decoration:none;">cinepass2024@gmail.com</a>
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="background-color:#333333; text-align:center; padding: 10px;">
+                    <p style="margin:0; font-size:14px; color:#ffffff;">© 2024 CinePass. Todos los derechos reservados.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </body>
+    </html>
+    `;
   }
 
   formatDate(date: string | Date): string {

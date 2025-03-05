@@ -1,54 +1,67 @@
 .title {
   text-align: center;
-  font-size: 2em;
-  color: #333;
+  font-size: 3em;
+  color: var(--color-texto-oscuro);
   margin-bottom: 20px;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--fuente-titulos);
 }
 
 .table-responsive {
   overflow-x: auto;
+  font-family: var(--fuente-texto);
 }
 
 .movie-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
-}
-
-.movie-table th, .movie-table td {
-  border: 1px solid #ccc;
-  padding: 10px;
   text-align: left;
+  padding: 12px;
 }
 
 .movie-table th {
-  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+  color: var(--color-texto-claro);
+}
+
+.movie-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+  color: var(--color-texto-oscuro);
+}
+
+.movie-table th {
+  background-color: var(--color-principal);
   cursor: pointer;
   position: relative;
-  padding-right: 20px; /* Añadir padding adicional para el símbolo de ordenamiento */
+  padding-right: 30px; 
 }
 
 .movie-table th:hover {
-  background-color: #e0e0e0;
+  background-color: var(--color-boton);
 }
 
 .sort-asc::after {
   content: '▲';
   position: absolute;
-  right: 5px; /* Ajustar la posición del símbolo de ordenamiento */
+  right: 5px; 
 }
 
 .sort-desc::after {
   content: '▼';
   position: absolute;
-  right: 5px; /* Ajustar la posición del símbolo de ordenamiento */
+  right: 5px; 
 }
 
 .movie-poster img {
-  width: 50px;
+  width: 60px;
   height: auto;
+  border-radius: 5px;
 }
+
 
 @media screen and (max-width: 768px) {
   .movie-table th, .movie-table td {
@@ -65,29 +78,29 @@
 }
 
 .selected {
-  background-color: #f0f0f0;
+  background-color: #dfdfdf !important;
 }
 
 .edit-button {
-  background-color: #333; /* Color de fondo azul */
-  color: white; /* Color del texto blanco */
-  border: none; /* Sin borde */
-  padding: 10px 20px; /* Espaciado interno */
-  text-align: center; /* Alineación del texto */
-  text-decoration: none; /* Sin subrayado */
-  display: inline-block; /* Mostrar en línea */
-  font-size: 16px; /* Tamaño de fuente */
-  margin: 10px 2px; /* Margen */
-  cursor: pointer; /* Cursor de puntero */
-  border-radius: 4px; /* Bordes redondeados */
-  transition: background-color 0.3s ease; /* Transición suave para el cambio de color */
+  background-color: var(--color-principal);
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  text-align: center; 
+  text-decoration: none; 
+  display: inline-block; 
+  font-size: 16px; 
+  margin: 10px 2px; 
+  cursor: pointer; 
+  border-radius: 4px; 
+  transition: background-color 0.3s ease; 
 }
 
 .edit-button:hover {
-  background-color: #555; /* Color de fondo al pasar el ratón */
+  background-color: var(--color-boton); 
 }
 
 .edit-button:disabled {
-  background-color: #cccccc; /* Color de fondo cuando está deshabilitado */
-  cursor: not-allowed; /* Cursor no permitido */
+  background-color: #cccccc; 
+  cursor: not-allowed; 
 }

@@ -20,6 +20,19 @@ export class MovieService {
     return this.http.get<MovieI[]>(`${this.apiUrl}/subsidiaries/movies/${subsidiaryId}`);
   }
 
+  getMoviesWithShowsInNextTwoWeeks(movies: MovieI[]): MovieI[] {
+    const today = new Date();
+    const twoWeeksFromNow = new Date();
+    twoWeeksFromNow.setDate(today.getDate() + 14);
+
+    return movies.filter(movie => 
+      movie.shows && movie.shows.some(show => {
+        const showDate = new Date(show.dateAndTime);
+        return showDate >= today && showDate <= twoWeeksFromNow;
+      })
+    );
+  }
+
   getMovies(): Observable<MovieI[]> {
     return this.http.get<MovieI[]>(`${this.apiUrl}/movies`);
   }

@@ -17,6 +17,7 @@ export class MovieListComponent {
   sortColumn: string = 'id';
   sortDirection: 'asc' | 'desc' = 'asc';
   selectedMovie: MovieI | null = null;
+  filter: string = 'all';
   
 
   constructor(private movieService: MovieService, private router: Router) {
@@ -24,13 +25,22 @@ export class MovieListComponent {
     if (subsidiary) {
       this.subsidiaryId = JSON.parse(subsidiary).id;
     } else {
-      // Manejar el caso en el que no se haya seleccionado una sucursal
-      this.subsidiaryId = 0; // O algún valor por defecto
+      this.subsidiaryId = 0;
     }
   }
 
   ngOnInit(): void {
-    if (this.subsidiaryId) {
+    this.loadMovies();
+  }
+
+  onFilterChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.filter = selectElement.value;
+    this.loadMovies();
+  }
+
+  loadMovies(): void {
+    if (this.filter === 'subsidiary') {
       this.movieService.getMoviesBySubsidiary(this.subsidiaryId).subscribe(
         (movies) => {
           this.movies = movies;
@@ -38,6 +48,26 @@ export class MovieListComponent {
         },
         (error) => {
           console.error('Error al obtener las películas:', error);
+        }
+      );
+    } else if (this.filter === 'all') {
+      this.movieService.getMovies().subscribe(
+        (movies) => {
+          this.movies = movies;
+          this.sort('id'); // Ordenar por defecto por ID de menor a mayor
+        },
+        (error) => {
+          console.error('Error al obtener todas las películas:', error);
+        }
+      );
+    } else if (this.filter === 'inTheaters') {
+      this.movieService.getMoviesBySubsidiary(this.subsidiaryId).subscribe(
+        (movies) => {
+          this.movies = this.movieService.getMoviesWithShowsInNextTwoWeeks(movies);
+          this.sort('id'); // Ordenar por defecto por ID de menor a mayor
+        },
+        (error) => {
+          console.error('Error al obtener las películas en cartelera:', error);
         }
       );
     }
