@@ -1,14 +1,20 @@
-<div class="container">
-  <h2>Seleccione una sucursal</h2>
-  <select 
-    (change)="onSubsidiarySelect($event)" 
-    [(ngModel)]="selectedSubsidiaryCode"
-    aria-label="Selección de sucursal"
-    class="subsidiary-select"
-  >
-    <option value="">Seleccione una sucursal</option>
-    <option *ngFor="let subsidiary of subsidiaries" [value]="subsidiary.subsidiaryCode">
-      {{ subsidiary.name }}
-    </option>
-  </select>
+<div class="container-fluid text-center">
+  <div class="container">
+    <img src="assets/logo.png" alt="Logo CinePass" class="logo">
+
+    <h3>Seleccione una sucursal</h3>
+
+    <div class="dropdown select-container">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        {{ selectedSubsidiaryName || 'Seleccione una sucursal' }}
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li *ngFor="let subsidiary of subsidiaries">
+          <a class="dropdown-item" href="#" (click)="onSubsidiarySelect(subsidiary)">
+            {{ subsidiary.name }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

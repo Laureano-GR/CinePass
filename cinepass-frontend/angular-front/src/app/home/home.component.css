@@ -4,16 +4,19 @@
   max-width: 1200px;
 }
 
-/* Banner */
-.banner {
+/* Carrusel de banners */
+.carousel {
   overflow: hidden;
+  border-radius: 8px;
 }
 
 .banner-image {
   width: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
+  height: 400px; /* Ajusta la altura según tu necesidad */
 }
+
 
 /* Títulos */
 h1, h2 {
@@ -31,25 +34,28 @@ h2 {
 
 /* Movie Card */
 .movie-card {
-  background-color: white/*var(--color-fondo-claro)*/;
-  border: none;
-  border-radius: 8px;
+  background-color: var(--color-fondo-claro);
+  border-radius: 10px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra inicial */
 }
 
 .movie-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Sombra al hacer hover */
+  border-color: var(--color-principal);
 }
 
 /* Poster de la película */
 .movie-poster {
   max-width: 100%;
-  height: auto;
+  height: 400px; 
+  object-fit: cover;
   border-radius: 8px;
   margin-bottom: 10px;
 }
+
 /* Card Body y textos */
 .card-body {
   font-family: var(--fuente-texto);
@@ -71,4 +77,30 @@ h2 {
   font-family: var(--fuente-texto);
   font-size: 1.125rem;
   color: #666;
+}
+
+
+/* Ajustes responsive */
+@media (max-width: 576px) {
+  .movie-poster {
+    height: 500px;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 768px) {
+  .movie-poster {
+    height: 475px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+  .movie-poster {
+    height: 300px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1024px){
+  .movie-poster {
+    height: 300px;
+  }
 }

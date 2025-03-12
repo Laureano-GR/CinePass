@@ -8,7 +8,7 @@ import { ContentRatingI } from '../../../interfaces/contentRating';
 import { GenreI } from '../../../interfaces/genre';
 import { CreateMovieDto } from '../../../interfaces/createMovieDTO';
 import { UpdateMovieDto } from '../../../interfaces/updateMovieDTO';
-import { LoadingService } from '../../../loading-screen/loading.service';
+import { LoadingService } from '../../../shared-components/loading-screen/loading.service';
 
 @Component({
   selector: 'app-movie-form',
@@ -27,6 +27,8 @@ export class MovieFormComponent implements OnInit {
   filePreview: string | ArrayBuffer | null = null;
   errorMessage: string | null = null;
   showModal: boolean = false;
+  modalTitle: string = 'Procesado con exito';
+  modalMessage: string = 'Su proceso ha sido completado con éxito.';
   createdMovieId: number | null = null; // Nuevo campo para almacenar el ID de la película creada
   updatedMovieId: number | null = null; // Nuevo campo para almacenar el ID de la película actualizada
   movieDetails: MovieI | null = null; // Nuevo campo para almacenar los detalles de la película cargada
@@ -181,6 +183,15 @@ export class MovieFormComponent implements OnInit {
           // Ocultar la pantalla de carga
           this.loadingService.hide();
           this.updatedMovieId = movieId; // Almacenar el ID de la película actualizada
+          if (this.isEditMode) {
+            // Lógica para actualizar la película
+            this.modalTitle = 'Película Actualizada';
+            this.modalMessage = 'La película con ID: ' + this.updatedMovieId + ' ha sido actualizada con éxito.';
+          } else {
+            // Lógica para crear la película
+            this.modalTitle = 'Película Creada';
+            this.modalMessage = 'El ID de la película creada es: ' + this.createdMovieId;
+          }
           this.showModal = true;
         }, error => {
           // Ocultar la pantalla de carga en caso de error
@@ -196,6 +207,15 @@ export class MovieFormComponent implements OnInit {
         // Ocultar la pantalla de carga
         this.loadingService.hide();
         this.createdMovieId = response.id; // Almacenar el ID de la película creada
+        if (this.isEditMode) {
+          // Lógica para actualizar la película
+          this.modalTitle = 'Película Actualizada';
+          this.modalMessage = 'La película con ID: ' + this.updatedMovieId + ' ha sido actualizada con éxito.';
+        } else {
+          // Lógica para crear la película
+          this.modalTitle = 'Película Creada';
+          this.modalMessage = 'El ID de la película creada es: ' + this.createdMovieId;
+        }
         this.showModal = true;
       }, error => {
         // Ocultar la pantalla de carga en caso de error

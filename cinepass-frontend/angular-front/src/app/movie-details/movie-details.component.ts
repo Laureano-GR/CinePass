@@ -4,6 +4,7 @@ import { MovieService } from './movie.service';
 import { ShowService } from '../show-details/show.service';
 import { MovieI } from '../interfaces/movie';
 import { ShowI } from '../interfaces/show';
+import { LoadingService } from '../shared-components/loading-screen/loading.service';
 
 @Component({
   selector: 'app-movie-details',
@@ -13,7 +14,6 @@ import { ShowI } from '../interfaces/show';
 export class MovieDetailsComponent implements OnInit {
   movie: MovieI = {} as MovieI;
   shows: ShowI[] = [];
-  loading: boolean = true;
   error: any | string ;
   showMatrix: any = {}; // Matriz para almacenar las funciones por día y hora
   selectedDay: string | null = null; // Día seleccionado para mostrar los shows
@@ -22,10 +22,12 @@ export class MovieDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private movieService: MovieService,
-    private showService: ShowService // Inyectar el servicio ShowService
+    private showService: ShowService, // Inyectar el servicio ShowService
+    private loadingService: LoadingService
   ) {}
 
   ngOnInit() {
+    this.loadingService.show()
     console.log('ngOnInit called');
     this.route.params.subscribe(params => {
       const movieId = params['id'];
@@ -35,9 +37,10 @@ export class MovieDetailsComponent implements OnInit {
         const storedSubsidiaryId = sessionStorage.getItem('subsidiaryId');
         const subsidiaryId = storedSubsidiaryId ? +storedSubsidiaryId : 0;
         this.loadShows(+movieId, subsidiaryId);
+        this.loadingService.hide()
       } else {
         this.error = 'No se proporcionó un ID de película válido.';
-        this.loading = false;
+        this.loadingService.hide();
       }
     });
   }
@@ -45,30 +48,24 @@ export class MovieDetailsComponent implements OnInit {
   async loadMovie(id: number) {
     try {
       console.log('loadMovie called with ID:', id);
-      this.loading = true;
       this.movie = await this.movieService.getMovie(id);
       console.log('Movie loaded:', this.movie); // Agregar log para verificar los datos
-      this.loading = false;
     } catch (error) {
       console.error('Error loading movie:', error);
       this.error = 'Hubo un error al cargar los detalles de la película. Por favor, intente de nuevo más tarde.';
-      this.loading = false;
     }
   }
 
   async loadShows(movieId: number, subsidiaryId: number) {
     try {
       console.log('loadShows called with movieId:', movieId, 'and subsidiaryId:', subsidiaryId);
-      this.loading = true;
       this.shows = await this.showService.getShowsByMovieAndSubsidiary(movieId, subsidiaryId);
       console.log('Shows loaded:', this.shows); // Agregar log para verificar los datos
       this.showMatrix = this.showService.createShowMatrix(this.shows);
       console.log('Show Matrix:', this.showMatrix); // Agregar log para verificar la matriz de shows
-      this.loading = false;
     } catch (error) {
       console.error('Error loading shows:', error);
       this.error = 'Hubo un error al cargar las funciones. Por favor, intente de nuevo más tarde.';
-      this.loading = false;
     }
   }
 

@@ -9,7 +9,7 @@ import { MovieI } from '../../../interfaces/movie';
 import { LanguageI } from '../../../interfaces/language';
 import { ShowTypeI } from '../../../interfaces/showType';
 import { RoomI } from '../../../interfaces/room';
-import { LoadingService } from '../../../loading-screen/loading.service';
+import { LoadingService } from '../../../shared-components/loading-screen/loading.service';
 
 @Component({
   selector: 'app-show-form',
@@ -27,6 +27,8 @@ export class ShowFormComponent implements OnInit {
   rooms: RoomI[] = [];
   errorMessage: string | null = null;
   showModal: boolean = false;
+  modalTitle: string = 'Procesado con exito';
+  modalMessage: string = 'Su proceso ha sido completado con éxito.';
   createdShowId: number | null = null;
   updatedShowId: number | null = null;
   showDetails: any = null; // Puedes definir una interfaz ShowI si la tienes
@@ -171,6 +173,8 @@ export class ShowFormComponent implements OnInit {
           // Ocultar la pantalla de carga
           this.loadingService.hide();
           this.updatedShowId = this.showId;
+          this.modalTitle = 'Función Actualizada';
+          this.modalMessage = 'La función con ID: ' + this.updatedShowId + ' ha sido actualizada con éxito.';
           this.showModal = true;
         }, error => {
           // Ocultar la pantalla de carga en caso de error
@@ -186,6 +190,8 @@ export class ShowFormComponent implements OnInit {
         // Ocultar la pantalla de carga
         this.loadingService.hide();
         this.createdShowId = response.id;
+        this.modalTitle = 'Función Creada';
+        this.modalMessage = 'El ID de la función creada es: ' + this.createdShowId;
         this.showModal = true;
       }, error => {
         // Ocultar la pantalla de carga en caso de error

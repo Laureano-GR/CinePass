@@ -16,6 +16,7 @@ import { AuthService } from '../auth.service';
 })
 export class TemplateComponent implements OnInit, OnDestroy {
   subsidiaryName$: Observable<string | null>;
+  subsidiary: SubsidiaryI | null = null;
   isLoggedIn: boolean = false;
   private authSubscription: Subscription = new Subscription();
 

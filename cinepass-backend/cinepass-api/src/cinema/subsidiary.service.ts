@@ -4,6 +4,8 @@ import { ShowEntity } from 'src/_entities/show.entity';
 import { SubsidiaryEntity } from 'src/_entities/subsidiary.entity';
 import { DeepPartial } from "typeorm";
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class SubsidiaryService {

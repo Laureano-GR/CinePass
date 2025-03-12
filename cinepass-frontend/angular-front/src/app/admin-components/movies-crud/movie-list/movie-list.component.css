@@ -6,6 +6,15 @@
   font-family: var(--fuente-titulos);
 }
 
+.form-select:focus{
+  border-color: var(--color-acento);
+  box-shadow: 0 0 5px rgba(229, 9, 20, 0.5);
+}
+
+.form-select:hover{
+  border-color: var(--color-acento);
+}
+
 .table-responsive {
   overflow-x: auto;
   font-family: var(--fuente-texto);

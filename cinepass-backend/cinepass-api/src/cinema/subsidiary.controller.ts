@@ -5,12 +5,19 @@ import {
   Body,
   Param,
   Put,
+  HttpException,
+  Res,
+  HttpStatus,
 } from '@nestjs/common';
 import { SubsidiaryEntity } from 'src/_entities/subsidiary.entity';
 import { DeepPartial } from "typeorm";
 import { SubsidiaryService } from './subsidiary.service';
 import { MovieEntity } from 'src/_entities/movie.entity';
 import { ShowEntity } from 'src/_entities/show.entity';
+import { Response } from 'express';
+import { createReadStream } from 'fs';
+import { join } from 'path';
+
 
 @Controller('subsidiaries')
 export class SubsidiaryController {
@@ -36,7 +43,7 @@ export class SubsidiaryController {
       const updatedSubsidiary = await this.service.updateSubsidiary(id,subsidiary);
       return updatedSubsidiary;
     }
-    
+
     @Get(':id')
     async findByID(@Param('id') id: number): Promise<SubsidiaryEntity> {
       return await this.service.findByID(id);
@@ -51,5 +58,4 @@ export class SubsidiaryController {
     async findSubsidiaryShows(@Param('id') id: number): Promise<ShowEntity[]> {
       return await this.service.findSubsidiaryShows(id);
     }
-    
 }

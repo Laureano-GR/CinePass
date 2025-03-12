@@ -10,7 +10,7 @@ import { IDTypeI } from '../interfaces/idType';
 import { ShowI } from '../interfaces/show';
 import { CreateSaleDTO } from '../interfaces/createSaleDTO';
 import { catchError, Observable, of } from 'rxjs';
-import { LoadingService } from '../loading-screen/loading.service';
+import { LoadingService } from '../shared-components/loading-screen/loading.service';
 
 @Component({
   selector: 'app-purchase-details',

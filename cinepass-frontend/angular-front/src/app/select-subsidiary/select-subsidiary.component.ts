@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class SelectSubsidiaryComponent implements OnInit {
   subsidiaries: any[] = [];
   selectedSubsidiaryCode: string = '';
+  selectedSubsidiaryName: string = '';
   returnUrl: string = '';
 
   constructor(
@@ -27,17 +28,14 @@ export class SelectSubsidiaryComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  onSubsidiarySelect(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    this.selectedSubsidiaryCode = selectElement.value;
+  onSubsidiarySelect(subsidiary: any) {
+    this.selectedSubsidiaryCode = subsidiary.subsidiaryCode;
+    this.selectedSubsidiaryName = subsidiary.name;
     if (this.selectedSubsidiaryCode) {
-      const selectedSubsidiary = this.subsidiaries.find(sub => sub.subsidiaryCode === this.selectedSubsidiaryCode);
-      if (selectedSubsidiary) {
-        this.subsidiaryService.setSubsidiary(selectedSubsidiary);
-        const subsidiaryId = this.subsidiaryService.getSubsidiaryId();
-        sessionStorage.setItem('subsidiaryId', subsidiaryId.toString()); // Guardar en sessionStorage
-        this.router.navigate([this.returnUrl]);
-      }
+      this.subsidiaryService.setSubsidiary(subsidiary);
+      const subsidiaryId = this.subsidiaryService.getSubsidiaryId();
+      sessionStorage.setItem('subsidiaryId', subsidiaryId.toString()); // Guardar en sessionStorage
+      this.router.navigate([this.returnUrl]);
     }
   }
 

@@ -4,6 +4,7 @@ import { SubsidiaryService } from '../subsidiary.service';
 import { Router } from '@angular/router';
 import { MovieI } from '../interfaces/movie';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',

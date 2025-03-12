@@ -43,21 +43,9 @@
   </form>
 
   <!-- Modal de éxito -->
-  <div *ngIf="showModal" class="modal">
-    <div class="modal-content">
-      <h2>
-        {{ isEditMode ? 'Función Actualizada' : 'Función Creada' }}
-      </h2>
-      <div class="d-flex justify-content-center">
-        <img src="assets/success-icon.png" alt="Success" class="success-icon img-fluid">
-      </div>
-      <p *ngIf="isEditMode">
-        La función con ID: {{ updatedShowId }} ha sido actualizada exitosamente.
-      </p>
-      <p *ngIf="!isEditMode">
-        El ID de la función creada es: {{ createdShowId }}.
-      </p>
-      <button (click)="closeModal()">Cerrar</button>
-    </div>
-  </div>
-</div>
+  <app-modal 
+    [showModal]="showModal" 
+    [title]="modalTitle"
+    [message]="modalMessage"
+    (closeModalEvent)="closeModal()">
+  </app-modal>

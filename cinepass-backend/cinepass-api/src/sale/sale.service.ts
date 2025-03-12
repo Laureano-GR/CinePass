@@ -175,8 +175,10 @@ export class SaleService {
                       <img src="cid:qrcode@cinepass" alt="Código QR" style="max-width:200px; display:block; margin:0 auto;">
                     </div>
                     <p style="margin-top:20px; font-size:14px; text-align:center; color:#999;">
-                      Si tienes alguna duda, contáctanos en <a href="mailto:cinepass2024@gmail.com" style="color:#E50914; text-decoration:none;">cinepass2024@gmail.com</a>
+                      Si tienes alguna duda o deseas cancelar esta compra, contáctanos en:
                     </p>
+                    <p href="mailto:cinepass2024@gmail.com" style="color:#E50914;  font-size:14px; text-decoration:none; text-align:center;">cinepass2024@gmail.com</p>
+                    <p style="color:#E50914; text-decoration:none; text-align:center; font-size:14px;"> +54 9 11 1234-5678  </p>
                   </td>
                 </tr>
                 <tr>

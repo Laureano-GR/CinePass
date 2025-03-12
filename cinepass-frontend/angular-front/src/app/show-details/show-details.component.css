@@ -1,8 +1,49 @@
 .show-details-container {
+  max-width: 900px;
+  background-color: var(--color-fondo-claro);
+}
+
+.show-details-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+h1{
+  margin-top: 15px;
+}
+
+.list-group-item {
+  font-size: 18px;
+  color: #444;
+  background-color: var(--color-fondo-claro);
+  border-color: black;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.ticket-selection input {
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: var(--color-principal);
+  border-color: var(--color-principal);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-boton-hover);
+  border-color: var(--color-boton-hover);
+}
+
+/*
+.show-details-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #fff;
+  background-color: var();
   border-radius: 8px;
 }
 
@@ -82,3 +123,5 @@
   font-size: 24px;
   color: #666;
 }
+
+*/

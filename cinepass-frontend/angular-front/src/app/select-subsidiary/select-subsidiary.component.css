@@ -1,29 +1,81 @@
+.container-fluid {
+  text-align: center;
+  background-color: var(--color-principal);
+  min-height: 100vh; /* Para ocupar toda la altura */
+}
+
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f0f0f0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
 }
 
-h2 {
-  margin-bottom: 20px;
-  color: #333;
+.logo {
+  width: 90%;
+  max-width: 500px;
+  height: auto;
+  margin-bottom: 15px;
 }
 
-.subsidiary-select {
-  width: 300px;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: white;
-  cursor: pointer;
+h3 {
+  font-family: var(--fuente-titulos);
+  color: var(--color-texto-claro);
+  margin-bottom: 15px;
 }
 
-.subsidiary-select:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0,123,255,.25);
+.select-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.dropdown-toggle {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--color-boton-borde);
+  border-radius: 5px;
+  font-family: var(--fuente-texto);
+  background-color: var(--color-fondo-claro);
+  color: var(--color-texto-oscuro);
+  transition: all 0.3s ease;
+  box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho total */
+}
+
+.dropdown-toggle:focus,
+.dropdown-toggle[aria-expanded="true"] {
+  border-color: var(--color-acento);
+  box-shadow: 0 0 5px rgba(235, 0, 0, 0.5);
+}
+
+.dropdown-menu {
+  width: 100%;
+  box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho total */
+}
+
+.dropdown-item {
+  white-space: nowrap; /* Evita que el texto se desborde */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Añade puntos suspensivos si el texto es demasiado largo */
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--color-acento);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .logo {
+    width: 95%;
+  }
 }
