@@ -22,6 +22,7 @@ export class MovieFormComponent implements OnInit {
   movieId: number | null = null;
   languages: LanguageI[] = [];
   contentRatings: ContentRatingI[] = [];
+  selectedLanguages: number[] = [];
   genres: GenreI[] = [];
   selectedFile: File | null = null;
   filePreview: string | ArrayBuffer | null = null;
@@ -136,6 +137,19 @@ export class MovieFormComponent implements OnInit {
       // Actualizar el valor del campo poster en el formulario
       this.movieForm.patchValue({ poster: file.name });
     }
+  }
+
+  onLanguageChange(event: any): void {
+    const languageId = +event.target.value;
+    if (event.target.checked) {
+      this.selectedLanguages.push(languageId);
+    } else {
+      const index = this.selectedLanguages.indexOf(languageId);
+      if (index > -1) {
+        this.selectedLanguages.splice(index, 1);
+      }
+    }
+    this.movieForm.patchValue({ languageIds: this.selectedLanguages });
   }
 
   onSubmit(): void {

@@ -1,35 +1,65 @@
-
 /* Home Container */
 .home-container {
-  max-width: 1200px;
+  max-width:100%;
 }
 
 /* Carrusel de banners */
-.carousel {
+.carousel-container {
+  max-width: 100%;
+}
+
+.carousel-inner {
+  border-radius: 15px;
   overflow: hidden;
-  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 18 / 6; /* Mantiene una relación de aspecto de 16:9 */
+  width: 100%;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que la imagen cubra sin deformarse */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  color: #fff; /* Color de las flechas */
+}
+
+.carousel-indicators [data-bs-target] {
+  background-color: #fff; /* Indicadores en blanco */
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+  .carousel-item {
+    aspect-ratio: 18 / 6; /* Mantiene la relación en móviles */
+  }
 }
 
 .banner-image {
   width: 100%;
   object-fit: cover;
   object-position: center;
-  height: 400px; /* Ajusta la altura según tu necesidad */
+  height: 600px; /* Ajusta la altura según tu necesidad */
 }
-
 
 /* Títulos */
-h1, h2 {
+h1 {
+  font-size: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
   font-family: var(--fuente-titulos);
   color: var(--color-principal);
-}
-
-h1 {
-  font-size: 2rem; /* Equivalente a 32px, se ajusta según Bootstrap */
-}
-
-h2 {
-  font-size: 1.5rem; /* Equivalente a 24px */
 }
 
 /* Movie Card */
@@ -50,7 +80,7 @@ h2 {
 /* Poster de la película */
 .movie-poster {
   max-width: 100%;
-  height: 400px; 
+  height: 600px; 
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 10px;
@@ -79,28 +109,115 @@ h2 {
   color: #666;
 }
 
+/* Barra de búsqueda */
+.search-bar {
+  background-color: var(--color-principal);
+  padding: 20px;
+  border-radius: 8px;
+  color: var(--color-texto-claro);
+  text-align: center;
+}
+
+.search-bar .form-control {
+  background-color: var(--color-fondo-claro);
+  color: var(--color-texto-oscuro);
+}
+
+.search-bar .form-control:focus {
+  border-color: var(--color-acento);
+  box-shadow: 0 0 5px var(--color-sombra-secundario);
+}
+
+.search-bar .form-control::placeholder {
+  color: var(--color-texto-oscuro);
+}
+
+.search-bar .btn-primary {
+  background-color: var(--color-boton);
+  border-color: var(--color-boton);
+  width: 100%;
+}
+
+.search-bar .btn-primary:hover {
+  background-color: var(--color-secundario);
+  border-color: var(--color-secundario);
+  box-shadow: 0 0 5px var(--color-sombra-secundario);
+}
+
+.search-bar .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.search-bar .col-12,
+.search-bar .col-md-2,
+.search-bar .col-md-3 {
+  flex: 1 1 100%;
+  max-width: 100%;
+  padding: 5px;
+}
+
+.search-bar .col-12.col-md-2.mt-2 {
+  margin-top: 20px;
+  max-width: 100%;
+}
+
+@media (min-width: 1300px) {
+  .search-bar .row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .search-bar .col-12 {
+    flex: 1 1 auto;
+    max-width: 100%;
+  }
+
+  .search-bar .col-md-2 {
+    flex: 1 1 16.6667%;
+    max-width: 16.6667%;
+  }
+
+  .search-bar .col-md-2.mt-2 {
+    margin-top: 20px;
+  }
+}
 
 /* Ajustes responsive */
 @media (max-width: 576px) {
   .movie-poster {
-    height: 500px;
+    height: 250px;
   }
 }
 
-@media (min-width: 576px) and (max-width: 768px) {
+@media (min-width: 576px) and (max-width: 1300px) {
   .movie-poster {
-    height: 475px;
+    height: 400px;
   }
 }
 
-@media (min-width: 768px) and (max-width: 992px) {
-  .movie-poster {
-    height: 300px;
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1024px){
+@media (min-width: 768px) and (max-width: 1024px) {
   .movie-poster {
     height: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .movies-grid .col-12 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .card-body {
+    padding: 5px;
+  }
+
+  .card-title {
+    font-size: 17px;
+  }
+
+  .card-text {
+    font-size: 12px;
   }
 }

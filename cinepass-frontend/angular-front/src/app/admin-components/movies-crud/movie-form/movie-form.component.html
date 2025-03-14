@@ -1,58 +1,60 @@
 <app-loading-screen [loadingText]="'Procesando...'"></app-loading-screen>
 
-<div class="movie-form-container">
-  <h1 class="title">{{ isEditMode ? 'Actualizar Película' : 'Crear Película' }}</h1>
+<div class="container movie-form-container mt-4">
+  <h1 class="title text-center mb-4">{{ isEditMode ? 'Actualizar Película' : 'Crear Película' }}</h1>
   <form [formGroup]="movieForm" (ngSubmit)="onSubmit()">
-    <div *ngIf="errorMessage" class="error-message">
+    <div *ngIf="errorMessage" class="alert alert-danger">
       {{ errorMessage }}
     </div>
-    <div *ngIf="isEditMode">
-      <label for="movieId">ID de la Película</label>
-      <input id="movieId" formControlName="movieId" type="text">
-      <button *ngIf="!hasIdInUrl" type="button" (click)="onLoadMovie()">Cargar Película</button>
+    <div *ngIf="isEditMode" class="mb-3">
+      <label for="movieId" class="form-label">ID de la Película</label>
+      <input id="movieId" formControlName="movieId" type="text" class="form-control">
+      <button *ngIf="!hasIdInUrl" type="button" class="btn btn-secondary mt-2" (click)="onLoadMovie()">Cargar Película</button>
     </div>
-    <div>
-      <label for="name">Título</label>
-      <input id="name" formControlName="name" type="text">
+    <div class="mb-3">
+      <label for="name" class="form-label">Título</label>
+      <input id="name" formControlName="name" type="text" class="form-control">
     </div>
-    <div class="poster-container">
-      <label for="poster" class="poster-label">Póster</label>
-      <input id="poster" #posterInput type="file" (change)="onFileChange($event)" style="display: none;">
-      <button type="button" (click)="posterInput.click()">Seleccionar Póster</button>
-      <div *ngIf="filePreview" class="poster-preview">
-        <img [src]="filePreview" alt="Vista previa del póster">
+    <div class="mb-3 poster-container">
+      <label for="poster" class="form-label ">Póster</label>
+      <input id="poster" #posterInput type="file" (change)="onFileChange($event)" class="form-control">
+      <div *ngIf="filePreview" class="poster-preview mt-2">
+        <img [src]="filePreview" alt="Vista previa del póster" class="img-thumbnail">
       </div>
-      <div *ngIf="selectedFile && !filePreview">
+      <div *ngIf="selectedFile && !filePreview" class="mt-2">
         <p>{{ selectedFile.name }}</p>
       </div>
     </div>
-    <div>
-      <label for="description">Descripción</label>
-      <textarea id="description" formControlName="description"></textarea>
+    <div class="mb-3">
+      <label for="description" class="form-label">Descripción</label>
+      <textarea id="description" formControlName="description" class="form-control"></textarea>
     </div>
-    <div>
-      <label for="duration">Duración (minutos)</label>
-      <input id="duration" formControlName="duration" type="text">
+    <div class="mb-3">
+      <label for="duration" class="form-label">Duración (minutos)</label>
+      <input id="duration" formControlName="duration" type="text" class="form-control">
     </div>
-    <div>
-      <label for="languages">Idiomas</label>
-      <select id="languages" formControlName="languageIds" multiple>
-        <option *ngFor="let language of languages" [value]="language.id">{{ language.name }}</option>
-      </select>
+    <div class="mb-3">
+      <label for="languages" class="form-label">Idiomas</label>
+      <div id="languages" class="form-check">
+        <div *ngFor="let language of languages" class="form-check">
+          <input class="form-check-input" type="checkbox" [value]="language.id" (change)="onLanguageChange($event)">
+          <label class="form-check-label">{{ language.name }}</label>
+        </div>
+      </div>
     </div>
-    <div>
-      <label for="contentRating">Clasificación</label>
-      <select id="contentRating" formControlName="contentRatingId">
+    <div class="mb-3">
+      <label for="contentRating" class="form-label">Clasificación</label>
+      <select id="contentRating" formControlName="contentRatingId" class="form-select">
         <option *ngFor="let rating of contentRatings" [value]="rating.id">{{ rating.name }}</option>
       </select>
     </div>
-    <div>
-      <label for="genre">Género</label>
-      <select id="genre" formControlName="genreId">
+    <div class="mb-3">
+      <label for="genre" class="form-label">Género</label>
+      <select id="genre" formControlName="genreId" class="form-select">
         <option *ngFor="let genre of genres" [value]="genre.id">{{ genre.name }}</option>
       </select>
     </div>
-    <button type="submit">{{ isEditMode ? 'Actualizar' : 'Crear' }}</button>
+    <button type="submit" class="btn btn-primary w-100">{{ isEditMode ? 'Actualizar' : 'Crear' }}</button>
   </form>
 
   <!-- Modal de éxito -->
@@ -62,3 +64,4 @@
     [message]="modalMessage"
     (closeModalEvent)="closeModal()">
   </app-modal>
+</div>

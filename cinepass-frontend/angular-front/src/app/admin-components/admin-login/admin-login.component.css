@@ -66,9 +66,10 @@
   cursor: pointer;
 }
 
-.btn-primary:hover {
-  background-color: #696969;
-  border-color: #696969;
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--color-secundario);
+  border-color: var(--color-secundario);
+  box-shadow: 0 0 5px var(--color-sombra-secundario);
 }
 
 .text-danger {

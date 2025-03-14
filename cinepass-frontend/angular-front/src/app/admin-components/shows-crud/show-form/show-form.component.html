@@ -1,45 +1,45 @@
 <app-loading-screen [loadingText]="'Procesando...'"></app-loading-screen>
 
-<div class="show-form-container">
-  <h1 class="title">{{ isEditMode ? 'Actualizar Función' : 'Crear Función' }}</h1>
+<div class="container show-form-container mt-4">
+  <h1 class="title text-center mb-4">{{ isEditMode ? 'Actualizar Función' : 'Crear Función' }}</h1>
   <form [formGroup]="showForm" (ngSubmit)="onSubmit()">
-    <div *ngIf="errorMessage" class="error-message">
+    <div *ngIf="errorMessage" class="alert alert-danger">
       {{ errorMessage }}
     </div>
-    <div *ngIf="isEditMode">
-      <label for="showId">ID de la Función</label>
-      <input id="showId" formControlName="showId" type="text" [readonly]="hasIdInUrl">
-      <button *ngIf="!hasIdInUrl" type="button" (click)="onLoadShow()">Cargar Función</button>
+    <div *ngIf="isEditMode" class="mb-3">
+      <label for="showId" class="form-label">ID de la Función</label>
+      <input id="showId" formControlName="showId" type="text" class="form-control" [readonly]="hasIdInUrl">
+      <button *ngIf="!hasIdInUrl" type="button" class="btn btn-secondary mt-2" (click)="onLoadShow()">Cargar Función</button>
     </div>
-    <div>
-      <label for="dateAndTime">Fecha y Hora</label>
-      <input id="dateAndTime" formControlName="dateAndTime" type="datetime-local">
+    <div class="mb-3">
+      <label for="dateAndTime" class="form-label">Fecha y Hora</label>
+      <input id="dateAndTime" formControlName="dateAndTime" type="datetime-local" class="form-control">
     </div>
-    <div>
-      <label for="movieId">Película</label>
-      <select id="movieId" formControlName="movieId">
+    <div class="mb-3">
+      <label for="movieId" class="form-label">Película</label>
+      <select id="movieId" formControlName="movieId" class="form-select">
         <option *ngFor="let movie of movies" [value]="movie.id">{{ movie.name }}</option>
       </select>
     </div>
-    <div>
-      <label for="showTypeId">Tipo de Función</label>
-      <select id="showTypeId" formControlName="showTypeId">
+    <div class="mb-3">
+      <label for="showTypeId" class="form-label">Tipo de Función</label>
+      <select id="showTypeId" formControlName="showTypeId" class="form-select">
         <option *ngFor="let type of showTypes" [value]="type.id">{{ type.name }}</option>
       </select>
     </div>
-    <div>
-      <label for="languageId">Idioma</label>
-      <select id="languageId" formControlName="languageId">
+    <div class="mb-3">
+      <label for="languageId" class="form-label">Idioma</label>
+      <select id="languageId" formControlName="languageId" class="form-select">
         <option *ngFor="let language of languages" [value]="language.id">{{ language.name }}</option>
       </select>
     </div>
-    <div>
-      <label for="roomId">Sala</label>
-      <select id="roomId" formControlName="roomId">
+    <div class="mb-3">
+      <label for="roomId" class="form-label">Sala</label>
+      <select id="roomId" formControlName="roomId" class="form-select">
         <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
       </select>
     </div>
-    <button type="submit">{{ isEditMode ? 'Actualizar' : 'Crear' }}</button>
+    <button type="submit" class="btn btn-primary w-100">{{ isEditMode ? 'Actualizar' : 'Crear' }}</button>
   </form>
 
   <!-- Modal de éxito -->
@@ -49,3 +49,4 @@
     [message]="modalMessage"
     (closeModalEvent)="closeModal()">
   </app-modal>
+</div>

@@ -1,12 +1,5 @@
-.title {
-  text-align: center;
-  color: var(--color-texto-oscuro);
-  font-family: var(--fuente-titulos);
-  margin-bottom: 20px;
-}
-
 .movie-form-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;
@@ -15,67 +8,22 @@
   font-family: var(--fuente-texto);
 }
 
-.movie-form-container div {
-  margin-bottom: 15px;
-}
-
-.movie-form-container label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.movie-form-container input,
-.movie-form-container textarea,
-.movie-form-container select {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-}
-
-.movie-form-container button {
-  width: 100%;
-  padding: 10px;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.movie-form-container button:hover {
-  background-color: var(--color-boton); 
-}
-
-.movie-form-container button {
-  width: 100%;
-  padding: 10px;background-color: var(--color-principal);
-  color: var(--color-texto-claro);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; 
-  text-align: center; 
-}
-
-.movie-form-container button[type="button"]:hover {
-  background-color: var(--color-boton); 
+.title {
+  text-align: center;
+  color: var(--color-texto-oscuro);
+  font-family: var(--fuente-titulos);
+  margin-bottom: 20px;
 }
 
 .poster-container {
-  text-align: center;
-  position: relative;
-}
-
-.poster-label {
-  text-align: left;
-  display: block;
-  pointer-events: none;
+  flex-direction: column;
+  align-items: center;
 }
 
 .poster-preview {
-  display: inline-block;
   margin-top: 10px;
   text-align: center;
+  display: flex;
 }
 
 .poster-preview img {
@@ -88,33 +36,44 @@
 
 .error-message {
   color: red;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+}
+
+.form-label {
+  font-weight: 600;
   text-align: center;
 }
 
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.form-control, .form-select {
+  margin-bottom: 10px;
 }
 
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  max-width: 400px;
-  width: 100%;
+.form-control:focus, .form-select:focus{
+  border-color: var(--color-principal);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);;
 }
 
-.success-icon {
-  max-width: 100px;
-  height: auto;
-  margin-bottom: 20px;
+.btn-primary {
+  background-color: var(--color-principal);
+  border-color: var(--color-principal);
+}
+
+.movie-form-container .btn-primary:hover {
+  background-color: var(--color-boton); 
+  border-color: var(--color-boton);
+}
+
+.movie-form-container .btn-primary:focus {
+  background-color: var(--color-boton); 
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilos para el checkbox */
+.form-check-input:checked {
+  background-color: #000;
+  border-color: #000;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
 }

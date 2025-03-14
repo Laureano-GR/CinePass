@@ -1,14 +1,89 @@
 <div class="container home-container py-4">
-  <!-- Título principal -->
-  <h1 class="text-center mb-4">{{ title }}</h1>
+  
+  <!-- Carrusel -->
+<div *ngIf="banners.length > 0" class="container carousel-container">
+  <div id="carouselBanners" class="carousel slide" [ngClass]="{'carousel-fade': banners.length > 1}" data-bs-ride="carousel" pause="hover">
+    <div class="carousel-inner">
+      <div *ngFor="let banner of banners; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}" data-bs-interval="5000">
+        <img [src]="banner" class="d-block w-100" alt="Banner {{i}}">
+      </div>
+    </div>
 
+    <!-- Controles de navegación (flechas) -->
+    <button *ngIf="banners.length > 1" class="carousel-control-prev" type="button" data-bs-target="#carouselBanners" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button *ngIf="banners.length > 1" class="carousel-control-next" type="button" data-bs-target="#carouselBanners" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+
+    <!-- Indicadores (puntos abajo) -->
+    <div *ngIf="banners.length > 1" class="carousel-indicators">
+      <button *ngFor="let banner of banners; let i = index" 
+          type="button" 
+          data-bs-target="#carouselBanners" 
+          [attr.data-bs-slide-to]="i" 
+          [ngClass]="{'active': i === 0}" 
+          [attr.aria-label]="'Slide ' + (i + 1)">
+      </button>
+    </div>
+  </div>
+</div>
+  
   <!-- Subtítulo -->
-  <h2 class="text-center mb-4">Películas en Cartelera</h2>
+  <h1 class="text-center mb-4">Películas en Cartelera</h1>
+
+  <!-- Barra de búsqueda avanzada -->
+  <div class="search-bar mb-4">
+    <form (ngSubmit)="onSearch()">
+      <div class="row g-2">
+        <div class="col-12 col-md-3">
+          <input type="text" class="form-control" placeholder="Ingresar Nombre" [(ngModel)]="searchCriteria.name" name="name">
+        </div>
+        <div class="col-12 col-md-3">
+          <select class="form-control" [(ngModel)]="searchCriteria.contentRating" name="contentRating">
+            <option value="">Seleccionar Clasificación</option>
+            <option *ngFor="let rating of contentRatings" [value]="rating.name">{{ rating.name }}</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-2">
+          <select class="form-control" [(ngModel)]="searchCriteria.genre" name="genre">
+            <option value="">Seleccionar Género</option>
+            <option *ngFor="let genre of genres" [value]="genre.name">{{ genre.name }}</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-2">
+          <select class="form-control" [(ngModel)]="searchCriteria.language" name="language">
+            <option value="">Seleccionar Idioma</option>
+            <option *ngFor="let language of languages" [value]="language.name">{{ language.name }}</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-2">
+          <select class="form-control" [(ngModel)]="searchCriteria.duration" name="duration">
+            <option value="">Seleccionar Duración</option>
+            <option value="less-60">Menos de 1 hora</option>
+            <option value="less-90">Menos de 1.5 horas</option>
+            <option value="less-120">Menos de 2 horas</option>
+            <option value="less-150">Menos de 2.5 horas</option>
+            <option value="more-60">Más de 1 hora</option>
+            <option value="more-90">Más de 1.5 horas</option>
+            <option value="more-120">Más de 2 horas</option>
+            <option value="more-150">Más de 2.5 horas</option>
+          </select>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-12 col-md-2 mx-auto">
+          <button type="submit" class="btn btn-primary w-100">Buscar</button>
+        </div>
+      </div>
+    </form>
+  </div>
 
   <!-- Grid de películas -->
   <div class="row g-4 movies-grid">
     <div 
-      *ngFor="let movie of movies" 
+      *ngFor="let movie of filteredMovies" 
       class="col-12 col-sm-6 col-md-4 col-lg-3">
       <div class="card movie-card h-100" (click)="navigateToMovieDetails(movie.id)" style="cursor: pointer;">
         <img [src]="loadPosterPreview(movie.id)" [alt]="movie.name" class="card-img-top movie-poster">

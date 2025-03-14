@@ -50,7 +50,7 @@ h3 {
 .dropdown-toggle:focus,
 .dropdown-toggle[aria-expanded="true"] {
   border-color: var(--color-acento);
-  box-shadow: 0 0 5px rgba(235, 0, 0, 0.5);
+  box-shadow: 0 0 5px var(--color-sombra-secundario);
 }
 
 .dropdown-menu {

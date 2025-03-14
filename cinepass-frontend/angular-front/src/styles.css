@@ -9,6 +9,7 @@
   --color-boton-hover: #444;        /* Hover en botones */
   --color-boton-borde: #777;        /* Borde del toggler */
   --color-acento: #E50914;          /* Para íconos o acentos */
+  --color-sombra-secundario: rgba(235, 0, 0, 0.5); /* Sombra de los elementos seleccionables*/
 
   /* Fuentes */
   --fuente-titulos: 'Montserrat', sans-serif;

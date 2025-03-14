@@ -5,17 +5,13 @@ import {
   Body,
   Param,
   Put,
-  HttpException,
-  Res,
-  HttpStatus,
 } from '@nestjs/common';
 import { SubsidiaryEntity } from 'src/_entities/subsidiary.entity';
 import { DeepPartial } from "typeorm";
 import { SubsidiaryService } from './subsidiary.service';
 import { MovieEntity } from 'src/_entities/movie.entity';
 import { ShowEntity } from 'src/_entities/show.entity';
-import { Response } from 'express';
-import { createReadStream } from 'fs';
+import { readdirSync } from 'fs';
 import { join } from 'path';
 
 
@@ -42,6 +38,12 @@ export class SubsidiaryController {
     ): Promise<SubsidiaryEntity> {
       const updatedSubsidiary = await this.service.updateSubsidiary(id,subsidiary);
       return updatedSubsidiary;
+    }
+
+    @Get('banners')
+    getBanners(): string[] {
+      const bannersDir = join(__dirname, '..', '..', 'uploads', 'banners');
+      return readdirSync(bannersDir).map(file => `http://localhost:3001/banners/${file}`);
     }
 
     @Get(':id')
