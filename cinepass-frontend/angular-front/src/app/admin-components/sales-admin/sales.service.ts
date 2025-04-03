@@ -30,4 +30,10 @@ export class SalesService {
       axios.get<any[]>(`${this.apiUrl}/payment-methods`).then(response => response.data)
     );
   }
+
+  cancelSale(saleId: number): Observable<void> {
+    return from(
+      axios.put<void>(`${this.apiUrl}/sales/cancel/${saleId}`).then(response => response.data)
+    );
+  }
 }

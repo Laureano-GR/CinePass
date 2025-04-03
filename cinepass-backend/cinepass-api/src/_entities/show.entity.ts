@@ -26,4 +26,6 @@ export class ShowEntity extends BaseEntity {
   subsidiary: SubsidiaryEntity;
   @OneToMany(() => TicketEntity, (ticket) => ticket.show)
   tickets: TicketEntity[];
+  @OneToMany(() => SaleEntity, (sale) => sale.show)
+  sales: SaleEntity[];
 }

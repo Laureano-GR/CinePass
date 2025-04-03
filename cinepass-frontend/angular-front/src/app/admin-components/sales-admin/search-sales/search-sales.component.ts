@@ -6,6 +6,7 @@ import { SalesService } from '../sales.service';
 import { LoadingService } from '../../../shared-components/loading-screen/loading.service';
 import { ShowI } from '../../../interfaces/show';
 import { PaymentMethodI } from '../../../interfaces/paymentMethod';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-sales',
@@ -15,6 +16,8 @@ import { PaymentMethodI } from '../../../interfaces/paymentMethod';
 export class SearchSalesComponent implements OnInit {
   sales: SaleI[] = []; // Lista de ventas inicializada como vacía
   filteredSales: SaleI[] = []; // Ventas filtradas inicializada como vacía
+  showModal: boolean = false;
+  canceledSaleId: number | null = null; // Almacena el ID de la venta cancelada
   searchCriteria = {
     purchaseCode: '',
     date: '',
@@ -27,7 +30,8 @@ export class SearchSalesComponent implements OnInit {
 
   constructor(
     private salesService: SalesService,
-    private loadingService: LoadingService // Inyecta el servicio de pantalla de carga
+    private loadingService: LoadingService, // Inyecta el servicio de pantalla de carga
+    private router: Router,
   ) {} // Inyecta el servicio
 
   ngOnInit(): void {
@@ -82,8 +86,9 @@ export class SearchSalesComponent implements OnInit {
   }
 
   openDetails(sale: SaleI): void {
+    console.log(sale.show)
     this.loadingService.show(); // Muestra la pantalla de carga
-    this.salesService.getShowDetails(sale.tickets[0].show.id).subscribe({
+    this.salesService.getShowDetails(sale.show.id).subscribe({
       next: (details) => {
         this.showDetails = details; // Asigna los detalles del show
         this.selectedSale = sale; // Asigna la venta seleccionada
@@ -102,8 +107,27 @@ export class SearchSalesComponent implements OnInit {
   }
 
   cancelSale(saleId: number): void {
-    console.log(`Cancelando la venta con ID: ${saleId}`);
-    // Aquí puedes agregar la lógica para cancelar la venta
+    this.loadingService.show(); // Muestra la barra de carga
+
+    this.salesService.cancelSale(saleId).subscribe({
+      next: () => {
+        this.loadingService.hide(); // Oculta la barra de carga
+        this.canceledSaleId = saleId; // Almacena el ID de la venta cancelada
+        this.showModal=true; // Muestra el modal de éxito
+        //this.fetchSales(); // Actualiza la lista de ventas
+      },
+      error: (err) => {
+        console.error('Error canceling sale:', err);
+        this.loadingService.hide(); // Oculta la barra de carga incluso si hay un error
+      }
+    });
+
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.canceledSaleId = null; // Limpia el ID de la venta cancelada
+    this.router.navigate(['admin/dashboard']);
   }
 
   comparePurchaseCode(sale: SaleI, purchaseCode: string): boolean {

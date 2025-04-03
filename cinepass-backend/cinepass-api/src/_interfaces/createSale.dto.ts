@@ -1,4 +1,4 @@
-import { IsNumber, IsArray, ValidateNested } from 'class-validator';
+import { IsNumber, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreatePaymentDataDTO } from './createPaymentData.dto';
 import { ShowEntity } from 'src/_entities/show.entity';

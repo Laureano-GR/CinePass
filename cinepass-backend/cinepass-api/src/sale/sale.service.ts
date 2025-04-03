@@ -1,6 +1,6 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, EntityManager, DeepPartial } from 'typeorm';
+import { Repository, EntityManager, DeepPartial, In } from 'typeorm';
 import { SaleEntity } from 'src/_entities/sale.entity';
 import { PaymentDataEntity } from 'src/_entities/paymentData.entity';
 import { TicketEntity } from 'src/_entities/ticket.entity';
@@ -24,7 +24,7 @@ export class SaleService {
     const qrCodeBase64 = await QRCode.toDataURL(purchaseCode);
 
     // Generar el contenido del email
-    const htmlContent = this.generateEmailSalesContent(sale, createSaleDto, purchaseCode);
+    const htmlContent = this.generateEmailSalesContent(createSaleDto, purchaseCode);
 
     // Adjuntos
     const attachments = [
@@ -47,7 +47,8 @@ export class SaleService {
   }
 
   async createSale(createSaleDto: CreateSaleDTO): Promise<SaleEntity> {
-    const { show, ticketsAmount, paymentData, totalPrice } = createSaleDto;
+    const existingShow = createSaleDto.show
+    const { ticketsAmount, paymentData, totalPrice } = createSaleDto;
 
     return await this.saleRepository.manager.transaction(async (manager: EntityManager) => {
       try {
@@ -61,23 +62,41 @@ export class SaleService {
         // Crear datos de pago
         const savedPaymentData = await manager.save(PaymentDataEntity, paymentDataEntity);
 
-        // Obtener la cantidad de tickets existentes en el show
-        const existingTicketsCount = show.tickets.length;
+        //Manejo previo a la creacion de tickets
+        const existingTicketNumbers = existingShow.tickets.map(ticket => ticket.ticketXShowNumber); // Obtén los números de tickets existentes
+        const maxTicketNumber = Math.max(0, ...existingTicketNumbers); // Encuentra el número más alto
+        const availableNumbers = [];
+
+        // Encuentra los números faltantes (disponibles para reutilizar)
+        for (let i = 1; i <= maxTicketNumber; i++) {
+          if (!existingTicketNumbers.includes(i)) {
+            availableNumbers.push(i);
+          }
+        }
 
         // Crear tickets
         const tickets = [];
         for (let i = 0; i < ticketsAmount; i++) {
           const ticket = new TicketEntity();
-          ticket.show = { id: show.id } as any; // Asignar directamente el ID del Show
-          ticket.ticketXShowNumber = existingTicketsCount + i + 1; // Asignar un número de ticket basado en los tickets existentes
+          ticket.show = { id: existingShow.id } as any; // Asignar directamente el ID del Show
+
+          // Asignar un número de ticket reutilizable o consecutivo
+          if (availableNumbers.length > 0) {
+            ticket.ticketXShowNumber = availableNumbers.shift(); // Usa un número disponible
+          } else {
+            ticket.ticketXShowNumber = maxTicketNumber + 1 + i; // Usa un número consecutivo
+          }
+
           tickets.push(ticket);
         }
+
         const savedTickets = await manager.save(TicketEntity, tickets);
 
         // Crear venta
         const sale = new SaleEntity();
         sale.dateAndTime = new Date();
         sale.paymentData = savedPaymentData;
+        sale.show = existingShow;
         sale.tickets = savedTickets;
         sale.ticketsAmount = ticketsAmount;
         sale.totalPrice = totalPrice;
@@ -94,7 +113,7 @@ export class SaleService {
   async findAll() {
     try {
       return await this.saleRepository.find({
-        relations:['paymentData','tickets', 'paymentData.paymentMethod', 'paymentData.IDType', 'tickets.show']
+        relations:['paymentData','tickets', 'paymentData.paymentMethod', 'paymentData.IDType', 'show']
       });
     } catch (error) {
       throw new HttpException('Find sales error', 500);
@@ -128,7 +147,7 @@ export class SaleService {
         where: {
           id: saleId,
         },
-        relations:['paymentData','tickets']
+        relations:['paymentData','tickets', 'paymentData.paymentMethod', 'paymentData.IDType', 'show']
       });
       
       if (!sale) {
@@ -144,7 +163,7 @@ export class SaleService {
     }
   }
 
-  generateEmailSalesContent(sale: SaleEntity, createSaleDto: CreateSaleDTO, purchaseCode: string): string {
+  generateEmailSalesContent(createSaleDto: CreateSaleDTO, purchaseCode: string): string {
     return `
     <!DOCTYPE html>
     <html lang="es">
@@ -166,7 +185,7 @@ export class SaleService {
 
               <tr>
                 <td style="text-align:left; padding: 20px; font-size:16px; line-height:1.5;">
-                  <h2 style="font-family:'Montserrat', sans-serif; color:#E50914; font-size:22px; text-align:center;">¡Gracias por tu compra, ${sale.paymentData.name}!</h2>
+                  <h2 style="font-family:'Montserrat', sans-serif; color:#E50914; font-size:22px; text-align:center;">¡Gracias por tu compra, ${createSaleDto.paymentData.name}!</h2>
                   
                   <p style="text-align:center; font-size:18px;"><strong>Detalles de tu compra</strong></p>
 
@@ -202,8 +221,8 @@ export class SaleService {
 
                   <hr style="border: 1px solid #ddd; margin: 10px 0;">
 
-
-                  <p style="font-size:16px;"><strong>Importe total:</strong> ${sale.totalPrice}</p>
+                  <p style="font-size:16px;"><strong>Cantidad de entradas:</strong> ${createSaleDto.ticketsAmount}</p>
+                  <p style="font-size:16px;"><strong>Importe total:</strong> $${createSaleDto.totalPrice}</p>
                   <p style="font-size:16px;"><strong>Método de pago:</strong> ${createSaleDto.paymentData.paymentMethod.name}</p>
                   <p style="font-size:16px;"><strong>Código de compra:</strong> ${purchaseCode}</p>
 
@@ -248,5 +267,34 @@ export class SaleService {
     const hours = dateObj.getHours().toString().padStart(2, '0');
     const minutes = dateObj.getMinutes().toString().padStart(2, '0');
     return `${day}/${month}/${year} - ${hours}:${minutes}hs`;
+  }
+
+  cancelSale(saleId: number): Promise<SaleEntity> {
+    return this.saleRepository.manager.transaction(async (manager: EntityManager) => {
+      try {
+        // Buscar la venta por ID
+        const sale = await manager.findOne(SaleEntity, {
+          where: { id: saleId },
+          relations: ['tickets'], // Incluir los tickets relacionados
+        });
+  
+        if (!sale) {
+          throw new HttpException('Sale not found', 404);
+        }
+  
+        // Eliminar los tickets relacionados
+        if (sale.tickets && sale.tickets.length > 0) {
+          await manager.delete(TicketEntity, { id: In(sale.tickets.map(ticket => ticket.id)) });
+        }
+  
+        // Actualizar el estado de la venta a cancelado
+        sale.canceled = true;
+  
+        return await manager.save(SaleEntity, sale);
+      } catch (error) {
+        console.error('Error canceling sale:', error);
+        throw new HttpException('Cancel sale error', 500);
+      }
+    });
   }
 }

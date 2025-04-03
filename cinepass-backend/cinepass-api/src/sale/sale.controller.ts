@@ -39,4 +39,12 @@ export class SaleController {
   async findByID(@Param('id') id: number): Promise<SaleEntity> {
     return await this.service.findByID(id);
   }
+
+  @Put('cancel/:id')
+  async cancelSale(
+    @Param('id') id: number,
+  ): Promise<SaleEntity> {
+    const canceledSale = await this.service.cancelSale(id);
+    return canceledSale;
+  }
 }

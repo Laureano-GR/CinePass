@@ -1,4 +1,4 @@
-<app-loading-screen [loadingText]="'Cargando detalles...'"></app-loading-screen>
+<app-loading-screen [loadingText]="'Cargando...'"></app-loading-screen>
 
 <div class="search-sales-container">
   <h1 class="text-center">Buscar Ventas</h1>
@@ -97,9 +97,21 @@
           </div>
         </div>
         <div class="modal-footer d-flex justify-content-center">
-          <button class="btn btn-danger btn-sm" (click)="cancelSale(selectedSale.id)">Cancelar Venta</button>
+          <button
+            class="btn btn-danger btn-sm"
+            (click)="cancelSale(selectedSale.id)"
+            [disabled]="selectedSale.canceled"> <!-- Deshabilita el botón si la venta está cancelada -->
+            Cancelar Venta
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<app-modal
+  [showModal]="showModal"
+  [title]="'Cancelación Exitosa'"
+  [message]="'La venta con ID: ' + canceledSaleId + ' ha sido cancelada con éxito.'"
+  (closeModalEvent)="closeModal()">
+</app-modal>
