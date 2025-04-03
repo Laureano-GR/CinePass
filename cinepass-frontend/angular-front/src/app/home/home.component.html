@@ -37,47 +37,112 @@
   <div class="search-bar mb-4">
     <form (ngSubmit)="onSearch()">
       <div class="row g-2">
-        <div class="col-12 col-md-3">
-          <input type="text" class="form-control" placeholder="Ingresar Nombre" [(ngModel)]="searchCriteria.name" name="name">
+        <div class="col-12 col-md-2">
+          <input type="text" class="form-control" placeholder="Nombre" [(ngModel)]="searchCriteria.name" name="name">
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.name" 
+            (click)="clearFilter('name')">
+            X
+          </button>
         </div>
-        <div class="col-12 col-md-3">
+        <div class="col-12 col-md-2">
           <select class="form-control" [(ngModel)]="searchCriteria.contentRating" name="contentRating">
-            <option value="">Seleccionar Clasificación</option>
+            <option value="">Clasificación</option>
             <option *ngFor="let rating of contentRatings" [value]="rating.name">{{ rating.name }}</option>
           </select>
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.contentRating" 
+            (click)="clearFilter('contentRating')">
+            X
+          </button>
         </div>
         <div class="col-12 col-md-2">
           <select class="form-control" [(ngModel)]="searchCriteria.genre" name="genre">
-            <option value="">Seleccionar Género</option>
+            <option value="">Género</option>
             <option *ngFor="let genre of genres" [value]="genre.name">{{ genre.name }}</option>
           </select>
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.genre" 
+            (click)="clearFilter('genre')">
+            X
+          </button>
         </div>
         <div class="col-12 col-md-2">
           <select class="form-control" [(ngModel)]="searchCriteria.language" name="language">
-            <option value="">Seleccionar Idioma</option>
+            <option value="">Idioma</option>
             <option *ngFor="let language of languages" [value]="language.name">{{ language.name }}</option>
           </select>
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.language" 
+            (click)="clearFilter('language')">
+            X
+          </button>
+        </div>
+        <div class="col-12 col-md-2">
+          <select class="form-control" [(ngModel)]="searchCriteria.showType" name="showType" >
+            <option value="">Tipo de función</option>
+            <option *ngFor="let showType of showTypes" [value]="showType.name">{{ showType.name }}</option>
+          </select>
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.showType" 
+            (click)="clearFilter('showType')">
+            X
+          </button>
         </div>
         <div class="col-12 col-md-2">
           <select class="form-control" [(ngModel)]="searchCriteria.duration" name="duration">
-            <option value="">Seleccionar Duración</option>
-            <option value="less-60">Menos de 1 hora</option>
-            <option value="less-90">Menos de 1.5 horas</option>
-            <option value="less-120">Menos de 2 horas</option>
-            <option value="less-150">Menos de 2.5 horas</option>
-            <option value="more-60">Más de 1 hora</option>
-            <option value="more-90">Más de 1.5 horas</option>
-            <option value="more-120">Más de 2 horas</option>
-            <option value="more-150">Más de 2.5 horas</option>
+            <option *ngFor="let option of durationOptions" [value]="option.value">{{ option.label }}</option>
           </select>
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.duration" 
+            (click)="clearFilter('duration')">
+            X
+          </button>
         </div>
       </div>
-      <div class="row mt-2">
-        <div class="col-12 col-md-2 mx-auto">
+      <div class="btn-row row g-2">
+        <div class="col-12 col-md-2">
           <button type="submit" class="btn btn-primary w-100">Buscar</button>
         </div>
+        <div class="col-12 col-md-2">
+          <button type="button" class="btn btn-outline-secondary w-100" (click)="resetFilters()">Limpiar</button>
+        </div>        
       </div>
     </form>
+    
+    <div *ngIf="filtersApplied" class="filter-alert">
+      <strong>Filtros aplicados: </strong>
+      <span *ngIf="activeFilters.name">
+        <i class="fas fa-film"></i> Nombre: {{ activeFilters.name }}
+      </span>
+      <span *ngIf="activeFilters.genre">
+        <i class="fas fa-theater-masks"></i> Género: {{ activeFilters.genre }}
+      </span>
+      <span *ngIf="activeFilters.contentRating">
+        <i class="fas fa-star"></i> Clasificación: {{ activeFilters.contentRating }}
+      </span>
+      <span *ngIf="activeFilters.language">
+        <i class="fas fa-language"></i> Idioma: {{ activeFilters.language }}
+      </span>
+      <span *ngIf="activeFilters.showType">
+        <i class="fas fa-ticket-alt"></i> Tipo de función: {{ activeFilters.showType }}
+      </span>
+      <span *ngIf="activeFilters.duration">
+        <i class="fas fa-clock"></i> Duración: {{ getDurationLabel(activeFilters.duration) }}
+      </span>
+    </div>
   </div>
 
   <!-- Grid de películas -->

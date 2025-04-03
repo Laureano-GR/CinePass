@@ -28,10 +28,8 @@ export class MovieDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.loadingService.show()
-    console.log('ngOnInit called');
     this.route.params.subscribe(params => {
       const movieId = params['id'];
-      console.log('Movie ID:', movieId);
       if (movieId) {
         this.loadMovie(+movieId);
         const storedSubsidiaryId = sessionStorage.getItem('subsidiaryId');
@@ -47,9 +45,7 @@ export class MovieDetailsComponent implements OnInit {
 
   async loadMovie(id: number) {
     try {
-      console.log('loadMovie called with ID:', id);
       this.movie = await this.movieService.getMovie(id);
-      console.log('Movie loaded:', this.movie); // Agregar log para verificar los datos
     } catch (error) {
       console.error('Error loading movie:', error);
       this.error = 'Hubo un error al cargar los detalles de la película. Por favor, intente de nuevo más tarde.';
@@ -58,11 +54,8 @@ export class MovieDetailsComponent implements OnInit {
 
   async loadShows(movieId: number, subsidiaryId: number) {
     try {
-      console.log('loadShows called with movieId:', movieId, 'and subsidiaryId:', subsidiaryId);
       this.shows = await this.showService.getShowsByMovieAndSubsidiary(movieId, subsidiaryId);
-      console.log('Shows loaded:', this.shows); // Agregar log para verificar los datos
       this.showMatrix = this.showService.createShowMatrix(this.shows);
-      console.log('Show Matrix:', this.showMatrix); // Agregar log para verificar la matriz de shows
     } catch (error) {
       console.error('Error loading shows:', error);
       this.error = 'Hubo un error al cargar las funciones. Por favor, intente de nuevo más tarde.';
@@ -71,6 +64,10 @@ export class MovieDetailsComponent implements OnInit {
 
   getLanguages(): string {
     return this.movie.languages.map((language: { name: string }) => language.name).join(', ');
+  }
+
+  getShowTypes(): string {
+    return this.movie.showTypes.map((showType: { name: string }) => showType.name).join(', ');
   }
 
   objectKeys(obj: any): string[] {

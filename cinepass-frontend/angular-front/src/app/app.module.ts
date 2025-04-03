@@ -18,6 +18,7 @@ import { LoadingScreenComponent } from './shared-components/loading-screen/loadi
 import { ShowFormComponent } from './admin-components/shows-crud/show-form/show-form.component';
 import { MovieFormComponent } from './admin-components/movies-crud/movie-form/movie-form.component';
 import { ModalComponent } from './shared-components/modal/modal.component';
+import { SearchSalesComponent } from './admin-components/sales-admin/search-sales/search-sales.component';
 
 registerLocaleData(localeEsAr);
 
@@ -34,6 +35,7 @@ registerLocaleData(localeEsAr);
     ModalComponent,
     ShowFormComponent,
     MovieFormComponent,
+    SearchSalesComponent,
   ],
   imports: [
     BrowserModule,

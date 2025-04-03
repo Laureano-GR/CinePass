@@ -6,6 +6,7 @@ import { DeepPartial } from "typeorm";
 import * as bcrypt from 'bcrypt';
 import * as fs from 'fs';
 import * as path from 'path';
+import { RoomEntity } from 'src/_entities/room.entity';
 
 @Injectable()
 export class SubsidiaryService {
@@ -85,7 +86,8 @@ export class SubsidiaryService {
         'shows.movie.genre', 
         'shows.movie.contentRating', 
         'shows.movie.languages',
-        'shows.movie.shows'
+        'shows.movie.shows',
+        'shows.movie.showTypes',
       ],
     });
 
@@ -121,6 +123,23 @@ export class SubsidiaryService {
       return subsidiary.shows;
     } catch (error) {
       throw new HttpException('Find subsidiary shows error', 500);
+    }
+  }
+
+  async findSubsidiaryRooms(subsidiaryId: number): Promise<RoomEntity[]> {
+    try {
+      const subsidiary = await this.repository.findOne({
+        where: { id: subsidiaryId },
+        relations: ['rooms', 'rooms.showTypes'],
+      });
+
+      if (!subsidiary) {
+        throw new HttpException(`Subsidiary with ID ${subsidiaryId} not found`, 404);
+      }
+
+      return subsidiary.rooms;
+    } catch (error) {
+      throw new HttpException('Find subsidiary rooms error', 500);
     }
   }
 }

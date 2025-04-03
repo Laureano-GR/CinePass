@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router} from '@angular/router';
 import { PurchaseService } from './purchase-details.service';
 import { PurchaseDTO } from '../interfaces/purchaseDTO';
@@ -11,6 +8,7 @@ import { ShowI } from '../interfaces/show';
 import { CreateSaleDTO } from '../interfaces/createSaleDTO';
 import { catchError, Observable, of } from 'rxjs';
 import { LoadingService } from '../shared-components/loading-screen/loading.service';
+import { PaymentMethodI } from '../interfaces/paymentMethod';
 
 @Component({
   selector: 'app-purchase-details',
@@ -27,6 +25,9 @@ export class PurchaseDetailsComponent implements OnInit {
   totalPrice: number = 0;
   showModal: boolean = false;
   expiryDateError: string | null = null;
+  paymentMethods: PaymentMethodI[] = [];
+  showPaymentDetails: number | null = null;
+
 
   constructor(
     private purchaseService: PurchaseService,
@@ -37,6 +38,7 @@ export class PurchaseDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.loadDocumentTypes();
+    this.loadAvailablePaymentMethods();
     
     this.route.params.subscribe(params => {
       this.loadShow(+params['showId']).subscribe(show => {
@@ -56,6 +58,12 @@ export class PurchaseDetailsComponent implements OnInit {
     });
   }
 
+  loadAvailablePaymentMethods() {
+    this.purchaseService.getAvailablePaymentMethods().subscribe(methods => {
+      this.paymentMethods = methods;
+    });
+  }
+
   loadShow(showId: number): Observable<ShowI> {
     return this.purchaseService.getShow(showId).pipe(
       catchError(error => {
@@ -65,13 +73,24 @@ export class PurchaseDetailsComponent implements OnInit {
     );
   }
 
+  onPaymentMethodChange(): void {
+    this.showPaymentDetails = this.purchase.paymentMethod;
+  }
+
   onSubmit() {
     if (!this.show.id) {
       console.error('Show not loaded');
       return;
     }
   
+    const selectedPaymentMethod = this.paymentMethods.find(method => method.id == this.purchase.paymentMethod);
+    if (!selectedPaymentMethod) {
+      console.error('Selected payment method not found');
+      return;
+    }
+
     // Transferir datos de PurchaseDTO a PaymentDataDTO
+    this.paymentData.paymentMethod = selectedPaymentMethod;
     this.paymentData.name = this.purchase.name;
     this.paymentData.IDNumber = this.purchase.idNumber;
     this.paymentData.email = this.purchase.email;
@@ -83,7 +102,7 @@ export class PurchaseDetailsComponent implements OnInit {
       paymentData: this.paymentData,
       totalPrice: this.totalPrice
     };
-  
+    
     this.loadingService.show();
 
     this.purchaseService.createSale(saleData)
@@ -105,5 +124,30 @@ export class PurchaseDetailsComponent implements OnInit {
   closeModal() {
     this.showModal = false;
     this.router.navigate(['/']);
+  }
+
+  validateExpiryDate(): void {
+    const expiryDate = this.purchase.expiryDate;
+    this.expiryDateError = null; // Reinicia el error
+
+    if (!expiryDate || !/^\d{2}\/\d{2}$/.test(expiryDate)) {
+      this.expiryDateError = 'El formato debe ser MM/YY.';
+      return;
+    }
+
+    const [month, year] = expiryDate.split('/').map(Number);
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1; // Los meses en JavaScript son 0-indexados
+    const currentYear = currentDate.getFullYear() % 100; // Tomar los últimos dos dígitos del año
+
+    if (month < 1 || month > 12) {
+      this.expiryDateError = 'El mes debe estar entre 01 y 12.';
+      return;
+    }
+
+    if (year < currentYear || (year === currentYear && month < currentMonth)) {
+      this.expiryDateError = 'La fecha debe ser mayor o igual a la actual.';
+      return;
+    }
   }
 }

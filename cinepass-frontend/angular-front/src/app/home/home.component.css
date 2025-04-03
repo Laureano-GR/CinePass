@@ -134,14 +134,32 @@ h1 {
 
 .search-bar .btn-primary {
   background-color: var(--color-boton);
-  border-color: var(--color-boton);
+  border: none;
   width: 100%;
+  box-shadow: none;
 }
 
 .search-bar .btn-primary:hover {
+  background-color: #696969;
+  border: none;
+  width: 100%;
+  box-shadow: none;
+}
+
+.search-bar .btn-outline-secondary {
+  color: var(--color-texto-claro);
+  border-color: var(--color-texto-claro);
+}
+
+.search-bar .btn-outline-secondary:hover {
   background-color: var(--color-secundario);
   border-color: var(--color-secundario);
   box-shadow: 0 0 5px var(--color-sombra-secundario);
+}
+
+.btn-sm{
+  color: var(--color-secundario);
+  border: none;
 }
 
 .search-bar .row {
@@ -161,6 +179,10 @@ h1 {
 .search-bar .col-12.col-md-2.mt-2 {
   margin-top: 20px;
   max-width: 100%;
+}
+
+select option[value=""] {
+  color: gray;
 }
 
 @media (min-width: 1300px) {
@@ -183,6 +205,39 @@ h1 {
     margin-top: 20px;
   }
 }
+
+/*Alerta de filtros*/
+.filter-alert {
+  background: var(--color-principal);
+  border: var(--color-fondo-claro) 2px solid;
+  border-left: 7px solid var(--color-acento);
+  color: var(--color-texto-oscuro);
+  font-family: var(--fuente-texto);
+  padding: 12px 16px;
+  margin-top: 12px;
+  border-radius: 8px;
+}
+
+.filter-alert strong {
+  font-family: var(--fuente-titulos);
+  color: var(--color-texto-claro);
+}
+
+.filter-alert span {
+  display: inline-block;
+  background: var(--color-fondo-claro);
+  color: var(--color-texto-oscuro);
+  padding: 5px 10px;
+  border-radius: 4px;
+  margin: 4px 4px 0 0;
+  font-size: 14px;
+}
+
+.filter-alert i {
+  color: var(--color-acento);
+  margin-right: 5px;
+}
+
 
 /* Ajustes responsive */
 @media (max-width: 576px) {
@@ -220,4 +275,26 @@ h1 {
   .card-text {
     font-size: 12px;
   }
+
+  @media (max-width: 576px) {
+  .search-bar .row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+    gap: 10px; /* Espaciado entre columnas */ 
+  }
+
+  .search-bar .btn-row{
+    margin-top: 6px;
+  }
+
+  .search-bar .col-12 {
+    flex: 1 1 auto;
+    max-width: 100%;
+  }
+
+  .search-bar .col-md-6 {
+    flex: 1 1 50%;
+    max-width: 100%;
+  }
+}
 }

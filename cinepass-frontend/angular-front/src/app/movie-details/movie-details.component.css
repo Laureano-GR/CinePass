@@ -58,6 +58,14 @@
   box-shadow: none;
 }
 
+.days button:disabled {
+  background-color: var(--color-fondo-claro);
+  color: var(--color-principal);
+  border-color: var(--color-principal);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .shows .cursor-pointer {
   cursor: pointer;
   padding: 10px;

@@ -27,10 +27,8 @@ export class ShowDetailsComponent {
   ) {}
 
   ngOnInit() {
-    console.log('ngOnInit called');
     this.route.params.subscribe(params => {
       const showId = params['id'];
-      console.log('Show ID:', showId);
       if (showId) {
         this.loadShow(+showId);
       } else {
@@ -42,10 +40,8 @@ export class ShowDetailsComponent {
 
   async loadShow(id: number) {
     try {
-      console.log('loadShow called with ID:', id);
       this.loading = true;
       this.show = await this.showService.getShow(id);
-      console.log('Show loaded:', this.show); // Agregar log para verificar los datos
 
       // Calcular la cantidad de entradas vendidas y disponibles
       this.ticketsSold = this.show.tickets.length; // Suponiendo que `tickets` es un array de entradas vendidas
@@ -67,7 +63,6 @@ export class ShowDetailsComponent {
   }
 
   buyTickets() {
-    console.log('Comprar entradas para el show:', this.show?.id, 'Cantidad:', this.ticketQuantity);
     this.router.navigate(['/purchase', this.show?.id], {
       queryParams: {
         quantity: this.ticketQuantity,

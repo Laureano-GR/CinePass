@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { GenreI } from '../interfaces/genre';
 import { ContentRatingI } from '../interfaces/contentRating';
 import { LanguageI } from '../interfaces/language';
+import { ShowTypeI } from '../interfaces/showType';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +68,16 @@ export class HomeService {
       return response.data;
     } catch (error) {
       console.error('Error fetching languages:', error);
+      throw error;
+    }
+  }
+
+  async getShowTypes(): Promise<ShowTypeI[]> {
+    try {
+      const response = await axios.get(`${this.url}/show-types`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching show types:', error);
       throw error;
     }
   }

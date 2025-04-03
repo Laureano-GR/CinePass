@@ -6,6 +6,7 @@ import { MovieI } from '../interfaces/movie';
 import { GenreI } from '../interfaces/genre';
 import { ContentRatingI } from '../interfaces/contentRating';
 import { LanguageI } from '../interfaces/language';
+import { ShowTypeI } from '../interfaces/showType';
 
 
 @Component({
@@ -20,13 +21,29 @@ export class HomeComponent implements OnInit {
   genres: GenreI[] = [];
   contentRatings: ContentRatingI[] = []; // Ejemplo de clasificaciones precargadas
   languages: LanguageI[] = []; // Ejemplo de idiomas precargados
+  showTypes: ShowTypeI[] = []; // Ejemplo de tipos de show precargados
   searchCriteria = {
     name: '',
     genre: '',
     contentRating: '',
     duration: '',
     language: '',
+    showType: '',
   };
+  activeFilters = { ...this.searchCriteria };
+
+  durationOptions = [
+    { value: '', label: 'Duración' },
+    { value: 'less-60', label: 'Menos de 1 hora' },
+    { value: 'less-90', label: 'Menos de 1.5 horas' },
+    { value: 'less-120', label: 'Menos de 2 horas' },
+    { value: 'less-150', label: 'Menos de 2.5 horas' },
+    { value: 'more-60', label: 'Más de 1 hora' },
+    { value: 'more-90', label: 'Más de 1.5 horas' },
+    { value: 'more-120', label: 'Más de 2 horas' },
+    { value: 'more-150', label: 'Más de 2.5 horas' },
+  ];
+  filtersApplied: boolean = false;
 
   constructor(
     private homeService: HomeService,
@@ -40,17 +57,21 @@ export class HomeComponent implements OnInit {
     this.fetchContentRatings();
     this.fetchGenres();
     this.fetchLanguages();
+    this.fetchShowTypes();
   }
 
   onSearch(): void {
     this.filteredMovies = this.movies.filter(movie => {
-      const matchesName = this.searchCriteria.name ? movie.name.includes(this.searchCriteria.name) : true;
+      const matchesName = this.searchCriteria.name ? movie.name.toLowerCase().includes(this.searchCriteria.name.toLowerCase()) : true;
       const matchesGenre = this.searchCriteria.genre ? movie.genre.name === this.searchCriteria.genre : true;
       const matchesContentRating = this.searchCriteria.contentRating ? movie.contentRating.name === this.searchCriteria.contentRating : true;
       const matchesDuration = this.searchCriteria.duration ? this.filterByDuration(Number(movie.duration), this.searchCriteria.duration) : true;
       const matchesLanguage = this.searchCriteria.language ? movie.languages.some(language => language.name === this.searchCriteria.language) : true;
-      return matchesName && matchesGenre && matchesContentRating && matchesDuration && matchesLanguage;
+      const matchesShowType = this.searchCriteria.showType ? movie.showTypes.some(showType => showType.name === this.searchCriteria.showType) : true;
+      return matchesName && matchesGenre && matchesContentRating && matchesDuration && matchesLanguage && matchesShowType;
     });
+
+    this.applyFilters(); // Aplica los filtros después de reiniciar
   }
 
   filterByDuration(movieDuration: number, criteria: string): boolean {
@@ -72,10 +93,8 @@ export class HomeComponent implements OnInit {
     try {
       const subsidiaryId = this.subsidiaryService.getSubsidiaryId();
       const subsidiaryMovies = await this.homeService.getMovies(subsidiaryId);
-      console.log(subsidiaryMovies)
       this.movies = this.homeService.getMoviesWithShowsInNextTwoWeeks(subsidiaryMovies);
       this.filteredMovies = this.movies;
-      console.log('Movies:', this.movies);
     } catch (error) {
       console.error('Error fetching movies in theaters:', error);
     }
@@ -109,11 +128,49 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  async fetchShowTypes() {
+    try {
+      this.showTypes = await this.homeService.getShowTypes();
+    } catch (error) {
+      console.error('Error fetching show types:', error);
+    }
+  }
+
   async fetchBanners() {
     try {
       this.banners = await this.homeService.getBanners();
     } catch (error) {
       console.error('Error fetching banners:', error);
     }
+  }
+
+  clearFilter(filterKey: 'name' | 'genre' | 'contentRating' | 'duration' | 'language' | 'showType'): void {
+    this.searchCriteria[filterKey] = ''; // Limpia el filtro correspondiente
+  }
+
+  resetFilters(): void {
+    this.searchCriteria = {
+      name: '',
+      genre: '',
+      contentRating: '',
+      duration: '',
+      language: '',
+      showType: ''
+    };
+    this.filteredMovies = this.movies;
+    this.applyFilters(); // Aplica los filtros después de reiniciar
+  }
+
+  applyFilters() {
+    // Guardamos los filtros aplicados en la última búsqueda
+    this.activeFilters = { ...this.searchCriteria };
+    this.filtersApplied = Object.values(this.activeFilters).some(value => 
+      value !== null && value !== undefined && value !== ''
+    );    
+  }
+
+  getDurationLabel(value: string): string {
+    const option = this.durationOptions.find(option => option.value === value);
+    return option ? option.label : value; // Devuelve el label si lo encuentra, de lo contrario devuelve el value
   }
 }

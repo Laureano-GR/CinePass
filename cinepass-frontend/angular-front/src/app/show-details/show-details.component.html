@@ -14,8 +14,8 @@
     <div class="col-12 col-md-8">
       <h1 class="text-center">{{ show.movie.name }}</h1>
       <ul class="list-group list-group-flush">
-        <li class="list-group-item"><i class="fas fa-film"></i> <strong> Tipo de Show:</strong> {{ show.showType.name }}</li>
-        <li class="list-group-item"><i class="far fa-clock"></i> <strong> Horario:</strong> {{ show.dateAndTime | date: 'shortTime' }}</li>
+        <li class="list-group-item"><i class="fas fa-video"></i> <strong> Tipo de función:</strong> {{ show.showType.name }}</li>
+        <li class="list-group-item"><i class="fas fa-clock"></i> <strong> Horario:</strong> {{ show.dateAndTime | date: 'shortTime' }}</li>
         <li class="list-group-item"><i class="fas fa-calendar-alt"></i> <strong> Día: </strong> <span class="capitalize">{{ show.dateAndTime | date: 'EEEE, d MMMM' }}</span></li>
         <li class="list-group-item"><i class="fas fa-language"></i> <strong> Idioma:</strong> {{ show.selectedLanguage.name }}</li>
         <li class="list-group-item"><i class="fas fa-door-open"></i> <strong> Sala:</strong> {{ show.room.roomNumber }}</li>

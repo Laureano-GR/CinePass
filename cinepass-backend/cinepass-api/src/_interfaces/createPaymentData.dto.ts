@@ -1,4 +1,6 @@
-import { IsString, IsEmail, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsString, IsEmail, IsNumber, ValidateNested } from 'class-validator';
+import { PaymentMethodDTO} from './paymentMethodDTO';
 
 export class CreatePaymentDataDTO {
   @IsString()
@@ -12,4 +14,6 @@ export class CreatePaymentDataDTO {
 
   @IsNumber()
   IDType: number;
+
+  paymentMethod: PaymentMethodDTO;
 }

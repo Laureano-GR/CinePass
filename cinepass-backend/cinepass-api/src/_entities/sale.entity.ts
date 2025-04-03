@@ -13,6 +13,8 @@ export class SaleEntity extends BaseEntity {
   ticketsAmount: number;
   @Column()
   totalPrice: number;
+  @Column()
+  canceled: boolean;
   @ManyToOne(() => PaymentDataEntity, (paymentData) => paymentData.sales)
   paymentData: PaymentDataEntity;
   @OneToMany(() => TicketEntity, (ticket) => ticket.sale)

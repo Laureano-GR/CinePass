@@ -3,6 +3,7 @@ import { LanguageEntity } from './language.entity';
 import { ContentRatingEntity } from './contentRating.entity';
 import { GenreEntity } from './genre.entity';
 import { ShowEntity } from './show.entity';
+import { ShowTypeEntity } from './showType.entity';
 
 @Entity('movies')
 export class MovieEntity extends BaseEntity {
@@ -11,7 +12,7 @@ export class MovieEntity extends BaseEntity {
   @Column()
   name: string;
   @Column()
-  poster: string; //FIXME resolver como guardar imagenes de los posters
+  poster: string; // url de la imagen
   @Column()
   description: string;
   @Column()
@@ -19,6 +20,9 @@ export class MovieEntity extends BaseEntity {
   @ManyToMany(() => LanguageEntity, (languages) => languages.movies)
   @JoinTable()
   languages: LanguageEntity[];
+  @ManyToMany(() => ShowTypeEntity, (showTypes) => showTypes.movies)
+  @JoinTable()
+  showTypes: ShowTypeEntity[];
   @ManyToOne(() => ContentRatingEntity, (contentRating) => contentRating.movies)
   contentRating: ContentRatingEntity;
   @ManyToOne(() => GenreEntity, (genre) => genre.movies)

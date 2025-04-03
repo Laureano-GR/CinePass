@@ -17,26 +17,30 @@
     </div>
     <div class="mb-3">
       <label for="movieId" class="form-label">Película</label>
-      <select id="movieId" formControlName="movieId" class="form-select">
+      <select id="movieId" formControlName="movieId" class="form-select" (change)="onMovieChange($event)">
+        <option value="" selected>Seleccione una película</option>
         <option *ngFor="let movie of movies" [value]="movie.id">{{ movie.name }}</option>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="showTypeId" class="form-label">Tipo de Función</label>
-      <select id="showTypeId" formControlName="showTypeId" class="form-select">
-        <option *ngFor="let type of showTypes" [value]="type.id">{{ type.name }}</option>
       </select>
     </div>
     <div class="mb-3">
       <label for="languageId" class="form-label">Idioma</label>
       <select id="languageId" formControlName="languageId" class="form-select">
+        <option value="" disabled selected>Seleccione un idioma</option>
         <option *ngFor="let language of languages" [value]="language.id">{{ language.name }}</option>
       </select>
     </div>
     <div class="mb-3">
       <label for="roomId" class="form-label">Sala</label>
-      <select id="roomId" formControlName="roomId" class="form-select">
+      <select id="roomId" formControlName="roomId" class="form-select" (change)="onRoomChange($event)">
+        <option value="" selected>Seleccione una sala</option>
         <option *ngFor="let room of rooms" [value]="room.id">{{ room.roomNumber }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="showTypeId" class="form-label">Tipo de Función</label>
+      <select id="showTypeId" formControlName="showTypeId" class="form-select">
+        <option value="" disabled selected>Seleccione un tipo de función</option>
+        <option *ngFor="let type of filteredShowTypes" [value]="type.id">{{ type.name }}</option>
       </select>
     </div>
     <button type="submit" class="btn btn-primary w-100">{{ isEditMode ? 'Actualizar' : 'Crear' }}</button>

@@ -20,9 +20,9 @@
 }
 
 .card-title {
-  font-size: 1.5rem;
+  font-size: 2rem;
+  font-family: var(--fuente-titulos);
   margin-bottom: 1.5rem;
-  color: #333;
   text-align: center;
 }
 
@@ -53,7 +53,7 @@
 }
 
 .btn-primary {
-  background-color: #333;
+  background-color: var(--color-boton);
   border-color: #333;
   color: #fff;
   width: 100%;
@@ -67,9 +67,9 @@
 }
 
 .btn-primary:hover, .btn-primary:focus {
-  background-color: var(--color-secundario);
-  border-color: var(--color-secundario);
-  box-shadow: 0 0 5px var(--color-sombra-secundario);
+  background-color: var(--color-principal);
+  border-color: var(--color-principal);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .text-danger {

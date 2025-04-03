@@ -1,8 +1,16 @@
 <div class="dashboard-container">
   <h1>Admin Dashboard</h1>
-  
+
   <h2>Administración</h2>
   <div class="dashboard-grid">
+    <div class="dashboard-card" [class.selected]="selectedCard === 'sales'" (click)="selectCard('sales')">
+      <h3>Ventas</h3>
+      <p>Gestionar ventas</p>
+      <div *ngIf="selectedCard === 'sales'" class="sub-options">
+        <button (click)="navigateTo('/admin/sales/create')">Realizar</button>
+        <button (click)="navigateTo('/admin/sales/search')">Buscar</button>
+      </div>
+    </div>
     <div class="dashboard-card" [class.selected]="selectedCard === 'movies'" (click)="selectCard('movies')">
       <h3>Películas</h3>
       <p>Gestionar películas</p>
@@ -29,4 +37,5 @@
       <h3>Reporte de Ventas</h3>
       <p>Ver reporte de ventas</p>
     </div>
+  </div>
 </div>

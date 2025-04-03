@@ -13,6 +13,7 @@ import { MovieEntity } from 'src/_entities/movie.entity';
 import { ShowEntity } from 'src/_entities/show.entity';
 import { readdirSync } from 'fs';
 import { join } from 'path';
+import { RoomEntity } from 'src/_entities/room.entity';
 
 
 @Controller('subsidiaries')
@@ -59,5 +60,10 @@ export class SubsidiaryController {
     @Get('shows/:id')
     async findSubsidiaryShows(@Param('id') id: number): Promise<ShowEntity[]> {
       return await this.service.findSubsidiaryShows(id);
+    }
+
+    @Get('rooms/:id')
+    async findSubsidiaryRooms(@Param('id') id: number): Promise<RoomEntity[]> {
+      return await this.service.findSubsidiaryRooms(id);
     }
 }

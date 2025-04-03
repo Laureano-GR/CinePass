@@ -65,7 +65,7 @@ export class MovieService {
   async findAll() {
     try {
       return await this.movieRepository.find({
-        relations:['languages','contentRating','genre',],
+        relations:['languages','contentRating','genre', 'showTypes'],
       });
     } catch (error) {
       throw new HttpException('Find movies error', 500);
@@ -116,7 +116,7 @@ export class MovieService {
         where: {
           id: movieId,
         },
-        relations: ['languages', 'contentRating', 'genre', 'shows'], // Incluir la relación 'shows' y 'subsidiary'
+        relations: ['languages','showTypes', 'contentRating', 'genre', 'shows'], // Incluir la relación 'shows' y 'subsidiary'
       });
 
       if (!movie) {

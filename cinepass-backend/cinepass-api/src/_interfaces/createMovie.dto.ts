@@ -4,6 +4,7 @@ export interface CreateMovieDto {
   description: string;
   duration: string;
   languageIds: number[];
+  showTypeIds: number[];
   genreId: number;
   contentRatingId: number;
 }

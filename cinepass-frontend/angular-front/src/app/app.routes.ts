@@ -14,6 +14,8 @@ import { ShowFormComponent } from './admin-components/shows-crud/show-form/show-
 import { MovieFormComponent } from './admin-components/movies-crud/movie-form/movie-form.component';
 import { MovieListComponent } from './admin-components/movies-crud/movie-list/movie-list.component';
 import { AuthGuardService } from './auth-guard.service';
+import { CreateSalesComponent } from './admin-components/sales-admin/create-sales/create-sales.component';
+import { SearchSalesComponent } from './admin-components/sales-admin/search-sales/search-sales.component';
 
 export const routes: Routes = [
   { path: 'select-subsidiary', component: SelectSubsidiaryComponent },
@@ -38,7 +40,9 @@ export const routes: Routes = [
           { path: 'shows/read', component: ShowListComponent },
           { path: 'shows/create', component: ShowFormComponent },
           { path: 'shows/update', component: ShowFormComponent },
-          { path: 'shows/update/:id', component: ShowFormComponent }
+          { path: 'shows/update/:id', component: ShowFormComponent },
+          { path: 'sales/create', component: CreateSalesComponent },
+          { path: 'sales/search', component: SearchSalesComponent},
         ]
       },    
     ]

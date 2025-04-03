@@ -1,0 +1,140 @@
+.search-sales-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.search-bar {
+  background-color: var(--color-principal);
+  padding: 20px;
+  border-radius: 8px;
+  color: var(--color-texto-claro);
+  text-align: center;
+}
+
+.search-bar .form-control {
+  background-color: var(--color-fondo-claro);
+  color: var(--color-texto-oscuro);
+}
+
+.search-bar .form-control:focus {
+  border-color: var(--color-acento);
+  box-shadow: 0 0 5px var(--color-sombra-secundario);
+}
+
+.search-bar .form-control::placeholder {
+  color: var(--color-texto-oscuro);
+}
+
+.search-bar .btn-primary {
+  background-color: var(--color-boton);
+  border: none;
+  width: 100%;
+  box-shadow: none;
+}
+
+.search-bar .btn-primary:hover {
+  background-color: #696969;
+  border: none;
+  width: 100%;
+  box-shadow: none;
+}
+
+.search-bar .btn-outline-secondary {
+  color: var(--color-texto-claro);
+  border-color: var(--color-texto-claro);
+}
+
+.search-bar .btn-outline-secondary:hover {
+  background-color: var(--color-secundario);
+  border-color: var(--color-secundario);
+  box-shadow: 0 0 5px var(--color-sombra-secundario);
+}
+
+.search-bar .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.sales-list {
+  margin-top: 20px;
+}
+
+.sales-list .btn-sm {
+  background-color: var(--color-principal);
+  border: none;
+  width: 100%;
+  color: var(--color-texto-claro);
+  box-shadow: none;
+}
+
+.sales-list .btn-sm:hover {
+  background-color: var(--color-boton-hover);
+  border: none;
+  width: 100%;
+  box-shadow: none;
+}
+
+.sale-item {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+}
+
+.sale-details {
+  flex: 1;
+}
+
+.customer-details {
+  flex: 1;
+}
+
+.btn-danger {
+  width: 100%;
+}
+
+.no-results {
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+}
+
+.modal {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+  overflow: auto;
+}
+
+.modal-dialog {
+  margin: 10% auto;
+  max-width: 500px;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.tickets-details {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}

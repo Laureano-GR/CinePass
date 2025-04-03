@@ -20,11 +20,11 @@ export class SaleService {
 
   async processSale(createSaleDto: CreateSaleDTO): Promise<string> {
     const sale = await this.createSale(createSaleDto)
-    const codigoCompra = `CINEPASS-${sale.id}-${sale.paymentData.IDNumber}`;
-    const qrCodeBase64 = await QRCode.toDataURL(codigoCompra);
+    const purchaseCode = `CINEPASS-${sale.id}-${sale.paymentData.IDNumber}`;
+    const qrCodeBase64 = await QRCode.toDataURL(purchaseCode);
 
     // Generar el contenido del email
-    const htmlContent = this.generarContenidoEmailVenta(sale, createSaleDto, codigoCompra);
+    const htmlContent = this.generateEmailSalesContent(sale, createSaleDto, purchaseCode);
 
     // Adjuntos
     const attachments = [
@@ -43,7 +43,7 @@ export class SaleService {
 
     await this.emailManagerService.enviarCorreo(sale.paymentData.email, 'Tus entradas para el cine 🎟', htmlContent, attachments);
 
-    return codigoCompra;
+    return purchaseCode;
   }
 
   async createSale(createSaleDto: CreateSaleDTO): Promise<SaleEntity> {
@@ -52,6 +52,7 @@ export class SaleService {
     return await this.saleRepository.manager.transaction(async (manager: EntityManager) => {
       try {
         const paymentDataEntity = new PaymentDataEntity();
+        paymentDataEntity.paymentMethod = { id: paymentData.paymentMethod.id } as any; // Asignar directamente el ID del PaymentData
         paymentDataEntity.IDNumber = paymentData.IDNumber;
         paymentDataEntity.name = paymentData.name;
         paymentDataEntity.email = paymentData.email;
@@ -60,12 +61,15 @@ export class SaleService {
         // Crear datos de pago
         const savedPaymentData = await manager.save(PaymentDataEntity, paymentDataEntity);
 
+        // Obtener la cantidad de tickets existentes en el show
+        const existingTicketsCount = show.tickets.length;
+
         // Crear tickets
         const tickets = [];
         for (let i = 0; i < ticketsAmount; i++) {
           const ticket = new TicketEntity();
           ticket.show = { id: show.id } as any; // Asignar directamente el ID del Show
-          ticket.ticketXShowNumber = i + 1; // Asignar un número de ticket
+          ticket.ticketXShowNumber = existingTicketsCount + i + 1; // Asignar un número de ticket basado en los tickets existentes
           tickets.push(ticket);
         }
         const savedTickets = await manager.save(TicketEntity, tickets);
@@ -77,6 +81,7 @@ export class SaleService {
         sale.tickets = savedTickets;
         sale.ticketsAmount = ticketsAmount;
         sale.totalPrice = totalPrice;
+        sale.canceled = false;
 
         return await manager.save(SaleEntity, sale);
       } catch (error) {
@@ -89,7 +94,7 @@ export class SaleService {
   async findAll() {
     try {
       return await this.saleRepository.find({
-        relations:['paymentData','tickets']
+        relations:['paymentData','tickets', 'paymentData.paymentMethod', 'paymentData.IDType', 'tickets.show']
       });
     } catch (error) {
       throw new HttpException('Find sales error', 500);
@@ -139,58 +144,98 @@ export class SaleService {
     }
   }
 
-  generarContenidoEmailVenta(sale: SaleEntity, createSaleDto: CreateSaleDTO, codigoCompra: string): string {
+  generateEmailSalesContent(sale: SaleEntity, createSaleDto: CreateSaleDTO, purchaseCode: string): string {
     return `
     <!DOCTYPE html>
     <html lang="es">
-      <head>
-        <meta charset="UTF-8" />
-        <title>Confirmación de Compra - CinePass</title>
-      </head>
-      <body style="margin:0; padding:0; background-color:#ffffff; font-family:Roboto, sans-serif; color:#333333;">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff; padding:20px 0;">
-          <tr>
-            <td align="center">
-              <table width="600" border="0" cellspacing="0" cellpadding="20" style="border: 1px solid #ddd; border-radius: 8px; overflow:hidden; font-family:Roboto, sans-serif;">
-                <tr>
-                  <td style="background-color:#333333; text-align:center; padding: 20px;">
-                    <img src="cid:logo@cinepass" alt="CinePass Logo" style="max-width:150px;">
-                  </td>
-                </tr>
-                <tr>
-                  <td style="text-align:left; padding: 20px; font-size:16px; line-height:1.5;">
-                    <h2 style="font-family:'Montserrat', sans-serif; color:#E50914; font-size:22px;">¡Gracias por tu compra, ${sale.paymentData.name}!</h2>
-                    <p>Has comprado <strong>${sale.ticketsAmount}</strong> entradas para:</p>
-                    <table border="0" cellspacing="0" cellpadding="5" style="font-size:16px; margin-bottom: 10px;">
-                      <tr><td style="font-weight:bold;">Película:</td><td>${createSaleDto.show.movie.name}</td></tr>
-                      <tr><td style="font-weight:bold;">Fecha y Hora:</td><td>${new Date(createSaleDto.show.dateAndTime).toLocaleString()}</td></tr>
-                      <tr><td style="font-weight:bold;">Idioma:</td><td>${createSaleDto.show.selectedLanguage.name}</td></tr>
-                      <tr><td style="font-weight:bold;">Tipo de función:</td><td>${createSaleDto.show.showType.name}</td></tr>
-                      <tr><td style="font-weight:bold;">Sala:</td><td>${createSaleDto.show.room.roomNumber}</td></tr>
-                      <tr><td style="font-weight:bold;">Sucursal:</td><td>${createSaleDto.show.subsidiary.name}</td></tr>
-                    </table>
-                    <p><strong>Código de compra:</strong> ${codigoCompra}</p>
-                    <p>Adjuntamos tu QR para ingresar al cine.</p>
-                    <div style="text-align:center; margin-top:20px;">
-                      <img src="cid:qrcode@cinepass" alt="Código QR" style="max-width:200px; display:block; margin:0 auto;">
-                    </div>
-                    <p style="margin-top:20px; font-size:14px; text-align:center; color:#999;">
-                      Si tienes alguna duda o deseas cancelar esta compra, contáctanos en:
-                    </p>
-                    <p href="mailto:cinepass2024@gmail.com" style="color:#E50914;  font-size:14px; text-decoration:none; text-align:center;">cinepass2024@gmail.com</p>
-                    <p style="color:#E50914; text-decoration:none; text-align:center; font-size:14px;"> +54 9 11 1234-5678  </p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="background-color:#333333; text-align:center; padding: 10px;">
-                    <p style="margin:0; font-size:14px; color:#ffffff;">© 2024 CinePass. Todos los derechos reservados.</p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </body>
+    <head>
+      <meta charset="UTF-8" />
+      <title>Confirmación de Compra - CinePass</title>
+    </head>
+    <body style="margin:0; padding:0; background-color:#ffffff; font-family:Roboto, sans-serif; color:#333333;">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#ffffff; padding:20px 0;">
+        <tr>
+          <td align="center">
+            <table width="600" border="0" cellspacing="0" cellpadding="20" style="border: 1px solid #ddd; border-radius: 8px; overflow:hidden; font-family:Roboto, sans-serif;">
+
+              <tr>
+                <td style="background-color:#333333; text-align:center; padding: 20px;">
+                  <img src="cid:logo@cinepass" alt="CinePass Logo" style="max-width:150px;">
+                </td>
+              </tr>
+
+              <tr>
+                <td style="text-align:left; padding: 20px; font-size:16px; line-height:1.5;">
+                  <h2 style="font-family:'Montserrat', sans-serif; color:#E50914; font-size:22px; text-align:center;">¡Gracias por tu compra, ${sale.paymentData.name}!</h2>
+                  
+                  <p style="text-align:center; font-size:18px;"><strong>Detalles de tu compra</strong></p>
+
+                  <hr style="border: 1px solid #ddd; margin: 10px 0;">
+
+
+                  <table width="100%" border="0" cellspacing="0" cellpadding="8" style="font-size:16px;">
+                    <tr>
+                      <td style="font-weight:bold; width: 50%;">Película:</td>
+                      <td>${createSaleDto.show.movie.name}</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:bold;">Fecha y Hora:</td>
+                      <td>${new Date(createSaleDto.show.dateAndTime).toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:bold;">Idioma:</td>
+                      <td>${createSaleDto.show.selectedLanguage.name}</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:bold;">Tipo de función:</td>
+                      <td>${createSaleDto.show.showType.name}</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:bold;">Sala:</td>
+                      <td>${createSaleDto.show.room.roomNumber}</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:bold;">Sucursal:</td>
+                      <td>${createSaleDto.show.subsidiary.name}</td>
+                    </tr>
+                  </table>
+
+                  <hr style="border: 1px solid #ddd; margin: 10px 0;">
+
+
+                  <p style="font-size:16px;"><strong>Importe total:</strong> ${sale.totalPrice}</p>
+                  <p style="font-size:16px;"><strong>Método de pago:</strong> ${createSaleDto.paymentData.paymentMethod.name}</p>
+                  <p style="font-size:16px;"><strong>Código de compra:</strong> ${purchaseCode}</p>
+
+                  <hr style="border: 1px solid #ddd; margin: 10px 0;">
+
+                  <p style="text-align:center;">Adjuntamos tu QR para ingresar al cine.</p>
+                  <div style="text-align:center; margin-top:20px;">
+                    <img src="cid:qrcode@cinepass" alt="Código QR" style="max-width:200px; display:block; margin:0 auto;">
+                  </div>
+
+
+                  <p style="text-align:center; margin-top:20px;">
+                    <span style=" font-size:14px; text-align:center; color:#999;">
+                    Si tienes alguna duda o deseas cancelar esta compra, contáctanos en:
+                    </span>
+                    <a href="mailto:cinepass2024@gmail.com" style="color:#E50914; font-size:14px; text-decoration:none;">cinepass2024@gmail.com</a><br>
+                    <span style="color:#E50914; font-size:14px;"> +54 9 11 1234-5678</span>
+                    
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="background-color:#333333; text-align:center; padding: 10px;">
+                  <p style="margin:0; font-size:14px; color:#ffffff;">© 2024 CinePass. Todos los derechos reservados.</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
     </html>
     `;
   }

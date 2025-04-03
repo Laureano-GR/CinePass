@@ -12,7 +12,8 @@ import { ShowEntity } from "./show.entity";
 import { ShowTypeEntity } from "./showType.entity";
 import { SubsidiaryEntity } from "./subsidiary.entity";
 import { TicketEntity } from "./ticket.entity";
+import { PaymentMethodEntity } from "./paymentMethod";
 
 export const entities = [AddressEntity, CityEntity, ContentRatingEntity, GenreEntity, IDTypeEntity, 
   LanguageEntity, MovieEntity, PaymentDataEntity, RoomEntity, SaleEntity, ShowEntity, ShowTypeEntity, 
-  SubsidiaryEntity, TicketEntity];
+  SubsidiaryEntity, TicketEntity, PaymentMethodEntity];

@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
 import { RoomEntity } from './room.entity';
 import { ShowEntity } from './show.entity';
+import { MovieEntity } from './movie.entity';
 
 @Entity('showTypes')
 export class ShowTypeEntity extends BaseEntity {
@@ -14,4 +15,6 @@ export class ShowTypeEntity extends BaseEntity {
   rooms: RoomEntity[];
   @OneToMany(() => ShowEntity, (show) => show.showType)
   shows: ShowEntity[];
+  @ManyToMany(() => MovieEntity, (movies) => movies.showTypes)
+  movies: MovieEntity[];
 }

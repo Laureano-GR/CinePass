@@ -53,7 +53,7 @@ export class ShowService {
     return this.http.get<LanguageI[]>(`${this.apiUrl}/languages`);
   }
 
-  getRooms(): Observable<RoomI[]> {
-    return this.http.get<RoomI[]>(`${this.apiUrl}/rooms`);
+  getSubsidiaryRooms(subsidiaryId: number): Observable<RoomI[]> {
+    return this.http.get<RoomI[]>(`${this.apiUrl}/subsidiaries/rooms/${subsidiaryId}`);
   }
 }

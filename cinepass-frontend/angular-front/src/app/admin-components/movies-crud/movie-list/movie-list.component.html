@@ -33,6 +33,7 @@
             <th>Descripción</th>
             <th (click)="sort('duration')">Duración <span [class]="getSortIcon('duration')" class="sortable"></span></th>
             <th (click)="sort('languages')">Idiomas <span [class]="getSortIcon('languages')" class="sortable"></span></th>
+            <th (click)="sort('showTypes')">Tipos de funcion <span [class]="getSortIcon('showTypes')" class="sortable"></span></th>
             <th (click)="sort('contentRating')">Clasificación <span [class]="getSortIcon('contentRating')" class="sortable"></span></th>
             <th (click)="sort('genre')">Género <span [class]="getSortIcon('genre')" class="sortable"></span></th>
           </tr>
@@ -47,6 +48,7 @@
             <td>{{ movie.description }}</td>
             <td>{{ movie.duration }} minutos</td>
             <td>{{ getLanguages(movie) }}</td>
+            <td>{{ getShowTypes(movie) }}</td>
             <td>{{ movie.contentRating.name }}</td>
             <td>{{ movie.genre.name }}</td>
           </tr>

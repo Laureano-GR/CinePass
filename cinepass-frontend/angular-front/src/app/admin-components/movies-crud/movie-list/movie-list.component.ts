@@ -44,6 +44,7 @@ export class MovieListComponent {
       this.movieService.getMoviesBySubsidiary(this.subsidiaryId).subscribe(
         (movies) => {
           this.movies = movies;
+          this.sort('');
           this.sort('id'); // Ordenar por defecto por ID de menor a mayor
         },
         (error) => {
@@ -54,6 +55,7 @@ export class MovieListComponent {
       this.movieService.getMovies().subscribe(
         (movies) => {
           this.movies = movies;
+          this.sort('');
           this.sort('id'); // Ordenar por defecto por ID de menor a mayor
         },
         (error) => {
@@ -64,6 +66,7 @@ export class MovieListComponent {
       this.movieService.getMoviesBySubsidiary(this.subsidiaryId).subscribe(
         (movies) => {
           this.movies = this.movieService.getMoviesWithShowsInNextTwoWeeks(movies);
+          this.sort('');
           this.sort('id'); // Ordenar por defecto por ID de menor a mayor
         },
         (error) => {
@@ -119,6 +122,8 @@ export class MovieListComponent {
         return movie.genre.name;
       case 'languages':
         return this.getLanguages(movie);
+      case 'showTypes':
+        return this.getShowTypes(movie);
       default:
         return '';
     }
@@ -126,6 +131,10 @@ export class MovieListComponent {
 
   getLanguages(movie: MovieI): string {
     return movie.languages.map((language: { name: string }) => language.name).join(', ');
+  }
+
+  getShowTypes(movie: MovieI): string {
+    return movie.showTypes.map((showType: { name: string }) => showType.name).join(', ');
   }
 
   getSortIcon(column: string): string {

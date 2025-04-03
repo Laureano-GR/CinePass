@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { ShowService } from '../show-crud.service';
 import { CreateShowDto } from '../../../interfaces/createShowDTO';
 import { UpdateShowDto } from '../../../interfaces/updateShowDTO';
@@ -25,6 +24,7 @@ export class ShowFormComponent implements OnInit {
   showTypes: ShowTypeI[] = [];
   languages: LanguageI[] = [];
   rooms: RoomI[] = [];
+  filteredShowTypes: ShowTypeI[] = [];
   errorMessage: string | null = null;
   showModal: boolean = false;
   modalTitle: string = 'Procesado con exito';
@@ -32,6 +32,9 @@ export class ShowFormComponent implements OnInit {
   createdShowId: number | null = null;
   updatedShowId: number | null = null;
   showDetails: any = null; // Puedes definir una interfaz ShowI si la tienes
+  selectedMovie: MovieI | null = null;
+  selectedRoom: RoomI | null = null;
+  subsidiaryId: number;
 
   constructor(
     private fb: FormBuilder,
@@ -40,14 +43,14 @@ export class ShowFormComponent implements OnInit {
     private service: ShowService,
     private loadingService: LoadingService
   ) {
+    this.subsidiaryId = Number(sessionStorage.getItem('subsidiaryId'));
     this.showForm = this.fb.group({
       showId: [''], // Campo para el ID de la función
       dateAndTime: ['', Validators.required],
       movieId: ['', Validators.required],
-      showTypeId: ['', Validators.required],
-      languageId: ['', Validators.required],
+      showTypeId: [{ value: '', disabled: true }, Validators.required],
+      languageId: [{ value: '', disabled: true }, Validators.required],
       roomId: ['', Validators.required],
-      // Puedes incluir otros campos si fueran necesarios, por ejemplo, subsidiaryId
     });
   }
 
@@ -72,11 +75,16 @@ export class ShowFormComponent implements OnInit {
         this.showForm.get('showId')?.updateValueAndValidity();
       }
     });
+    if(!this.isEditMode) {
+    this.showForm.get('languageId')?.disable();
+    this.showForm.get('showTypeId')?.disable();
+    }
 
     this.loadMovies();
-    this.loadShowTypes();
-    this.loadLanguages();
-    this.loadRooms();
+
+    if (this.subsidiaryId) {
+      this.loadRooms();
+    }
   }
 
   loadShow(): void {
@@ -88,6 +96,10 @@ export class ShowFormComponent implements OnInit {
         const adjustedDate = new Date(originalDate.getTime() - 3 * 60 * 60 * 1000);
         // Convertir la fecha al formato "yyyy-MM-ddThh:mm"
         const dateVal = adjustedDate.toISOString().substring(0, 16);
+
+        this.onMovieChange(show.movie.id);
+        this.onRoomChange(show.room.id);
+
         this.showForm.patchValue({
           dateAndTime: dateVal,
           movieId: show.movie.id,
@@ -105,27 +117,14 @@ export class ShowFormComponent implements OnInit {
     });
   }
 
-  loadShowTypes(): void {
-    this.service.getShowTypes().subscribe((types: ShowTypeI[]) => {
-      this.showTypes = types;
-    });
-  }
-
-  loadLanguages(): void {
-    this.service.getLanguages().subscribe((languages: LanguageI[]) => {
-      this.languages = languages;
-    });
-  }
-
   loadRooms(): void {
-    this.service.getRooms().subscribe((rooms: RoomI[]) => {
+    this.service.getSubsidiaryRooms(this.subsidiaryId).subscribe((rooms: RoomI[]) => {
       this.rooms = rooms;
     });
   }
 
   onSubmit(): void {
     if (this.showForm.invalid) {
-      console.log(this.showForm);
       this.errorMessage = 'Por favor, completa todos los campos requeridos.';
       return;
     }
@@ -161,9 +160,6 @@ export class ShowFormComponent implements OnInit {
       this.errorMessage = 'No se encontró una sucursal válida en la sesión.';
       return;
     }
-
-    console.log('Payload a enviar:', payload);
-
     // Mostrar la pantalla de carga
     this.loadingService.show();
 
@@ -205,6 +201,47 @@ export class ShowFormComponent implements OnInit {
   closeModal(): void {
     this.showModal = false;
     this.router.navigate(['/admin/dashboard']);
+  }
+
+  onMovieChange(event: any): void {
+    let movieId: number = 0;
+    if (typeof event === 'number') {
+      movieId = event;
+    } else {
+      movieId = Number(event.target.value);
+    }
+    this.selectedMovie = this.movies.find(movie => movie.id == movieId) || null;
+    if (this.selectedMovie) {
+      this.languages = this.selectedMovie.languages;
+      this.showForm.get('languageId')?.enable();
+    } else {
+      this.languages = [];
+      this.showForm.get('languageId')?.disable();
+    }
+    this.updateFilteredShowTypes();
+  }
+    
+  onRoomChange(event: any): void {
+    let roomId: number;
+    if (typeof event === 'number') {
+      roomId = event;
+    } else {
+      roomId = Number(event.target.value);
+    }
+    this.selectedRoom = this.rooms.find(room => room.id == roomId) || null;
+    this.updateFilteredShowTypes();
+  }
+
+  updateFilteredShowTypes(): void {
+    if (this.selectedMovie && this.selectedRoom ) {
+      this.filteredShowTypes = this.selectedMovie.showTypes.filter(showType =>
+        Array.isArray(this.selectedRoom?.showTypes) && this.selectedRoom.showTypes.some(roomShowType => roomShowType.id === showType.id)
+      );
+      this.showForm.get('showTypeId')?.enable();
+    } else {
+      this.filteredShowTypes = [];
+      this.showForm.get('showTypeId')?.disable();
+    }
   }
 
   onLoadShow(): void {
