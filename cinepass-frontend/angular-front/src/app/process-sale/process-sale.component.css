@@ -34,13 +34,14 @@ button {
   background-color: #333;
   border: none;
   border-radius: 4px;
-  color: white;
+  color: var(--color-texto-claro);
   font-size: 16px;
   cursor: pointer;
 }
 
 button:disabled {
   background-color: #cccccc;
+  color: var(--color-texto-claro);
   cursor: not-allowed;
 }
 

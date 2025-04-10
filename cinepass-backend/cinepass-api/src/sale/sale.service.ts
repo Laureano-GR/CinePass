@@ -23,26 +23,51 @@ export class SaleService {
     const purchaseCode = `CINEPASS-${sale.id}-${sale.paymentData.IDNumber}`;
     const qrCodeBase64 = await QRCode.toDataURL(purchaseCode);
 
-    // Generar el contenido del email
-    const htmlContent = this.generateEmailSalesContent(createSaleDto, purchaseCode);
+    if (createSaleDto.isOnline) {
+      // Generar el contenido del email
+      const htmlContent = this.generateEmailSalesContent(createSaleDto, purchaseCode);
 
-    // Adjuntos
-    const attachments = [
-      {
-        filename: 'qrcode.png',
-        content: qrCodeBase64.split(';base64,').pop(),
-        encoding: 'base64',
-        cid: 'qrcode@cinepass' // Identificador único para la imagen QR
-      },
-      {
-        filename: 'logo.png',
-        path: path.join(__dirname, '..', '..', 'uploads', 'logo.png'),
-        cid: 'logo@cinepass' // Identificador único para la imagen del logo
-      }
-    ];
+      // Adjuntos
+      const attachments = [
+        {
+          filename: 'qrcode.png',
+          content: qrCodeBase64.split(';base64,').pop(),
+          encoding: 'base64',
+          cid: 'qrcode@cinepass' // Identificador único para la imagen QR
+        },
+        {
+          filename: 'logo.png',
+          path: path.join(__dirname, '..', '..', 'uploads', 'logo.png'),
+          cid: 'logo@cinepass' // Identificador único para la imagen del logo
+        }
+      ];
 
-    await this.emailManagerService.enviarCorreo(sale.paymentData.email, 'Tus entradas para el cine 🎟', htmlContent, attachments);
+      await this.emailManagerService.enviarCorreo(sale.paymentData.email, 'Tus entradas para el cine 🎟', htmlContent, attachments);
+    } else {
+      // Generar ASCII con los datos de la compra
+      const asciiReceipt = `
+      ==========================================
+                      CINEPASS
+      ==========================================
+      Código de Compra: ${purchaseCode}
+      Película: ${createSaleDto.show.movie.name}
+      Fecha y Hora: ${new Date(createSaleDto.show.dateAndTime).toLocaleString()}
+      Idioma: ${createSaleDto.show.selectedLanguage.name}
+      Tipo de Función: ${createSaleDto.show.showType.name}
+      Sala: ${createSaleDto.show.room.roomNumber}
+      Sucursal: ${createSaleDto.show.subsidiary.name}
+      ------------------------------------------
+      Cantidad de Entradas: ${createSaleDto.ticketsAmount}
+      Importe Total: $${createSaleDto.totalPrice}
+      Método de Pago: ${createSaleDto.paymentData.paymentMethod.name}
+      ==========================================
+      ¡Gracias por tu compra!
+      ==========================================
+      `;
 
+      return asciiReceipt; // Retorna el ASCII como resultado
+    }
+    
     return purchaseCode;
   }
 
@@ -258,7 +283,7 @@ export class SaleService {
     </html>
     `;
   }
-
+  /*
   formatDate(date: string | Date): string {
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     const day = dateObj.getDate().toString().padStart(2, '0');
@@ -268,7 +293,7 @@ export class SaleService {
     const minutes = dateObj.getMinutes().toString().padStart(2, '0');
     return `${day}/${month}/${year} - ${hours}:${minutes}hs`;
   }
-
+  */
   cancelSale(saleId: number): Promise<SaleEntity> {
     return this.saleRepository.manager.transaction(async (manager: EntityManager) => {
       try {

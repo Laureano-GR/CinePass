@@ -52,7 +52,7 @@
       <div *ngIf="paymentMethod.errors?.['required']">El método de pago es requerido.</div>
     </div>
   </div>
-  <div *ngIf="showPaymentDetails">
+  <div *ngIf="showPaymentDetails && !isCashPayment">
     <div class="mb-3">
       <label for="responsibleName">Nombre del Responsable:</label>
       <input type="text" id="responsibleName" [(ngModel)]="purchase.responsibleName" name="responsibleName" required minlength="3" maxlength="50" placeholder="Nombre que aparece en la tarjeta" #responsibleName="ngModel">
@@ -103,12 +103,12 @@
     </div>
   </div>
 
-  <button type="submit" [disabled]="!purchaseForm.valid"><i class="fas fa-shopping-cart"></i> Realizar compra</button>
+  <button type="submit" [disabled]="!purchaseForm.valid"><i class="fas fa-shopping-cart"></i> {{ isOnline ? 'Realizar compra' : 'Registrar venta' }}</button>
 </form>
 
 <app-modal
   [showModal]="showModal"
   [title]="'Compra Exitosa'"
-  [message]="'Gracias por su compra.<br>Su transacción ha sido completada con éxito.<br>Las entradas han sido enviadas a su correo electrónico.'"
+  [message]="isOnline ? 'Gracias por su compra!\nSu transacción ha sido completada con éxito.\nLas entradas han sido enviadas a su correo electrónico.' : 'Venta registrada exitosamente.\nPara ver detalles sobre la misma acceda a la sección de busqueda de ventas.'"
   (closeModalEvent)="closeModal()">
 </app-modal>

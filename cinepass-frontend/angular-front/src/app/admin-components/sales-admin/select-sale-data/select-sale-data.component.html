@@ -1,0 +1,95 @@
+<div class="container mt-4">
+  <form>
+    <h2 class="text-center">Seleccionar Datos de la Venta</h2>
+    <hr class="my-4" />
+    <!-- Selección de película -->
+    <div class="mb-3">
+      <label for="movie" class="form-label">Película</label>
+      <select
+        id="movie"
+        class="form-select"
+        [(ngModel)]="selectedMovieId"
+        name="movie"
+        (change)="onMovieChange($event)"
+        required
+      >
+        <option [value]="null" disabled selected>Seleccione una película</option>
+        <option *ngFor="let movie of movies" [value]="movie.id">
+          {{ movie.name }}
+        </option>
+      </select>
+      <!-- Detalles de la película -->
+      
+      <div *ngIf="selectedMovieId && movie" class="mt-4">
+        <hr class="my-4" />
+        <h5 class="text-center fw-semibold" >Detalles de la película</h5>
+          <p><strong>Duración:</strong> {{ movie.duration }} minutos</p>
+          <p *ngIf="movie.genre"><strong>Género:</strong> {{ movie.genre.name }}</p>
+          <p *ngIf="movie.contentRating"><strong>Clasificación:</strong> {{ movie.contentRating.name }}</p>
+          <p *ngIf="movie.languages"><strong>Idiomas:</strong> {{ getMovieLanguages() }}</p>
+          <p *ngIf="movie.showTypes"><strong>Tipos de Función:</strong> {{ getMovieShowTypes() }}</p>
+          <hr class="my-4" />
+        </div>
+    </div>
+
+    <!-- Selección de función -->
+    <div class="mb-3">
+      <label for="show" class="form-label">Función</label>
+      <select
+        id="show"
+        class="form-select"
+        [(ngModel)]="selectedShowId"
+        name="show"
+        [disabled]="!selectedMovieId"
+        (change)="loadShowDetails(selectedShowId)"
+        required
+      >
+        <option [value]="null" disabled selected>Seleccione una función</option>
+        <option *ngFor="let show of shows" [value]="show.id">
+          {{ show.dateAndTime | date: 'dd/MM/yyyy, HH:mm' }} - {{ show.selectedLanguage.name }} - {{ show.showType.name }}
+        </option>
+      </select>
+      <!-- Detalles del show -->
+      <div *ngIf="selectedShowId && show && show.room" class="mt-2">
+        <hr class="my-4" />
+        <h5 class="text-center fw-semibold">Detalles de la función</h5>
+        <p><strong>Fecha y Hora:</strong> {{ show.dateAndTime | date: 'dd/MM/yyyy, HH:mm' }}</p>
+        <p ><strong>Sala:</strong> {{ show.room.roomNumber }}</p>
+        <p><strong>Tipo de Función:</strong> {{ show.showType.name }}</p>
+        <p><strong>Idioma:</strong> {{ show.selectedLanguage.name }}</p>
+        <p><strong>Entradas Disponibles:</strong> {{ availableTickets }}</p>
+        <hr class="my-4" />
+      </div>
+    </div>
+
+    <!-- Selección de cantidad de entradas -->
+    <div class="mb-3">
+      <label for="quantity" class="form-label">Cantidad de Entradas</label>
+      <input
+        type="number"
+        id="quantity"
+        class="form-control"
+        [(ngModel)]="ticketQuantity"
+        name="quantity"
+        [disabled]="!selectedShowId"
+        [max]="availableTickets"
+        min="1"
+        required
+      />
+      <!-- Precio total -->
+      <div *ngIf="ticketQuantity > 0" class="mt-2">
+        <p><strong>Precio Total:</strong> ${{ ticketQuantity * ticketPrice }}</p>
+      </div>
+    </div>
+
+    <!-- Botón de Confirmar Compra -->
+    <button
+      type="button"
+      class="btn"
+      [disabled]="!selectedShowId || ticketQuantity <= 0"
+      (click)="onSubmit()"
+      >
+      <i class="fas fa-shopping-cart"></i> Vender Entradas
+    </button>
+  </form>
+</div>

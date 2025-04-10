@@ -1,7 +1,5 @@
-<div class="container home-container py-4">
-  
   <!-- Carrusel -->
-<div *ngIf="banners.length > 0" class="container carousel-container">
+<div *ngIf="banners.length > 0">
   <div id="carouselBanners" class="carousel slide" [ngClass]="{'carousel-fade': banners.length > 1}" data-bs-ride="carousel" pause="hover">
     <div class="carousel-inner">
       <div *ngFor="let banner of banners; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}" data-bs-interval="5000">
@@ -29,6 +27,9 @@
     </div>
   </div>
 </div>
+<div class="container home-container py-4">
+  
+
   
   <!-- Subtítulo -->
   <h1 class="text-center mb-4">Películas en Cartelera</h1>

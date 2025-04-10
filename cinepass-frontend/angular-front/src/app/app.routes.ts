@@ -6,7 +6,7 @@ import { SubsidiaryGuard } from './subsidiary.guard';
 import { SelectSubsidiaryComponent } from './select-subsidiary/select-subsidiary.component';
 import { MovieDetailsComponent } from './movie-details/movie-details.component';
 import { ShowDetailsComponent } from './show-details/show-details.component';
-import { PurchaseDetailsComponent } from './purchase-details/purchase-details.component';
+import { ProcessSaleComponent } from './process-sale/process-sale.component';
 import { AdminLoginComponent } from './admin-components/admin-login/admin-login.component';
 import { AdminDashboardComponent } from './admin-components/admin-dashboard/admin-dashboard.component';
 import { ShowListComponent } from './admin-components/shows-crud/show-list/show-list.component';
@@ -14,8 +14,8 @@ import { ShowFormComponent } from './admin-components/shows-crud/show-form/show-
 import { MovieFormComponent } from './admin-components/movies-crud/movie-form/movie-form.component';
 import { MovieListComponent } from './admin-components/movies-crud/movie-list/movie-list.component';
 import { AuthGuardService } from './auth-guard.service';
-import { CreateSalesComponent } from './admin-components/sales-admin/create-sales/create-sales.component';
 import { SearchSalesComponent } from './admin-components/sales-admin/search-sales/search-sales.component';
+import { SelectSaleDataComponent } from './admin-components/sales-admin/select-sale-data/select-sale-data.component';
 
 export const routes: Routes = [
   { path: 'select-subsidiary', component: SelectSubsidiaryComponent },
@@ -27,7 +27,7 @@ export const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'movie-details/:id', component: MovieDetailsComponent },
       { path: 'show-details/:id', component: ShowDetailsComponent },
-      { path: 'purchase/:showId', component: PurchaseDetailsComponent },
+      { path: 'purchase/:showId', component: ProcessSaleComponent },
       { path: 'admin-login', component: AdminLoginComponent },
       { path: 'admin', 
         canActivate: [AuthGuardService],
@@ -41,7 +41,8 @@ export const routes: Routes = [
           { path: 'shows/create', component: ShowFormComponent },
           { path: 'shows/update', component: ShowFormComponent },
           { path: 'shows/update/:id', component: ShowFormComponent },
-          { path: 'sales/create', component: CreateSalesComponent },
+          { path: 'sales/select-sale-data', component:SelectSaleDataComponent },
+          { path: 'sales/create/:showId', component: ProcessSaleComponent },
           { path: 'sales/search', component: SearchSalesComponent},
         ]
       },    

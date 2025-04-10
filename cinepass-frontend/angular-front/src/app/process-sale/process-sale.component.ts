@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router} from '@angular/router';
-import { PurchaseService } from './purchase-details.service';
+import { ProcessSaleService } from './process-sale.service';
 import { PurchaseDTO } from '../interfaces/purchaseDTO';
 import { PaymentDataDTO } from '../interfaces/paymentDataDTO';
 import { IDTypeI } from '../interfaces/idType';
@@ -11,12 +11,12 @@ import { LoadingService } from '../shared-components/loading-screen/loading.serv
 import { PaymentMethodI } from '../interfaces/paymentMethod';
 
 @Component({
-  selector: 'app-purchase-details',
-  templateUrl: './purchase-details.component.html',
-  styleUrls: ['./purchase-details.component.css']
+  selector: 'app-process-sale',
+  templateUrl: './process-sale.component.html',
+  styleUrls: ['./process-sale.component.css']
 })
 
-export class PurchaseDetailsComponent implements OnInit {
+export class ProcessSaleComponent implements OnInit {
   purchase: PurchaseDTO = {} as PurchaseDTO;
   paymentData: PaymentDataDTO = {} as PaymentDataDTO;
   idTypes: IDTypeI[] = [];
@@ -27,19 +27,27 @@ export class PurchaseDetailsComponent implements OnInit {
   expiryDateError: string | null = null;
   paymentMethods: PaymentMethodI[] = [];
   showPaymentDetails: number | null = null;
-
+  isOnline: boolean = false; // Variable para determinar si está en modo online
+  isCashPayment: boolean = false; // Variable para verificar si es efectivo
+  asciiReceipt: string = ''; // Variable para almacenar el recibo ASCII
 
   constructor(
-    private purchaseService: PurchaseService,
+    private processSaleService: ProcessSaleService,
     private route: ActivatedRoute, 
     private router: Router,
     private loadingService: LoadingService
   ) {}
 
   ngOnInit() {
+    // Determina el modo de operación según la URL
+    this.route.url.subscribe(url => {
+      this.isOnline = !(url.some(segment => segment.path === 'create'));
+    });
+
     this.loadDocumentTypes();
-    this.loadAvailablePaymentMethods();
     
+    this.loadPaymentMethods(this.isOnline);
+    console.log('es online:',this.isOnline);
     this.route.params.subscribe(params => {
       this.loadShow(+params['showId']).subscribe(show => {
         this.show = show;
@@ -53,19 +61,22 @@ export class PurchaseDetailsComponent implements OnInit {
   }
 
   loadDocumentTypes() {
-    this.purchaseService.getDocumentTypes().subscribe(types => {
+    this.processSaleService
+    .getDocumentTypes().subscribe(types => {
       this.idTypes = types;
     });
   }
 
-  loadAvailablePaymentMethods() {
-    this.purchaseService.getAvailablePaymentMethods().subscribe(methods => {
+  loadPaymentMethods(isOnline: boolean) {
+    this.processSaleService
+    .getPaymentMethods(isOnline).subscribe(methods => {
       this.paymentMethods = methods;
     });
   }
 
   loadShow(showId: number): Observable<ShowI> {
-    return this.purchaseService.getShow(showId).pipe(
+    return this.processSaleService
+    .getShow(showId).pipe(
       catchError(error => {
         console.error('Error getting show:', error);
         return of({} as ShowI);
@@ -75,6 +86,8 @@ export class PurchaseDetailsComponent implements OnInit {
 
   onPaymentMethodChange(): void {
     this.showPaymentDetails = this.purchase.paymentMethod;
+    const selectedMethod = this.paymentMethods.find(method => method.id === +this.purchase.paymentMethod);
+    this.isCashPayment = selectedMethod?.name == 'Efectivo'; // Verifica si el método es "Efectivo"
   }
 
   onSubmit() {
@@ -84,6 +97,8 @@ export class PurchaseDetailsComponent implements OnInit {
     }
   
     const selectedPaymentMethod = this.paymentMethods.find(method => method.id == this.purchase.paymentMethod);
+    
+  
     if (!selectedPaymentMethod) {
       console.error('Selected payment method not found');
       return;
@@ -100,25 +115,33 @@ export class PurchaseDetailsComponent implements OnInit {
       show: this.show,
       ticketsAmount: this.quantity,
       paymentData: this.paymentData,
-      totalPrice: this.totalPrice
+      totalPrice: this.totalPrice,
+      isOnline: this.isOnline
     };
     
     this.loadingService.show();
 
-    this.purchaseService.createSale(saleData)
-      .then(response => {
-        this.loadingService.hide();
-        if (response && response.trim() !== '') {
-          console.log('Sale created successfully:', response);
-          this.showModal = true;
+    this.processSaleService
+    .createSale(saleData)
+    .then(response => {
+      this.loadingService.hide();
+
+      if (response && response.trim() !== '') {
+        if (this.isOnline) {
+          console.log('Online sale created successfully:', response);
         } else {
-          console.error('Sale creation failed: response is null or empty');
+          console.log('Presential sale created successfully:', response);
+          this.asciiReceipt = response; // Asigna el recibo ASCII si no es online
         }
-      })
-      .catch(error => {
-        this.loadingService.hide();
-        console.error('Error creating sale:', error);
-      });
+        this.showModal = true; // Muestra el modal en ambos casos
+      } else {
+        console.error('Sale creation failed: response is null or empty');
+      }
+    })
+    .catch(error => {
+      this.loadingService.hide();
+      console.error('Error creating sale:', error);
+    });
   }
 
   closeModal() {

@@ -1,3 +1,7 @@
+.container-fluid{
+  padding: 2rem;
+}
+
 .title {
   text-align: center;
   font-size: 3em;

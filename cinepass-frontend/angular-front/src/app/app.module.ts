@@ -12,13 +12,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminLoginComponent } from './admin-components/admin-login/admin-login.component';
-import { PurchaseDetailsComponent } from './purchase-details/purchase-details.component';
+import { ProcessSaleComponent } from './process-sale/process-sale.component';
 import { AdminDashboardComponent } from './admin-components/admin-dashboard/admin-dashboard.component';
 import { LoadingScreenComponent } from './shared-components/loading-screen/loading-screen.component';
 import { ShowFormComponent } from './admin-components/shows-crud/show-form/show-form.component';
 import { MovieFormComponent } from './admin-components/movies-crud/movie-form/movie-form.component';
 import { ModalComponent } from './shared-components/modal/modal.component';
 import { SearchSalesComponent } from './admin-components/sales-admin/search-sales/search-sales.component';
+import { SelectSaleDataComponent } from './admin-components/sales-admin/select-sale-data/select-sale-data.component';
 
 registerLocaleData(localeEsAr);
 
@@ -29,13 +30,14 @@ registerLocaleData(localeEsAr);
     ShowDetailsComponent,
     MovieDetailsComponent,
     AdminLoginComponent,
-    PurchaseDetailsComponent,
+    ProcessSaleComponent,
     AdminDashboardComponent,
     LoadingScreenComponent,
     ModalComponent,
     ShowFormComponent,
     MovieFormComponent,
     SearchSalesComponent,
+    SelectSaleDataComponent
   ],
   imports: [
     BrowserModule,

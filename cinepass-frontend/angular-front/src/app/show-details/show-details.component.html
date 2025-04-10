@@ -26,7 +26,7 @@
   <!-- Selección de entradas -->
   <div class="ticket-selection text-center mt-4">
     <label for="ticketQuantity" class="form-label"><i class="fas fa-ticket-alt"></i> <strong> Cantidad de entradas:</strong></label>
-    <input type="number" id="ticketQuantity" class="form-control d-inline w-auto" [(ngModel)]="ticketQuantity" [max]="availableTickets" min="1">
+    <input type="number" id="ticketQuantity" class="form-control d-inline w-auto ms-2" [(ngModel)]="ticketQuantity" [max]="availableTickets" min="1">
     <p class="mt-2"><strong>Precio total:</strong> {{ ticketQuantity * ticketPrice | currency: 'ARS' }}</p>
   </div>
 

@@ -17,4 +17,6 @@ export class CreateSaleDTO {
 
   @IsNumber()
   totalPrice: number;
+
+  isOnline: boolean; // Indica si la venta es online o presencial
 }

@@ -10,7 +10,7 @@ import axios from 'axios';
 @Injectable({
   providedIn: 'root'
 })
-export class PurchaseService {
+export class ProcessSaleService {
   private apiUrl = 'http://localhost:3001';
   
   constructor() {}
@@ -45,13 +45,23 @@ export class PurchaseService {
     ).toPromise();
   }
 
-  getAvailablePaymentMethods(): Observable<PaymentMethodI[]> { // Este metodo trae todos los metodos de pago menos el de efectivo ya que online no se puede pagar de esta manera
-    return from(axios.get<PaymentMethodI[]>(`${this.apiUrl}/payment-methods`)).pipe(
-      map(response => response.data.filter(method => method.name !== 'Efectivo')),
-      catchError(error => {
-        console.error('Error getting payment methods:', error);
-        return of([]);
-      })
-    );
+  getPaymentMethods(isOnline: boolean): Observable<PaymentMethodI[]> { // Este metodo trae todos los metodos de pago menos el de efectivo en caso de que no sea online
+    if (isOnline) {
+      return from(axios.get<PaymentMethodI[]>(`${this.apiUrl}/payment-methods`)).pipe(
+        map(response => response.data.filter(method => method.name !== 'Efectivo')),
+        catchError(error => {
+          console.error('Error getting payment methods:', error);
+          return of([]);
+        })
+      );
+    } else {
+      return from(axios.get<PaymentMethodI[]>(`${this.apiUrl}/payment-methods`)).pipe(
+        map(response => response.data),
+        catchError(error => {
+          console.error('Error getting payment methods:', error);
+          return of([]);
+        })
+      );
+    }
   }
 }

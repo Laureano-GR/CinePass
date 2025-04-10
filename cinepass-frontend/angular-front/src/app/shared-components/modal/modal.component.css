@@ -67,3 +67,7 @@
 .btn:focus{
   box-shadow: none;
 }
+
+.modal-message {
+  white-space: pre-wrap; /* Respeta los saltos de línea (\n) */
+}
