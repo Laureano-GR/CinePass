@@ -242,7 +242,7 @@ export class MovieFormComponent implements OnInit {
 
   closeModal(): void {
     this.showModal = false;
-    this.router.navigate(['/admin/dashboard']);
+    this.router.navigate(['/admin/movies/read']);
   }
 
   onLoadMovie(): void {

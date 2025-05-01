@@ -51,4 +51,9 @@ export class TemplateComponent implements OnInit, OnDestroy {
   goToAdminDashboard(): void {
     this.router.navigate(['/admin/dashboard']);
   }
+
+  logOut(): void {
+    this.authService.logout();
+    window.location.reload();
+  }
 }

@@ -7,7 +7,7 @@ import { GenreI } from '../interfaces/genre';
 import { ContentRatingI } from '../interfaces/contentRating';
 import { LanguageI } from '../interfaces/language';
 import { ShowTypeI } from '../interfaces/showType';
-
+import Swiper from 'swiper/bundle';
 
 @Component({
   selector: 'app-home',
@@ -58,6 +58,30 @@ export class HomeComponent implements OnInit {
     this.fetchGenres();
     this.fetchLanguages();
     this.fetchShowTypes();
+
+    setTimeout(() => {
+      new Swiper('.swiper', {
+        slidesPerView: 1.05, // Muestra 1.2 slides (el actual y parte del siguiente)
+        centeredSlides: true, // Centra el slide activo
+        spaceBetween: 3, // Espacio entre las imágenes
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        autoplay: {
+          delay: 5000, // Intervalo entre cada cambio de imagen
+          disableOnInteraction: false,
+        },
+        breakpoints: {
+          768: {
+            spaceBetween: 10, // Espacio entre imágenes para pantallas medianas (>= 768px)
+          },
+          1024: {
+            spaceBetween: 20, // Espacio entre imágenes para pantallas grandes (>= 1024px)
+          },
+        },
+      });
+    }, 100);
   }
 
   onSearch(): void {

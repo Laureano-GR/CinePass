@@ -31,11 +31,12 @@ export class ShowListComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.subsidiaryId) {
-      this.showService.getShowsBySubsidiary(this.subsidiaryId).subscribe(
+      this.showService.getShowsBySubsidiary(this.subsidiaryId).then(
         (shows) => {
           this.shows = shows;
           this.sort('id'); // Ordenar por defecto por ID de menor a mayor
-        },
+        }
+      ).catch(
         (error) => {
           console.error('Error al obtener las funciones:', error);
         }

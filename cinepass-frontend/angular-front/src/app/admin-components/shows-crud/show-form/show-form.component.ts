@@ -89,7 +89,7 @@ export class ShowFormComponent implements OnInit {
 
   loadShow(): void {
     if (this.showId !== null) {
-      this.service.getShowById(this.showId).subscribe(show => {
+      this.service.getShowById(this.showId).then(show => {
         this.showDetails = show;
         // Ajustar la fecha: restarle 3 horas
         const originalDate = new Date(show.dateAndTime);
@@ -112,14 +112,18 @@ export class ShowFormComponent implements OnInit {
   }
 
   loadMovies(): void {
-    this.service.getMovies().subscribe((movies: MovieI[]) => {
+    this.service.getMovies().then((movies: MovieI[]) => {
       this.movies = movies;
+    }).catch(error => {
+      console.error('Error loading movies:', error);
     });
   }
 
   loadRooms(): void {
-    this.service.getSubsidiaryRooms(this.subsidiaryId).subscribe((rooms: RoomI[]) => {
+    this.service.getSubsidiaryRooms(this.subsidiaryId).then((rooms: RoomI[]) => {
       this.rooms = rooms;
+    }).catch(error => {
+      console.error('Error loading rooms:', error);
     });
   }
 
@@ -165,14 +169,14 @@ export class ShowFormComponent implements OnInit {
 
     if (this.isEditMode) {
       if (this.showId) {
-        this.service.updateShow(this.showId, payload as UpdateShowDto).subscribe(() => {
+        this.service.updateShow(this.showId, payload as UpdateShowDto).then(() => {
           // Ocultar la pantalla de carga
           this.loadingService.hide();
           this.updatedShowId = this.showId;
           this.modalTitle = 'Función Actualizada';
           this.modalMessage = 'La función con ID: ' + this.updatedShowId + ' ha sido actualizada con éxito.';
           this.showModal = true;
-        }, error => {
+        }).catch(error => {
           // Ocultar la pantalla de carga en caso de error
           this.loadingService.hide();
           this.errorMessage = 'Error al actualizar la función.';
@@ -182,14 +186,14 @@ export class ShowFormComponent implements OnInit {
         this.errorMessage = 'Por favor, ingresa el ID de la función a actualizar.';
       }
     } else {
-      this.service.createShow(payload as CreateShowDto).subscribe((response: any) => {
+      this.service.createShow(payload as CreateShowDto).then((response: any) => {
         // Ocultar la pantalla de carga
         this.loadingService.hide();
         this.createdShowId = response.id;
         this.modalTitle = 'Función Creada';
         this.modalMessage = 'El ID de la función creada es: ' + this.createdShowId;
         this.showModal = true;
-      }, error => {
+      }).catch(error => {
         // Ocultar la pantalla de carga en caso de error
         this.loadingService.hide();
         this.errorMessage = 'Error al crear la función.';
@@ -200,7 +204,7 @@ export class ShowFormComponent implements OnInit {
 
   closeModal(): void {
     this.showModal = false;
-    this.router.navigate(['/admin/dashboard']);
+    this.router.navigate(['/admin/shows/read']);
   }
 
   onMovieChange(event: any): void {

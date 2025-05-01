@@ -1,36 +1,20 @@
-  <!-- Carrusel -->
-<div *ngIf="banners.length > 0">
-  <div id="carouselBanners" class="carousel slide" [ngClass]="{'carousel-fade': banners.length > 1}" data-bs-ride="carousel" pause="hover">
-    <div class="carousel-inner">
-      <div *ngFor="let banner of banners; let i = index" class="carousel-item" [ngClass]="{'active': i === 0}" data-bs-interval="5000">
-        <img [src]="banner" class="d-block w-100" alt="Banner {{i}}">
-      </div>
-    </div>
-
-    <!-- Controles de navegación (flechas) -->
-    <button *ngIf="banners.length > 1" class="carousel-control-prev" type="button" data-bs-target="#carouselBanners" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    </button>
-    <button *ngIf="banners.length > 1" class="carousel-control-next" type="button" data-bs-target="#carouselBanners" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    </button>
-
-    <!-- Indicadores (puntos abajo) -->
-    <div *ngIf="banners.length > 1" class="carousel-indicators">
-      <button *ngFor="let banner of banners; let i = index" 
-          type="button" 
-          data-bs-target="#carouselBanners" 
-          [attr.data-bs-slide-to]="i" 
-          [ngClass]="{'active': i === 0}" 
-          [attr.aria-label]="'Slide ' + (i + 1)">
-      </button>
+<!-- Carrusel Swiper -->
+<div *ngIf="banners.length > 0" class="swiper">
+  <!-- Wrapper de Swiper -->
+  <div class="swiper-wrapper">
+    <!-- Slides -->
+    <div *ngFor="let banner of banners" class="swiper-slide">
+      <img [src]="banner" class="d-block w-100" alt="Banner">
     </div>
   </div>
-</div>
-<div class="container home-container py-4">
-  
 
-  
+  <!-- Controles de navegación (flechas) -->
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+
+</div>
+
+<div class="container home-container py-4">  
   <!-- Subtítulo -->
   <h1 class="text-center mb-4">Películas en Cartelera</h1>
 
@@ -153,11 +137,20 @@
       class="col-12 col-sm-6 col-md-4 col-lg-3">
       <div class="card movie-card h-100" (click)="navigateToMovieDetails(movie.id)" style="cursor: pointer;">
         <img [src]="loadPosterPreview(movie.id)" [alt]="movie.name" class="card-img-top movie-poster">
-        <div class="card-body text-center">
-          <h3 class="card-title h5">{{ movie.name }}</h3>
-          <p class="card-text mb-1">Género: {{ movie.genre.name }}</p>
-          <p class="card-text mb-1">Duración: {{ movie.duration }} minutos</p>
-          <p class="card-text">Clasificación: {{ movie.contentRating.name }}</p>
+        <div class="card-body">
+          <h3 class="card-title">{{ movie.name }}</h3>
+          <!-- Detalles en una sola línea -->
+          <div class="details-row mt-2">
+            <div class="detail-box">
+              <p class="mb-0">{{ movie.duration }} min</p>
+            </div>
+            <div class="detail-box">
+              <p class="mb-0">{{ movie.genre.name }}</p>
+            </div>
+            <div class="detail-box">
+              <p class="mb-0">{{ movie.contentRating.name }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

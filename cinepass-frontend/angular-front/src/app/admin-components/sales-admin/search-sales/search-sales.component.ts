@@ -1,12 +1,11 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // Para usar [(ngModel)]
 import { SaleI } from '../../../interfaces/sale';
 import { SalesService } from '../sales.service';
 import { LoadingService } from '../../../shared-components/loading-screen/loading.service';
 import { ShowI } from '../../../interfaces/show';
 import { PaymentMethodI } from '../../../interfaces/paymentMethod';
 import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-search-sales',
@@ -128,6 +127,13 @@ export class SearchSalesComponent implements OnInit {
     this.showModal = false;
     this.canceledSaleId = null; // Limpia el ID de la venta cancelada
     this.router.navigate(['admin/dashboard']);
+  }
+
+  confirmCancelSale(saleId: number): void {
+    const confirmation = window.confirm('¿Estás seguro de que quieres cancelar esta venta?');
+    if (confirmation) {
+      this.cancelSale(saleId);
+    }
   }
 
   comparePurchaseCode(sale: SaleI, purchaseCode: string): boolean {

@@ -1,3 +1,12 @@
+@import "swiper/swiper-bundle.css";
+
+html {
+  scrollbar-gutter: stable; /* Reserva espacio para la barra de desplazamiento */
+  overflow-y: scroll; /* Fuerza la barra de desplazamiento vertical siempre visible */
+  scrollbar-width: thin; /* Para navegadores compatibles con scrollbar-width */
+  scrollbar-color: var(--color-boton-borde) var(--color-principal); /* Colores de la scrollbar */
+}
+
 :root {
   /* Paleta de colores */
   --color-principal: #333333;      /* Fondo principal (navbar, footer, etc.) */
@@ -5,7 +14,8 @@
   --color-fondo-claro: #F5F5F5;      /* Fondos claros */
   --color-texto-claro: #FFFFFF;      /* Texto en fondos oscuros */
   --color-texto-oscuro: #333333;     /* Texto en fondos claros */
-  --color-boton: #555;             /* Color de botones */
+  --color-fondo-oscuro: #555555;      /* Fondo oscuro (modal, etc.) */
+  --color-boton: #555555;             /* Color de botones */
   --color-boton-hover: #444;        /* Hover en botones */
   --color-boton-borde: #777;        /* Borde del toggler */
   --color-acento: #E50914;          /* Para íconos o acentos */

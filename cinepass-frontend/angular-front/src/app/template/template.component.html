@@ -27,6 +27,9 @@
             <li class="nav-item">
               <button class="btn btn-secondary" (click)="changeSubsidiary()">Cambiar Sucursal</button>
             </li>
+            <li class="nav-item" *ngIf="isLoggedIn">
+              <button class="btn btn-primary" (click)="logOut()">Cerrar Sesión</button>
+            </li>
           </ul>
         </div>
       </div>

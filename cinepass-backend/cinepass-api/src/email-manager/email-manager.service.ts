@@ -19,7 +19,7 @@ export class EmailManagerService {
 
   async enviarCorreo(recipient: string, asunto: string, htmlContent: string, attachments: any[] = []) {
     const mailOptions: any = {
-      from: "cinepass2024@gmail.com",
+      from: "CinePass <cinepass2024@gmail.com>",
       to: recipient,
       subject: asunto,
       html: htmlContent,

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import axios, { AxiosInstance } from 'axios';
 import { Observable } from 'rxjs';
+import { from } from 'rxjs';
 import { MovieI } from '../../interfaces/movie';
 import { LanguageI } from '../../interfaces/language';
 import { ContentRatingI } from '../../interfaces/contentRating';
@@ -9,15 +10,20 @@ import { CreateMovieDto } from '../../interfaces/createMovieDTO';
 import { UpdateMovieDto } from '../../interfaces/updateMovieDTO';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MovieService {
   private apiUrl = 'http://localhost:3001';
+  private axiosInstance: AxiosInstance;
 
-  constructor(private http: HttpClient) {}
+  constructor() {
+    this.axiosInstance = axios.create({
+      baseURL: this.apiUrl,
+    });
+  }
 
   getMoviesBySubsidiary(subsidiaryId: number): Observable<MovieI[]> {
-    return this.http.get<MovieI[]>(`${this.apiUrl}/subsidiaries/movies/${subsidiaryId}`);
+    return from(this.axiosInstance.get<MovieI[]>(`/subsidiaries/movies/${subsidiaryId}`).then(res => res.data));
   }
 
   getMoviesWithShowsInNextTwoWeeks(movies: MovieI[]): MovieI[] {
@@ -25,7 +31,7 @@ export class MovieService {
     const twoWeeksFromNow = new Date();
     twoWeeksFromNow.setDate(today.getDate() + 14);
 
-    return movies.filter(movie => 
+    return movies.filter(movie =>
       movie.shows && movie.shows.some(show => {
         const showDate = new Date(show.dateAndTime);
         return showDate >= today && showDate <= twoWeeksFromNow;
@@ -34,37 +40,37 @@ export class MovieService {
   }
 
   getMovies(): Observable<MovieI[]> {
-    return this.http.get<MovieI[]>(`${this.apiUrl}/movies`);
+    return from(this.axiosInstance.get<MovieI[]>('/movies').then(res => res.data));
   }
 
   getMovieById(id: number): Observable<MovieI> {
-    return this.http.get<MovieI>(`${this.apiUrl}/movies/${id}`);
+    return from(this.axiosInstance.get<MovieI>(`/movies/${id}`).then(res => res.data));
   }
 
   createMovie(movie: CreateMovieDto): Observable<CreateMovieDto> {
-    return this.http.post<CreateMovieDto>(`${this.apiUrl}/movies`, movie);
+    return from(this.axiosInstance.post<CreateMovieDto>('/movies', movie).then(res => res.data));
   }
 
   updateMovie(id: number, movie: UpdateMovieDto): Observable<UpdateMovieDto> {
-    return this.http.put<UpdateMovieDto>(`${this.apiUrl}/movies/update/${id}`, movie);
+    return from(this.axiosInstance.put<UpdateMovieDto>(`/movies/update/${id}`, movie).then(res => res.data));
   }
 
   getLanguages(): Observable<LanguageI[]> {
-    return this.http.get<LanguageI[]>(`${this.apiUrl}/languages`);
+    return from(this.axiosInstance.get<LanguageI[]>('/languages').then(res => res.data));
   }
 
   getContentRatings(): Observable<ContentRatingI[]> {
-    return this.http.get<ContentRatingI[]>(`${this.apiUrl}/content-ratings`);
+    return from(this.axiosInstance.get<ContentRatingI[]>('/content-ratings').then(res => res.data));
   }
 
   getGenres(): Observable<GenreI[]> {
-    return this.http.get<GenreI[]>(`${this.apiUrl}/genres`);
+    return from(this.axiosInstance.get<GenreI[]>('/genres').then(res => res.data));
   }
 
   uploadPoster(file: File, fileName: string): Observable<any> {
     const formData = new FormData();
     formData.append('file', file, fileName);
-    return this.http.post<any>(`${this.apiUrl}/upload/poster`, formData);
+    return from(this.axiosInstance.post<any>('/upload/poster', formData).then(res => res.data));
   }
 
   getPosterUrl(movieId: number): string {

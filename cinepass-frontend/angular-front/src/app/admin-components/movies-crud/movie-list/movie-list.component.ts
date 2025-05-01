@@ -17,7 +17,7 @@ export class MovieListComponent {
   sortColumn: string = 'id';
   sortDirection: 'asc' | 'desc' = 'asc';
   selectedMovie: MovieI | null = null;
-  filter: string = 'all';
+  filter: string = 'inTheaters';
   
 
   constructor(private movieService: MovieService, private router: Router) {

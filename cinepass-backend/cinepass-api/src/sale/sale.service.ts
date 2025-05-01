@@ -51,7 +51,7 @@ export class SaleService {
       ==========================================
       Código de Compra: ${purchaseCode}
       Película: ${createSaleDto.show.movie.name}
-      Fecha y Hora: ${new Date(createSaleDto.show.dateAndTime).toLocaleString()}
+      Fecha y Hora: ${new Date(createSaleDto.show.dateAndTime).toLocaleString('es-ES', { hour12: false })}
       Idioma: ${createSaleDto.show.selectedLanguage.name}
       Tipo de Función: ${createSaleDto.show.showType.name}
       Sala: ${createSaleDto.show.room.roomNumber}
@@ -224,7 +224,7 @@ export class SaleService {
                     </tr>
                     <tr>
                       <td style="font-weight:bold;">Fecha y Hora:</td>
-                      <td>${new Date(createSaleDto.show.dateAndTime).toLocaleString()}</td>
+                      <td>${new Date(createSaleDto.show.dateAndTime).toLocaleString('es-ES', { hour12: false })}</td>
                     </tr>
                     <tr>
                       <td style="font-weight:bold;">Idioma:</td>

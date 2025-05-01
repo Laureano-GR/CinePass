@@ -7,54 +7,86 @@
   margin:0;
 }
 
-.carousel-inner {
-  overflow: hidden;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.carousel-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  aspect-ratio: 18 / 6;
+.swiper {
+  margin-top: 10px;
+  aspect-ratio: 18/6; /* Mantiene la relación de aspecto 16:9 */
   width: 100%;
+  overflow: hidden; /* Evita desbordamientos */
 }
 
-.carousel-item img {
+.swiper-slide img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Asegura que la imagen cubra sin deformarse */
+  object-fit: cover; /* Asegura que la imagen mantenga su proporción */
+  border-radius: 5px; /* Opcional: bordes redondeados */
 }
 
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  color: #fff; /* Color de las flechas */
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--color-texto-claro); /* Color de las flechas */
 }
 
-.carousel-indicators [data-bs-target] {
-  background-color: #fff; /* Indicadores en blanco */
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.swiper-button-next {
+  right: 75px; /* Ajusta la posición horizontal de la flecha derecha */
 }
 
-@media (max-width: 768px) {
-  .carousel-item {
-    aspect-ratio: 18 / 6; /* Mantiene la relación en móviles */
+.swiper-button-prev {
+  left: 75px; /* Ajusta la posición horizontal de la flecha izquierda */
+}
+
+@media (max-width: 1024px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    --swiper-navigation-size: 40px;
+  }
+
+  .swiper-button-next {
+    right: 60px; /* Ajusta la posición horizontal de la flecha derecha */
+  }
+  
+  .swiper-button-prev {
+    left: 60px; /* Ajusta la posición horizontal de la flecha izquierda */
   }
 }
 
-.banner-image {
-  width: 100%;
-  object-fit: cover;
-  object-position: center;
-  height: 600px; /* Ajusta la altura según tu necesidad */
+@media (max-width: 768px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    --swiper-navigation-size: 30px;
+  }
+
+  .swiper-button-next {
+    right: 40px; /* Ajusta la posición horizontal de la flecha derecha */
+  }
+  
+  .swiper-button-prev {
+    left: 40px; /* Ajusta la posición horizontal de la flecha izquierda */
+  }
+}
+
+@media (max-width: 576px) {
+  .swiper {
+    margin-top: 5px;
+  }
+
+  .swiper-button-next {
+    right: 20px; /* Ajusta la posición horizontal de la flecha derecha */
+  }
+  
+  .swiper-button-prev {
+    left: 20px; /* Ajusta la posición horizontal de la flecha izquierda */
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    --swiper-navigation-size: 20px;
+  }
 }
 
 /* Títulos */
 h1 {
   font-size: 2rem;
-  margin-top: 2rem;
+  margin-top: 0;
   margin-bottom: 2rem;
   font-family: var(--fuente-titulos);
   color: var(--color-principal);
@@ -62,7 +94,7 @@ h1 {
 
 /* Movie Card */
 .movie-card {
-  background-color: var(--color-fondo-claro);
+  background-color: var(--color-principal);
   border-radius: 10px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
@@ -81,23 +113,70 @@ h1 {
   height: 750px; 
   object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 10px;
 }
 
 /* Card Body y textos */
 .card-body {
   font-family: var(--fuente-texto);
+  margin: 5px
 }
 
 .card-title {
   font-weight: 600;
   margin-bottom: 0.5rem;
+  color: var(--color-texto-claro);
+  font-size: x-large;
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta el texto que se desborda */
+  text-overflow: ellipsis; /* Muestra "..." cuando el texto se corta */
 }
 
 .card-text {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--color-texto-claro);
   margin-bottom: 0.5rem;
+}
+
+.details-row {
+  display: flex; /* Usa Flexbox para alinear los elementos horizontalmente */
+  justify-content: flex-start; /* Alinea los elementos a la izquierda */
+  align-items: center; /* Alinea los elementos verticalmente al centro */
+  gap: 8px; /* Espaciado entre los elementos */
+  overflow: hidden; /* Evita que los elementos se desborden */
+}
+
+.detail-box {
+  display: inline-block; /* Hace que la caja se ajuste al contenido */
+  border-radius: 5px; /* Bordes redondeados */
+  padding: 4px 8px; /* Espaciado interno */
+  background-color: var(--color-boton); /* Fondo claro */
+  color: var(--color-texto-claro);
+  font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+  text-align: center; /* Centrar el texto */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  flex-shrink: 0;
+}
+
+@media (max-width: 576px) {
+  .details-row {
+    gap: 4px; /* Reduce el espacio entre las cajas */
+  }
+
+  .detail-box {
+    font-size: 0.75rem; /* Reduce el tamaño de la fuente */
+    padding: 2px 4px; /* Reduce el espaciado interno */
+  }
+}
+
+@media (min-width: 576px) and (max-width: 768px) {
+  .details-row {
+    gap: 6px; /* Espaciado intermedio entre las cajas */
+  }
+
+  .detail-box {
+    font-size: 0.85rem; /* Tamaño de fuente intermedio */
+    padding: 3px 6px; /* Ajusta el espaciado interno */
+  }
 }
 
 /* Mensaje sin películas */

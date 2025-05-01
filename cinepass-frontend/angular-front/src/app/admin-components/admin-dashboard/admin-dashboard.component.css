@@ -1,3 +1,7 @@
+html {
+  scrollbar-gutter: stable; /* Reserva espacio para la barra de desplazamiento */
+}
+
 .dashboard-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -5,7 +9,7 @@
 }
 
 h1 {
-  font-size: 32px;
+  font-size: 2.75rem;
   margin-bottom: 20px;
   text-align: center;
   color: var(--color-texto-oscuro);
@@ -80,4 +84,10 @@ h2 {
 
 .sub-options button:hover {
   background-color: #555;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
 }
