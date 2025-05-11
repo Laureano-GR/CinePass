@@ -19,6 +19,7 @@ html {
   --color-boton-hover: #444;        /* Hover en botones */
   --color-boton-borde: #777;        /* Borde del toggler */
   --color-acento: #E50914;          /* Para íconos o acentos */
+  --color-secundario-hover: rgb(255, 0, 0); /* Hover en elementos secundarios */
   --color-sombra-secundario: rgba(235, 0, 0, 0.5); /* Sombra de los elementos seleccionables*/
 
   /* Fuentes */

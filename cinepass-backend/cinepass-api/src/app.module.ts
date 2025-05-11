@@ -9,6 +9,7 @@ import { SaleModule } from './sale/sale.module';
 import { entities } from './_entities';
 import { EmailManagerModule } from './email-manager/email-manager.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
+import { ReportsGeneratorModule } from './reports-generator/reports-generator.module';
 
 @Module({
   imports: [CinemaModule, MovieModule, ShowModule, SaleModule,
@@ -20,6 +21,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     }),
     EmailManagerModule,
     FileUploadModule,
+    ReportsGeneratorModule,
   ],
   controllers: [AppController],
   providers: [AppService],

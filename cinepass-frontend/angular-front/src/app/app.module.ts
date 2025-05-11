@@ -20,6 +20,7 @@ import { MovieFormComponent } from './admin-components/movies-crud/movie-form/mo
 import { ModalComponent } from './shared-components/modal/modal.component';
 import { SearchSalesComponent } from './admin-components/sales-admin/search-sales/search-sales.component';
 import { SelectSaleDataComponent } from './admin-components/sales-admin/select-sale-data/select-sale-data.component';
+import { ReportsVisualizerComponent } from './admin-components/reports-visualizer/reports-visualizer.component';
 
 registerLocaleData(localeEsAr);
 
@@ -37,7 +38,8 @@ registerLocaleData(localeEsAr);
     ShowFormComponent,
     MovieFormComponent,
     SearchSalesComponent,
-    SelectSaleDataComponent
+    SelectSaleDataComponent,
+    ReportsVisualizerComponent
   ],
   imports: [
     BrowserModule,

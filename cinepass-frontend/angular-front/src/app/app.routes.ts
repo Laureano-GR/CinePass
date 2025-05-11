@@ -16,6 +16,7 @@ import { MovieListComponent } from './admin-components/movies-crud/movie-list/mo
 import { AuthGuardService } from './auth-guard.service';
 import { SearchSalesComponent } from './admin-components/sales-admin/search-sales/search-sales.component';
 import { SelectSaleDataComponent } from './admin-components/sales-admin/select-sale-data/select-sale-data.component';
+import { ReportsVisualizerComponent } from './admin-components/reports-visualizer/reports-visualizer.component';
 
 export const routes: Routes = [
   { path: 'select-subsidiary', component: SelectSubsidiaryComponent },
@@ -44,6 +45,7 @@ export const routes: Routes = [
           { path: 'sales/select-sale-data', component:SelectSaleDataComponent },
           { path: 'sales/create/:showId', component: ProcessSaleComponent },
           { path: 'sales/search', component: SearchSalesComponent},
+          { path: 'reports/:report', component: ReportsVisualizerComponent },
         ]
       },    
     ]
