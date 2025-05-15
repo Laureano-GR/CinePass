@@ -25,21 +25,18 @@ export class HomeService {
     }
   }
 
-  getMoviePosterUrl(movieId: number): string {
-    return `${this.url}/movies/${movieId}/poster`;
+  async getUpcomingMovies(subsidiaryId: number){
+    try {
+      const response = await axios.get(`${this.url}/subsidiaries/${subsidiaryId}/upcoming-movies`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching upcoming movies:', error);
+      throw error;
+    }
   }
 
-  getMoviesWithShowsInNextTwoWeeks(movies: MovieI[]): MovieI[] {
-    const today = new Date();
-    const twoWeeksFromNow = new Date();
-    twoWeeksFromNow.setDate(today.getDate() + 14);
-
-    return movies.filter(movie => 
-      movie.shows && movie.shows.some(show => {
-        const showDate = new Date(show.dateAndTime);
-        return showDate >= today && showDate <= twoWeeksFromNow;
-      })
-    );
+  getMoviePosterUrl(movieId: number): string {
+    return `${this.url}/movies/${movieId}/poster`;
   }
 
   async getGenres(): Promise<GenreI[]> {

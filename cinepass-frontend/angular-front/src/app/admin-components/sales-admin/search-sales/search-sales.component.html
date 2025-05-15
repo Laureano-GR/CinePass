@@ -113,5 +113,6 @@
   [showModal]="showModal"
   [title]="'Cancelación Exitosa'"
   [message]="'La venta con ID: ' + canceledSaleId + ' ha sido cancelada con éxito.'"
-  (closeModalEvent)="closeModal()">
+  (closeModalEvent)="closeModal()"
+  (navigateEvent)="navigate()">
 </app-modal>

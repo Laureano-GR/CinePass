@@ -1,4 +1,3 @@
-
 /* MODAL STYLES */
 .modal-content {
   border-radius: 10px;
@@ -129,13 +128,16 @@ button.btn-download:active {
 
 /* Table styles */
 .report-tables {
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
+  display: block; /* Allow tables to scroll horizontally */
+  width: 100%; /* Use full width of the container */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling for touch devices */
 }
 
 .report-tables table {
-  width: auto; 
+  min-width: 600px; /* Set a minimum width for better readability */
+  max-width: 100%; /* Prevent tables from exceeding container width */
+  margin: 0 auto; /* Center tables horizontally */
   border-collapse: collapse;
   margin-bottom: 1.5rem;
   table-layout: auto;
@@ -152,6 +154,8 @@ button.btn-download:active {
   font-weight: bold;
   padding: 12px;
   border: 1px solid #dee2e6; /* Border for headers */
+  word-wrap: break-word; /* Break long words to prevent overflow */
+  white-space: normal; /* Allow text to wrap within cells */
 }
 
 .report-tables td {
@@ -159,6 +163,8 @@ button.btn-download:active {
   border: 1px solid #dee2e6; /* Border for cells */
   text-align: left; /* Align cell content to the left */
   vertical-align: middle; /* Center content vertically */
+  word-wrap: break-word; /* Break long words to prevent overflow */
+  white-space: normal; /* Allow text to wrap within cells */
 }
 
 .report-tables tr:nth-child(even) {
@@ -180,15 +186,24 @@ button.btn-download:active {
 }
 
 /* Responsive table styles */
-.report-tables {
-  overflow-x: auto; /* Enable horizontal scrolling for small screens */
+@media (max-width: 768px) {
+  .report-tables table {
+    min-width: 100%; /* Adjust minimum width for smaller screens */
+  }
+
+  .report-tables th,
+  .report-tables td {
+    font-size: 0.9rem; /* Adjust font size for smaller screens */
+    padding: 8px; /* Reduce padding for better fit */
+  }
 }
 
-.report-tables table {
-  display: block;
-  max-width: 100%;
-  overflow-x: auto;
-  white-space: nowrap;
+@media (max-width: 576px) {
+  .report-tables th,
+  .report-tables td {
+    font-size: 0.8rem; /* Further reduce font size for very small screens */
+    padding: 6px; /* Further reduce padding */
+  }
 }
 
 /* Chart container styles */
@@ -216,5 +231,54 @@ canvas {
   display: block;
   max-width: 100%;
   height: auto; /* Make charts responsive */
+}
+
+/* Responsive styles for report-info */
+@media (max-width: 768px) {
+  .report-info {
+    flex-direction: column; /* Stack elements vertically */
+    align-items: flex-start; /* Align items to the start */
+    text-align: left; /* Align text to the left */
+    padding: 10px; /* Reduce padding */
+  }
+
+  .report-info > div:first-child {
+    width: 100%; /* Make the report name and parameters take full width */
+    margin-bottom: 10px; /* Add spacing below the parameters */
+    font-size: 0%;
+  }
+
+  .report-info .d-flex {
+    flex-direction: row; /* Display buttons side by side */
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 10px; /* Add spacing between buttons */
+    width: 100%; /* Ensure buttons container takes full width */
+  }
+
+  .report-info button {
+    flex: 1; /* Make buttons take equal width */
+    max-width: 150px; /* Set a maximum width for buttons */
+  }
+}
+
+@media (max-width: 576px) {
+  .report-info h3 {
+    text-align: center; 
+    font-size: 1.5rem; 
+    font-weight: bold;
+    margin-bottom: 10px; 
+    color: var(--color-secundario);
+  }
+
+  .report-info p {
+    text-align: center; 
+    font-size: 1rem; 
+    color: #6c757d;
+    margin-bottom: 15px; 
+  }
+
+  .report-info button {
+    max-width: 100%; 
+  }
 }
 

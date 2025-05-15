@@ -146,7 +146,22 @@ export class ProcessSaleComponent implements OnInit {
 
   closeModal() {
     this.showModal = false;
-    this.router.navigate(['/']);
+    if (this.isOnline) {
+      this.router.navigate(['/']);
+    }
+    else {
+      this.router.navigate(['/admin/dashboard']);
+    }
+  }
+
+  navigate() {
+    this.showModal = false;
+    if (this.isOnline) {
+      this.router.navigate(['/']);
+    }
+    else {
+      this.router.navigate(['/admin/dashboard']);
+    }
   }
 
   validateExpiryDate(): void {

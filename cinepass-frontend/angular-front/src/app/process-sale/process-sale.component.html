@@ -110,5 +110,6 @@
   [showModal]="showModal"
   [title]="'Compra Exitosa'"
   [message]="isOnline ? 'Gracias por su compra!\nSu transacción ha sido completada con éxito.\nLas entradas han sido enviadas a su correo electrónico.' : 'Venta registrada exitosamente.\nPara ver detalles sobre la misma acceda a la sección de busqueda de ventas.'"
-  (closeModalEvent)="closeModal()">
+  (closeModalEvent)="closeModal()"
+  (navigateEvent)="navigate()">
 </app-modal>

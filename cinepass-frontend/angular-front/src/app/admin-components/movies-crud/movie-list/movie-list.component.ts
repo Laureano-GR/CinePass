@@ -44,6 +44,7 @@ export class MovieListComponent {
       this.movieService.getMoviesBySubsidiary(this.subsidiaryId).subscribe(
         (movies) => {
           this.movies = movies;
+          console.log('Películas de la sucursal:', movies);
           this.sort('');
           this.sort('id'); // Ordenar por defecto por ID de menor a mayor
         },
@@ -63,9 +64,10 @@ export class MovieListComponent {
         }
       );
     } else if (this.filter === 'inTheaters') {
-      this.movieService.getMoviesBySubsidiary(this.subsidiaryId).subscribe(
+      this.movieService.getUpcomingMovies(this.subsidiaryId).subscribe(
         (movies) => {
-          this.movies = this.movieService.getMoviesWithShowsInNextTwoWeeks(movies);
+          this.movies = movies;
+          console.log('Películas en cartelera:', movies);
           this.sort('');
           this.sort('id'); // Ordenar por defecto por ID de menor a mayor
         },

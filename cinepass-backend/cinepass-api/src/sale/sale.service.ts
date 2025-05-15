@@ -145,6 +145,32 @@ export class SaleService {
     }
   }
 
+  async findSales(purchaseId?: number, documentNumber?: string, date?: string): Promise<SaleEntity[]> {
+    try {
+      const query = this.saleRepository.createQueryBuilder('sale')
+        .leftJoinAndSelect('sale.paymentData', 'paymentData')
+        .leftJoinAndSelect('sale.tickets', 'tickets')
+        .leftJoinAndSelect('sale.show', 'show')
+        .leftJoinAndSelect('paymentData.paymentMethod', 'paymentMethod')
+        .leftJoinAndSelect('paymentData.IDType', 'IDType');
+
+      if (purchaseId) {
+        query.andWhere('sale.id = :purchaseId', { purchaseId });
+      }
+      if (documentNumber) {
+        query.andWhere('paymentData.IDNumber = :documentNumber', { documentNumber });
+      }
+      if (date) {
+        query.andWhere('DATE(sale.dateAndTime) = :date', { date });
+      }
+
+      return await query.getMany();
+    } catch (error) {
+      console.error('Error finding sales:', error);
+      throw new HttpException('Find sales error', 500);
+    }
+  }
+
   async updateSale(
     saleId: number,
     sale: DeepPartial<SaleEntity>,
@@ -187,7 +213,7 @@ export class SaleService {
       throw new HttpException('Find sale by id error', 500);
     }
   }
-
+  
   generateEmailSalesContent(createSaleDto: CreateSaleDTO, purchaseCode: string): string {
     return `
     <!DOCTYPE html>

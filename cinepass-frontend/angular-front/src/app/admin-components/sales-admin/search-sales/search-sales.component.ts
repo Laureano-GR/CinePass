@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SaleI } from '../../../interfaces/sale';
 import { SalesService } from '../sales.service';
 import { LoadingService } from '../../../shared-components/loading-screen/loading.service';
@@ -12,16 +12,14 @@ import { Router } from '@angular/router';
   templateUrl: './search-sales.component.html',
   styleUrls: ['./search-sales.component.css']
 })
-export class SearchSalesComponent implements OnInit {
+export class SearchSalesComponent {
   sales: SaleI[] = []; // Lista de ventas inicializada como vacía
   filteredSales: SaleI[] = []; // Ventas filtradas inicializada como vacía
   showModal: boolean = false;
   canceledSaleId: number | null = null; // Almacena el ID de la venta cancelada
   searchCriteria = {
     purchaseCode: '',
-    date: '',
-    canceled: '',
-    paymentMethod: ''
+    date: ''
   }; // Criterios de búsqueda
   selectedSale: SaleI | null = null; // Venta seleccionada para mostrar en el modal
   showDetails: ShowI | null = null; // Detalles del show
@@ -33,35 +31,31 @@ export class SearchSalesComponent implements OnInit {
     private router: Router,
   ) {} // Inyecta el servicio
 
-  ngOnInit(): void {
-    this.fetchSales(); // Llama a la función fetchSales al inicializar el componente
-  }
+  onSearch(): void {
+    console.log('Buscando ventas con criterios:', this.searchCriteria);
+    const { purchaseCode, date } = this.searchCriteria;
+    let purchaseId: number | undefined;
+    let documentNumber: string | undefined;
 
-  fetchSales(): void {
-    this.salesService.getSales().subscribe({
+    if (purchaseCode) {
+      const parts = purchaseCode.split('-');
+      if (parts.length === 3 && parts[0] === 'CINEPASS') {
+        purchaseId = parseInt(parts[1], 10);
+        documentNumber = parts[2];
+      } else {
+        console.error('Invalid purchase code format');
+        return;
+      }
+    }
+
+    this.salesService.findSales(purchaseId, documentNumber, date).subscribe({
       next: (sales) => {
-        this.sales = sales; // Asigna las ventas obtenidas
-        console.log('Sales fetched:', this.sales); // Muestra las ventas en la consola
+        this.filteredSales = sales;
       },
       error: (err) => {
-        console.error('Error fetching sales:', err);
+        console.error('Error finding sales:', err);
       }
     });
-  }
-
-  onSearch(): void {
-    console.log(this.searchCriteria);
-    if (this.searchCriteria.purchaseCode || this.searchCriteria.date || this.searchCriteria.canceled || this.searchCriteria.paymentMethod) {
-      this.filteredSales = this.sales.filter(sale => {
-        // Extrae solo la parte del día de la fecha de la venta (formato yyyy-MM-dd)
-        const saleDate = this.formatDate(new Date(sale.dateAndTime));
-        return (
-          (!this.searchCriteria.purchaseCode || this.comparePurchaseCode(sale, this.searchCriteria.purchaseCode)) &&
-          (!this.searchCriteria.date || saleDate === this.searchCriteria.date));
-      });
-    } else {
-      this.filteredSales = [];
-    }
   }
   
   /**
@@ -77,9 +71,7 @@ export class SearchSalesComponent implements OnInit {
   resetFilters(): void {
     this.searchCriteria = {
       purchaseCode: '',
-      date: '',
-      canceled: '',
-      paymentMethod: ''
+      date: ''
     };
     this.onSearch()
   }
@@ -113,20 +105,25 @@ export class SearchSalesComponent implements OnInit {
         this.loadingService.hide(); // Oculta la barra de carga
         this.canceledSaleId = saleId; // Almacena el ID de la venta cancelada
         this.showModal=true; // Muestra el modal de éxito
-        //this.fetchSales(); // Actualiza la lista de ventas
       },
       error: (err) => {
         console.error('Error canceling sale:', err);
         this.loadingService.hide(); // Oculta la barra de carga incluso si hay un error
       }
     });
-
   }
 
   closeModal() {
     this.showModal = false;
     this.canceledSaleId = null; // Limpia el ID de la venta cancelada
-    this.router.navigate(['admin/dashboard']);
+    this.closeDetails(); // Limpia la venta seleccionada y los detalles
+    this.onSearch(); // Vuelve a buscar las ventas para actualizar la lista
+  }
+
+  navigate() {
+    this.showModal = false;
+    this.canceledSaleId = null; // Limpia el ID de la venta cancelada
+    this.router.navigate(['/admin/dashboard']); // Navega a la página de ventas
   }
 
   confirmCancelSale(saleId: number): void {

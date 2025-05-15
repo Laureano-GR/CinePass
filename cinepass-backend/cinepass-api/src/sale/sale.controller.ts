@@ -47,4 +47,13 @@ export class SaleController {
     const canceledSale = await this.service.cancelSale(id);
     return canceledSale;
   }
+
+  @Post('find')
+  async findSales(
+    @Body('purchaseId') purchaseId?: number,
+    @Body('documentNumber') documentNumber?: string,
+    @Body('date') date?: string,
+  ): Promise<SaleEntity[]> {
+    return await this.service.findSales(purchaseId, documentNumber, date);
+  }
 }

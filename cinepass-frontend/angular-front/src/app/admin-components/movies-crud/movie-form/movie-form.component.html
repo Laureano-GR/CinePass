@@ -62,6 +62,8 @@
     [showModal]="showModal" 
     [title]="modalTitle"
     [message]="modalMessage"
-    (closeModalEvent)="closeModal()">
+    (closeModalEvent)="closeModal()"
+    (navigateEvent)="navigate()"
+    >
   </app-modal>
 </div>

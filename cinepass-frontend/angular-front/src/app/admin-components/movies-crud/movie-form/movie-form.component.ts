@@ -245,6 +245,11 @@ export class MovieFormComponent implements OnInit {
     this.router.navigate(['/admin/movies/read']);
   }
 
+  navigate(): void {
+    this.showModal = false;
+    this.router.navigate(['/admin/movies/read']);
+  }
+
   onLoadMovie(): void {
     const movieId = this.movieForm.get('movieId')?.value;
     if (movieId) {

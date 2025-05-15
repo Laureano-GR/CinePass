@@ -5,6 +5,8 @@ import {
   Body,
   Param,
   Put,
+  ParseIntPipe,
+  HttpException,
 } from '@nestjs/common';
 import { SubsidiaryEntity } from 'src/_entities/subsidiary.entity';
 import { DeepPartial } from "typeorm";
@@ -51,6 +53,17 @@ export class SubsidiaryController {
     async findByID(@Param('id') id: number): Promise<SubsidiaryEntity> {
       return await this.service.findByID(id);
     }
+
+    @Get(':id/upcoming-movies')
+      async findUpcomingMovies(
+        @Param('id', ParseIntPipe) subsidiaryId: number,
+      ): Promise<MovieEntity[]> {
+        try {
+          return await this.service.findUpcomingMovies(subsidiaryId);
+        } catch (error) {
+          throw new HttpException(error.message, error.status || 500);
+        }
+      } 
 
     @Get('movies/:id')
     async findSubsidiaryMovies(@Param('id') id: number): Promise <MovieEntity[]>{

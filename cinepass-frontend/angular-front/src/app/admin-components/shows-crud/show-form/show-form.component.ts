@@ -207,6 +207,11 @@ export class ShowFormComponent implements OnInit {
     this.router.navigate(['/admin/shows/read']);
   }
 
+  navigate(){
+    this.showModal = false;
+    this.router.navigate(['/admin/shows/read']);
+  }
+
   onMovieChange(event: any): void {
     let movieId: number = 0;
     if (typeof event === 'number') {

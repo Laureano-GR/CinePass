@@ -51,8 +51,7 @@ export class SelectSaleDataComponent {
     }
 
     try {
-      const subsidiaryMovies = await this.service.getMovies(this.subsidiaryId);
-      this.movies = this.service.getMoviesWithShowsInNextTwoWeeks(subsidiaryMovies);
+      this.movies = await this.service.getUpcomingMovies(this.subsidiaryId);
     } catch (error) {
       console.error('Error fetching movies in theaters:', error);
       this.error = 'Hubo un error al cargar las películas. Por favor, intente de nuevo más tarde.';

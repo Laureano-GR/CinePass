@@ -14,11 +14,11 @@ export class SalesService {
 
   constructor() {}
 
-  getSales(): Observable<SaleI[]> {
+  /*getSales(): Observable<SaleI[]> {
     return from(
       axios.get<SaleI[]>(`${this.apiUrl}/sales`).then(response => response.data)
     );
-  }
+  }*/
 
   getShowDetails(showId: number): Observable<ShowI> {
     return from(
@@ -38,27 +38,23 @@ export class SalesService {
     );
   }
 
-  async getMovies(subsidiaryId: number) {
-    try {
-      const response = await axios.get(`${this.apiUrl}/subsidiaries/movies/${subsidiaryId}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-      throw error;
-    }
+  findSales(purchaseId?: number, documentNumber?: string, date?: string): Observable<SaleI[]> {
+    return from(
+      axios.post<SaleI[]>(`${this.apiUrl}/sales/find`, { purchaseId, documentNumber, date }).then(response => response.data)
+    );
   }
 
-  getMoviesWithShowsInNextTwoWeeks(movies: MovieI[]): MovieI[] {
-    const today = new Date();
-    const twoWeeksFromNow = new Date();
-    twoWeeksFromNow.setDate(today.getDate() + 14);
-
-    return movies.filter(movie => 
-      movie.shows && movie.shows.some(show => {
-        const showDate = new Date(show.dateAndTime);
-        return showDate >= today && showDate <= twoWeeksFromNow;
-      })
-    );
+  async getUpcomingMovies(subsidiaryId: number): Promise<MovieI[]> {
+    try {
+      const response = await axios.get<MovieI[]>(`${this.apiUrl}/subsidiaries/${subsidiaryId}/upcoming-movies`);
+      if (!response.data) {
+        throw new Error('No upcoming movies found');
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching upcoming movies:', error);
+      throw error;
+    }
   }
 
   async getShow(showId: number): Promise<ShowI> {
@@ -74,13 +70,30 @@ export class SalesService {
     }
   }
 
-  async getShowsByMovieAndSubsidiary(movieId: number, subsidiaryId: number): Promise<ShowI[]> {
+  async getShowsByMovieAndSubsidiary(movieId: number, subsidiaryId: number): Promise<ShowI[]> { //Este metodo obtiene las funciones de una pelicula dentro de las proximas dos semanas para esa sucursal
     try {
       const response = await axios.get<ShowI[]>(`${this.apiUrl}/shows/filter-shows/${movieId}/${subsidiaryId}`);
       if (!response.data) {
         throw new Error('Shows not found');
       }
-      return response.data;
+
+      const twoWeeksFromNow = new Date();
+      twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+
+      // Filtrar los shows con fecha dentro de las próximas dos semanas
+      const filteredShows = response.data.filter((show) => {
+        const showDate = new Date(show.dateAndTime);
+        return showDate >= new Date() && showDate <= twoWeeksFromNow;
+      });
+
+      // Ordenar los shows por fecha
+      const sortedShows = filteredShows.sort((a, b) => {
+        const dateA = new Date(a.dateAndTime).getTime();
+        const dateB = new Date(b.dateAndTime).getTime();
+        return dateA - dateB; // Orden ascendente
+      });
+
+      return sortedShows;
     } catch (error) {
       console.error('Error fetching shows by movie and subsidiary:', error);
       throw error;
@@ -88,15 +101,16 @@ export class SalesService {
   }
 
   async getMovie(id: number): Promise<MovieI> {
-  try {
-    const response = await axios.get<MovieI>(`${this.apiUrl}/movies/${id}`);
-    if (!response.data) {
-      throw new Error('Movie not found');
+    try {
+      const response = await axios.get<MovieI>(`${this.apiUrl}/movies/${id}`);
+      if (!response.data) {
+        throw new Error('Movie not found');
+      }
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching movie details:', error);
+      throw error;
     }
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching movie details:', error);
-    throw error;
   }
-}
+
 }

@@ -10,8 +10,13 @@ export class ModalComponent {
   @Input() title: string = 'Procesado con exito';
   @Input() message: string = 'Su proceso ha sido completado con éxito.';
   @Output() closeModalEvent = new EventEmitter<void>();
+  @Output() navigateEvent = new EventEmitter<void>(); // Nuevo evento para navegación
 
   closeModal() {
     this.closeModalEvent.emit();
+  }
+
+  navigate() {
+    this.navigateEvent.emit();
   }
 }

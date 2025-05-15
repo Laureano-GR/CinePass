@@ -116,8 +116,7 @@ export class HomeComponent implements OnInit {
   async fetchMoviesInTheaters() {
     try {
       const subsidiaryId = this.subsidiaryService.getSubsidiaryId();
-      const subsidiaryMovies = await this.homeService.getMovies(subsidiaryId);
-      this.movies = this.homeService.getMoviesWithShowsInNextTwoWeeks(subsidiaryMovies);
+      this.movies = await this.homeService.getUpcomingMovies(subsidiaryId);
       this.filteredMovies = this.movies;
     } catch (error) {
       console.error('Error fetching movies in theaters:', error);

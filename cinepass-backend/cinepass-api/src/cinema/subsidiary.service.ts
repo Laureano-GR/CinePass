@@ -4,8 +4,6 @@ import { ShowEntity } from 'src/_entities/show.entity';
 import { SubsidiaryEntity } from 'src/_entities/subsidiary.entity';
 import { DeepPartial } from "typeorm";
 import * as bcrypt from 'bcrypt';
-import * as fs from 'fs';
-import * as path from 'path';
 import { RoomEntity } from 'src/_entities/room.entity';
 
 @Injectable()
@@ -140,6 +138,47 @@ export class SubsidiaryService {
       return subsidiary.rooms;
     } catch (error) {
       throw new HttpException('Find subsidiary rooms error', 500);
+    }
+  }
+
+  async findUpcomingMovies(subsidiaryId: number): Promise<MovieEntity[]> {
+    try {
+      const twoWeeksFromNow = new Date();
+      twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+
+      const subsidiary = await this.repository.findOne({
+        where: { id: subsidiaryId },
+        relations: [
+          'shows',
+          'shows.movie',
+          'shows.movie.genre',
+          'shows.movie.showTypes',
+          'shows.movie.contentRating',
+          'shows.movie.languages',
+        ],
+      });
+
+      if (!subsidiary) {
+        throw new HttpException(`Subsidiary with ID ${subsidiaryId} not found`, 404);
+      }
+
+      const movieSet = new Set<number>();
+      const upcomingMovies: MovieEntity[] = [];
+
+      for (const show of subsidiary.shows) {
+        const showDate = new Date(show.dateAndTime);
+        if (showDate >= new Date() && showDate <= twoWeeksFromNow) {
+          const movie = show.movie;
+          if (movie && !movieSet.has(movie.id)) {
+            movieSet.add(movie.id);
+            upcomingMovies.push(movie);
+          }
+        }
+      }
+
+      return upcomingMovies;
+    } catch (error) {
+      throw new HttpException('Find upcoming movies error', 500);
     }
   }
 }

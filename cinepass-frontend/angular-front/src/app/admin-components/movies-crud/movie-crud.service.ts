@@ -26,17 +26,8 @@ export class MovieService {
     return from(this.axiosInstance.get<MovieI[]>(`/subsidiaries/movies/${subsidiaryId}`).then(res => res.data));
   }
 
-  getMoviesWithShowsInNextTwoWeeks(movies: MovieI[]): MovieI[] {
-    const today = new Date();
-    const twoWeeksFromNow = new Date();
-    twoWeeksFromNow.setDate(today.getDate() + 14);
-
-    return movies.filter(movie =>
-      movie.shows && movie.shows.some(show => {
-        const showDate = new Date(show.dateAndTime);
-        return showDate >= today && showDate <= twoWeeksFromNow;
-      })
-    );
+  getUpcomingMovies(subsidiaryId: number): Observable<MovieI[]> {
+    return from(this.axiosInstance.get<MovieI[]>(`/subsidiaries/${subsidiaryId}/upcoming-movies`).then(res => res.data));
   }
 
   getMovies(): Observable<MovieI[]> {
