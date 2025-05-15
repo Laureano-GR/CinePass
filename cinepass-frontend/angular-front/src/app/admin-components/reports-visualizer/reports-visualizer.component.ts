@@ -266,8 +266,20 @@ export class ReportsVisualizerComponent implements OnInit {
     }
   }
 
-  downloadReport(): void {
-    // Lógica para descargar el reporte (vacía por ahora)
-    console.log('Descargar reporte');
+  async downloadReport(): Promise<void> {
+    try {
+      // Construir el nombre del archivo
+      const sanitizedParameters = this.reportParameters
+        .map(param => param.replace(/:/g, '').trim()) // Eliminar ":" y espacios adicionales
+        .join(' - '); // Unir los parámetros con ' - ' como separador
+
+      const filename = `${this.modalData.title.replace(/:/g, '').trim()} - ${sanitizedParameters}`; // Concatenar título y parámetros con ' - '
+      const reportData = this.reportData; // Datos del reporte que se enviarán al backend
+
+      // Llamar al servicio para exportar el reporte a Excel
+      await this.reportsService.exportReportToExcel({ reportData }, filename);
+    } catch (error) {
+      console.error('Error al descargar el reporte:', error);
+    }
   }
 }

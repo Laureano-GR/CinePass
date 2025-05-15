@@ -54,7 +54,7 @@
         <ng-template #defaultParam>
           {{ param }}
         </ng-template>
-        <span *ngIf="!last">, </span>
+        <ng-container *ngIf="!last">|</ng-container>
       </span>
     </p>
   </div>

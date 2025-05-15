@@ -39,4 +39,32 @@ export class ReportsService {
     }
   }
 
+  async exportReportToExcel(reportData: any, filename: string): Promise<void> {
+    try {
+      const response = await axios.post(`${this.apiUrl}/reports-generator/export`, reportData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        },
+        responseType: 'blob', // Asegura que la respuesta sea tratada como un archivo binario
+      });
+  
+      // Crear un blob con los datos recibidos del backend
+      const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  
+      // Crear una URL temporal para descargar el archivo
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${filename}.xlsx`; // Nombre del archivo con extensión
+      a.click();
+  
+      // Revocar la URL temporal después de la descarga
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting report to Excel:', error);
+      throw error;
+    }
+  }
+
 }

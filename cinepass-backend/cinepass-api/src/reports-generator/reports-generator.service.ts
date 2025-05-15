@@ -44,30 +44,40 @@ export class ReportsGeneratorService {
   }
 
   private async calculateMovieSalesReport(subsidiaryId: number, month: string, year: string): Promise<any[][]> {
-    const result = await this.dataSource.query(
-      `
-      SELECT 
-        m.name AS movieName,
-        SUM(s.totalPrice) AS totalRevenue,
-        SUM(s.ticketsAmount) AS totalTickets,
-        st.name AS mostSoldShowType
-      FROM sales s
-      INNER JOIN shows sh ON s.showId = sh.id
-      INNER JOIN movies m ON sh.movieId = m.id
-      INNER JOIN showTypes st ON sh.showTypeId = st.id
-      WHERE sh.subsidiaryId = ? AND strftime('%m', s.dateAndTime) = ? AND strftime('%Y', s.dateAndTime) = ? AND s.canceled = 0
-      GROUP BY m.name, st.name
-      ORDER BY totalRevenue DESC
-      `,
-      [subsidiaryId, month, year]
-    );
-  
-    const formattedResult = result.map(row => [row.movieName, row.totalRevenue, row.totalTickets, row.mostSoldShowType]);
-  
-    return [
-      ['Ventas de películas del mes'],
-      ['Película', 'Total recaudado', 'Cantidad de entradas vendidas', 'Tipo de función más vendido'], ...formattedResult];
-  }
+  const result = await this.dataSource.query(
+    `
+    SELECT 
+      m.name AS movieName,
+      SUM(s.totalPrice) AS totalRevenue,
+      SUM(s.ticketsAmount) AS totalTickets,
+      (
+        SELECT st.name
+        FROM sales s2
+        INNER JOIN shows sh2 ON s2.showId = sh2.id
+        INNER JOIN showTypes st ON sh2.showTypeId = st.id
+        WHERE sh2.movieId = m.id AND sh2.subsidiaryId = ? AND strftime('%m', s2.dateAndTime) = ? AND strftime('%Y', s2.dateAndTime) = ? AND s2.canceled = 0
+        GROUP BY st.id
+        ORDER BY SUM(s2.ticketsAmount) DESC
+        LIMIT 1
+      ) AS mostSoldShowType
+    FROM sales s
+    INNER JOIN shows sh ON s.showId = sh.id
+    INNER JOIN movies m ON sh.movieId = m.id
+    WHERE sh.subsidiaryId = ? AND strftime('%m', s.dateAndTime) = ? AND strftime('%Y', s.dateAndTime) = ? AND s.canceled = 0
+    GROUP BY m.id
+    ORDER BY totalRevenue DESC
+    `,
+    [subsidiaryId, month, year, subsidiaryId, month, year]
+  );
+
+  const formattedResult = result.map(row => [row.movieName, row.totalRevenue, row.totalTickets, row.mostSoldShowType]);
+
+  return [
+    ['Ventas de películas del mes'],
+    ['Película', 'Total recaudado', 'Cantidad de entradas vendidas', 'Tipo de función más vendido'],
+    ...formattedResult,
+  ];
+}
 
   private async calculatePaymentMethodsReport(subsidiaryId: number, month: string, year: string): Promise<any[][]> {
     const result = await this.dataSource.query(

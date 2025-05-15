@@ -92,17 +92,28 @@ export class AdminsService {
     admin: DeepPartial<AdminEntity>,
   ): Promise<AdminEntity> {
     try {
-      const existingAdmin = await this.repository.findOne({where:{id:adminId}});
+      const existingAdmin = await this.repository.findOne({ where: { id: adminId } });
       if (!existingAdmin) {
         throw new HttpException('Admin not found', 404);
       }
+
+      // Hashear la contraseña si se está actualizando
+      if (admin.password) {
+        admin.password = hashSync(admin.password, 10);
+      }
+
+      // Hashear el subsidiaryCode si se está actualizando
+      if (admin.subsidiaryCode) {
+        admin.subsidiaryCode = hashSync(admin.subsidiaryCode, 10);
+      }
+
       Object.assign(existingAdmin, admin);
 
       const updatedAdmin = await this.repository.save(existingAdmin);
       return updatedAdmin;
     } catch (error) {
       if (error instanceof HttpException) {
-        throw error; 
+        throw error;
       }
       throw new HttpException('Update admin error', 500);
     }
