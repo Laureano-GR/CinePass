@@ -106,6 +106,10 @@
   <button type="submit" [disabled]="!purchaseForm.valid"><i class="fas fa-shopping-cart"></i> {{ isOnline ? 'Realizar compra' : 'Registrar venta' }}</button>
 </form>
 
+<div *ngIf="errorMessage" class="alert alert-danger mt-3">
+  {{ errorMessage }}
+</div>
+
 <app-modal
   [showModal]="showModal"
   [title]="'Compra Exitosa'"

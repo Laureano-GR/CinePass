@@ -86,7 +86,7 @@
     <button
       type="button"
       class="btn"
-      [disabled]="!selectedShowId || ticketQuantity <= 0"
+      [disabled]="!selectedShowId || ticketQuantity <= 0 || ticketQuantity > availableTickets"
       (click)="onSubmit()"
       >
       <i class="fas fa-shopping-cart"></i> Vender Entradas

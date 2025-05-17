@@ -1,10 +1,9 @@
 import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, EntityManager, DeepPartial, In } from 'typeorm';
+import { Repository, EntityManager, In, DataSource, QueryRunner, DeepPartial } from 'typeorm';
 import { SaleEntity } from 'src/_entities/sale.entity';
 import { PaymentDataEntity } from 'src/_entities/paymentData.entity';
 import { TicketEntity } from 'src/_entities/ticket.entity';
-import { ShowEntity } from 'src/_entities/show.entity';
 import { CreateSaleDTO } from 'src/_interfaces/createSale.dto';
 import * as QRCode from 'qrcode';
 import { EmailManagerService } from 'src/email-manager/email-manager.service';
@@ -13,6 +12,7 @@ import * as path from 'path';
 @Injectable()
 export class SaleService {
   constructor(
+    private readonly dataSource: DataSource,
     private readonly emailManagerService: EmailManagerService,
     @InjectRepository(SaleEntity)
     private readonly saleRepository: Repository<SaleEntity>,
@@ -72,69 +72,100 @@ export class SaleService {
   }
 
   async createSale(createSaleDto: CreateSaleDTO): Promise<SaleEntity> {
-    const existingShow = createSaleDto.show
-    const { ticketsAmount, paymentData, totalPrice } = createSaleDto;
+    const MAX_RETRIES = 3;
+    let attempt = 0;
+    let lastError: any;
 
-    return await this.saleRepository.manager.transaction(async (manager: EntityManager) => {
+    while (attempt < MAX_RETRIES) {
+      const qr: QueryRunner = this.dataSource.createQueryRunner();
+      await qr.connect();
+      await qr.query(`PRAGMA busy_timeout = 5000;`);
+
       try {
-        const paymentDataEntity = new PaymentDataEntity();
-        paymentDataEntity.paymentMethod = { id: paymentData.paymentMethod.id } as any; // Asignar directamente el ID del PaymentData
-        paymentDataEntity.IDNumber = paymentData.IDNumber;
-        paymentDataEntity.name = paymentData.name;
-        paymentDataEntity.email = paymentData.email;
-        paymentDataEntity.IDType = { id: paymentData.IDType } as any; // Asignar directamente el ID del IDType
+        await qr.startTransaction();
 
-        // Crear datos de pago
-        const savedPaymentData = await manager.save(PaymentDataEntity, paymentDataEntity);
+        // 0) Verificación de disponibilidad (consultar en la base real)
+        const showId = createSaleDto.show.id;
+        const capacity = createSaleDto.show.room.capacity;
 
-        //Manejo previo a la creacion de tickets
-        const existingTicketNumbers = existingShow.tickets.map(ticket => ticket.ticketXShowNumber); // Obtén los números de tickets existentes
-        const maxTicketNumber = Math.max(0, ...existingTicketNumbers); // Encuentra el número más alto
-        const availableNumbers = [];
-
-        // Encuentra los números faltantes (disponibles para reutilizar)
-        for (let i = 1; i <= maxTicketNumber; i++) {
-          if (!existingTicketNumbers.includes(i)) {
-            availableNumbers.push(i);
-          }
+        // Consulta los tickets vendidos en la base de datos dentro de la transacción
+        const sold = await qr.manager.count(TicketEntity, { where: { show: { id: showId } } });
+        const remaining = capacity - sold;
+        if (createSaleDto.ticketsAmount > remaining) {
+          throw new HttpException(
+            `No quedan suficientes butacas. Disponibles: ${remaining}`,
+            400
+          );
         }
 
-        // Crear tickets
-        const tickets = [];
-        for (let i = 0; i < ticketsAmount; i++) {
-          const ticket = new TicketEntity();
-          ticket.show = { id: existingShow.id } as any; // Asignar directamente el ID del Show
+        // 1) Guardar PaymentData
+        const pd = new PaymentDataEntity();
+        pd.paymentMethod = { id: createSaleDto.paymentData.paymentMethod.id } as any;
+        pd.IDNumber = createSaleDto.paymentData.IDNumber;
+        pd.name = createSaleDto.paymentData.name;
+        pd.email = createSaleDto.paymentData.email;
+        pd.IDType = { id: createSaleDto.paymentData.IDType } as any;
+        const savedPD = await qr.manager.save(pd);
 
-          // Asignar un número de ticket reutilizable o consecutivo
-          if (availableNumbers.length > 0) {
-            ticket.ticketXShowNumber = availableNumbers.shift(); // Usa un número disponible
+        // 2) Crear tickets
+        const existingShow = createSaleDto.show;
+        const existingNumbers = existingShow.tickets.map(t => t.ticketXShowNumber);
+        const maxNum = Math.max(0, ...existingNumbers);
+        const available = Array.from({ length: maxNum }, (_, i) => i + 1)
+          .filter(n => !existingNumbers.includes(n));
+
+        let nextNum = maxNum + 1;
+        const tickets: TicketEntity[] = [];
+        for (let i = 0; i < createSaleDto.ticketsAmount; i++) {
+          const t = new TicketEntity();
+          t.show = { id: existingShow.id } as any;
+          if (available.length) {
+            t.ticketXShowNumber = available.shift();
           } else {
-            ticket.ticketXShowNumber = maxTicketNumber + 1 + i; // Usa un número consecutivo
+            t.ticketXShowNumber = nextNum++;
           }
-
-          tickets.push(ticket);
+          tickets.push(t);
         }
+        const savedTickets = await qr.manager.save(TicketEntity, tickets);
 
-        const savedTickets = await manager.save(TicketEntity, tickets);
-
-        // Crear venta
+        // 3) Crear la venta
         const sale = new SaleEntity();
         sale.dateAndTime = new Date();
-        sale.paymentData = savedPaymentData;
+        sale.paymentData = savedPD;
         sale.show = existingShow;
         sale.tickets = savedTickets;
-        sale.ticketsAmount = ticketsAmount;
-        sale.totalPrice = totalPrice;
+        sale.ticketsAmount = createSaleDto.ticketsAmount;
+        sale.totalPrice = createSaleDto.totalPrice;
         sale.canceled = false;
+        const savedSale = await qr.manager.save(SaleEntity, sale);
 
-        return await manager.save(SaleEntity, sale);
-      } catch (error) {
-        console.error(error); // Agrega esto para ver el error en la consola
-        throw new HttpException(`Create sale error: ${error.message}`, 500);
+        await qr.commitTransaction();
+        await qr.release();
+        return savedSale;
+
+      } catch (err: any) {
+        lastError = err;
+        if (err.code === 'SQLITE_BUSY') {
+          await qr.rollbackTransaction();
+          await qr.release();
+          attempt++;
+          await new Promise(res => setTimeout(res, 100 * attempt));
+          continue;
+        }
+        await qr.rollbackTransaction();
+        await qr.release();
+        throw err instanceof HttpException
+          ? err
+          : new HttpException(`Error al crear venta: ${err.message}`, 500);
       }
-    });
-  }
+    }
 
+    throw new HttpException(
+      `Demasiados intentos concurrentes, por favor inténtalo de nuevo.`,
+      409
+    );
+  }
+  
   async findAll() {
     try {
       return await this.saleRepository.find({

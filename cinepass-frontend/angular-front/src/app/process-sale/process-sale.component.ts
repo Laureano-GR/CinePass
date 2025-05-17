@@ -30,6 +30,7 @@ export class ProcessSaleComponent implements OnInit {
   isOnline: boolean = false; // Variable para determinar si está en modo online
   isCashPayment: boolean = false; // Variable para verificar si es efectivo
   asciiReceipt: string = ''; // Variable para almacenar el recibo ASCII
+  errorMessage: string | null = null;
 
   constructor(
     private processSaleService: ProcessSaleService,
@@ -139,9 +140,17 @@ export class ProcessSaleComponent implements OnInit {
       }
     })
     .catch(error => {
-      this.loadingService.hide();
-      console.error('Error creating sale:', error);
-    });
+        this.loadingService.hide();
+        // Manejo genérico de errores usando el mensaje del backend si existe
+        if (error?.response?.data?.message) {
+          this.errorMessage = error.response.data.message;
+        } else if (typeof error === 'string') {
+          this.errorMessage = error;
+        } else {
+          this.errorMessage = 'Ocurrió un error inesperado. Intente nuevamente.';
+        }
+        console.error('Error creating sale:', error);
+      });
   }
 
   closeModal() {

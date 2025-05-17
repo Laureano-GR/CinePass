@@ -35,14 +35,13 @@ export class ProcessSaleService {
     );
   }
 
-  createSale(saleData: CreateSaleDTO): Promise<string | null> {
-    return from(axios.post(`${this.apiUrl}/sales`, saleData, { responseType: 'text' })).pipe(
-      map(response => response.data),
-      catchError(error => {
-        console.error('Error creating sale:', error);
-        return of(null);
-      })
-    ).toPromise();
+  async createSale(saleData: CreateSaleDTO): Promise<string | null> {
+    try {
+      const response = await axios.post<string>(`${this.apiUrl}/sales`, saleData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 
   getPaymentMethods(isOnline: boolean): Observable<PaymentMethodI[]> { // Este metodo trae todos los metodos de pago menos el de efectivo en caso de que no sea online
