@@ -64,9 +64,13 @@ export class MovieService {
 
   async findAll() {
     try {
-      return await this.movieRepository.find({
-        relations:['languages','contentRating','genre', 'showTypes'],
-      });
+      return await this.movieRepository
+        .createQueryBuilder('movie')
+        .leftJoinAndSelect('movie.languages', 'language')
+        .leftJoinAndSelect('movie.contentRating', 'contentRating')
+        .leftJoinAndSelect('movie.genre', 'genre')
+        .leftJoinAndSelect('movie.showTypes', 'showType')
+        .getMany();
     } catch (error) {
       throw new HttpException('Find movies error', 500);
     }

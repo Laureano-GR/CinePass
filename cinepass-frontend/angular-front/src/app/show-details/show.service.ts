@@ -44,9 +44,14 @@ export class ShowService {
     }
 
     shows.forEach(show => {
-      const date = new Date(show.dateAndTime);
-      const day = date.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-      const time = date.toTimeString().split(' ')[0].slice(0, 5); // Formato HH:mm
+      const dateUTC = new Date(show.dateAndTime);
+      // Ajustar a GMT-3 restando 3 horas
+      const dateGMT3 = new Date(dateUTC.getTime());
+      const year = dateGMT3.getFullYear();
+      const month = String(dateGMT3.getMonth() + 1).padStart(2, '0');
+      const dayNum = String(dateGMT3.getDate()).padStart(2, '0');
+      const day = `${year}-${month}-${dayNum}`; // YYYY-MM-DD
+      const time = dateGMT3.toTimeString().split(' ')[0].slice(0, 5); // Formato HH:mm
 
       if (showMatrix[day]) {
         showMatrix[day].push({

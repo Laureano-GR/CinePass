@@ -76,43 +76,39 @@ export class SubsidiaryService {
   }
 
   async findSubsidiaryMovies(subsidiaryId: number): Promise<MovieEntity[]> {
-    const subsidiary = await this.repository.findOne({
-      where: { id: subsidiaryId },
-      relations: [
-        'shows', 
-        'shows.movie', 
-        'shows.movie.genre', 
-        'shows.movie.contentRating', 
-        'shows.movie.languages',
-        'shows.movie.shows',
-        'shows.movie.showTypes',
-      ],
-    });
+      const subsidiary = await this.repository
+        .createQueryBuilder('subsidiary')
+        .leftJoinAndSelect('subsidiary.shows', 'show')
+        .leftJoinAndSelect('show.movie', 'movie')
+        .leftJoinAndSelect('movie.genre', 'genre')
+        .leftJoinAndSelect('movie.contentRating', 'contentRating')
+        .leftJoinAndSelect('movie.languages', 'languages')
+        .leftJoinAndSelect('movie.showTypes', 'showTypes')
+        .where('subsidiary.id = :id', { id: subsidiaryId })
+        .getOne();
 
-    if (!subsidiary) {
-        throw new Error(`Subsidiary with ID ${subsidiaryId} not found.`);
-    }
+      if (!subsidiary) {
+          throw new Error(`Subsidiary with ID ${subsidiaryId} not found.`);
+      }
 
-    const movieSet = new Set<number>();
-    const movies: MovieEntity[] = [];
+      const movies = subsidiary.shows
+        .map(show => show.movie)
+        .filter((movie, index, self) => movie && self.findIndex(m => m.id === movie.id) === index);
 
-    for (const show of subsidiary.shows) {
-        const movie = show.movie;
-        if (movie && !movieSet.has(movie.id)) {
-            movieSet.add(movie.id);
-            movies.push(movie);
-        }
-    }
-
-    return movies;
+      return movies;
   }
 
   async findSubsidiaryShows(subsidiaryId: number): Promise<ShowEntity[]> {
     try {
-      const subsidiary = await this.repository.findOne({
-        where: { id: subsidiaryId },
-        relations: ['shows', 'shows.movie', 'shows.room', 'shows.showType', 'shows.selectedLanguage'],
-      });
+      const subsidiary = await this.repository
+        .createQueryBuilder('subsidiary')
+        .leftJoinAndSelect('subsidiary.shows', 'show')
+        .leftJoinAndSelect('show.movie', 'movie')
+        .leftJoinAndSelect('show.room', 'room')
+        .leftJoinAndSelect('show.showType', 'showType')
+        .leftJoinAndSelect('show.selectedLanguage', 'selectedLanguage')
+        .where('subsidiary.id = :id', { id: subsidiaryId })
+        .getOne();
 
       if (!subsidiary) {
         throw new HttpException(`Subsidiary with ID ${subsidiaryId} not found`, 404);
@@ -143,20 +139,22 @@ export class SubsidiaryService {
 
   async findUpcomingMovies(subsidiaryId: number): Promise<MovieEntity[]> {
     try {
+      const now = new Date();
       const twoWeeksFromNow = new Date();
-      twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14);
+      twoWeeksFromNow.setDate(now.getDate() + 14);
 
-      const subsidiary = await this.repository.findOne({
-        where: { id: subsidiaryId },
-        relations: [
-          'shows',
-          'shows.movie',
-          'shows.movie.genre',
-          'shows.movie.showTypes',
-          'shows.movie.contentRating',
-          'shows.movie.languages',
-        ],
-      });
+      const subsidiary = await this.repository
+        .createQueryBuilder('subsidiary')
+        .leftJoinAndSelect('subsidiary.shows', 'show')
+        .leftJoinAndSelect('show.movie', 'movie')
+        .leftJoinAndSelect('movie.genre', 'genre')
+        .leftJoinAndSelect('movie.showTypes', 'showTypes')
+        .leftJoinAndSelect('movie.contentRating', 'contentRating')
+        .leftJoinAndSelect('movie.languages', 'languages')
+        .where('subsidiary.id = :id', { id: subsidiaryId })
+        .andWhere('show.dateAndTime >= :now', { now: now.toISOString() })
+        .andWhere('show.dateAndTime <= :twoWeeksFromNow', { twoWeeksFromNow: twoWeeksFromNow.toISOString() })
+        .getOne();
 
       if (!subsidiary) {
         throw new HttpException(`Subsidiary with ID ${subsidiaryId} not found`, 404);
@@ -166,13 +164,10 @@ export class SubsidiaryService {
       const upcomingMovies: MovieEntity[] = [];
 
       for (const show of subsidiary.shows) {
-        const showDate = new Date(show.dateAndTime);
-        if (showDate >= new Date() && showDate <= twoWeeksFromNow) {
-          const movie = show.movie;
-          if (movie && !movieSet.has(movie.id)) {
-            movieSet.add(movie.id);
-            upcomingMovies.push(movie);
-          }
+        const movie = show.movie;
+        if (movie && !movieSet.has(movie.id)) {
+          movieSet.add(movie.id);
+          upcomingMovies.push(movie);
         }
       }
 
