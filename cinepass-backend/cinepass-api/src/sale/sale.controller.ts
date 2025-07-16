@@ -54,7 +54,9 @@ export class SaleController {
     @Body('documentNumber') documentNumber?: string,
     @Body('dateFrom') dateFrom?: string,
     @Body('dateTo') dateTo?: string,
-  ): Promise<SaleEntity[]> {
-    return await this.service.findSales(purchaseId, documentNumber, dateFrom, dateTo);
+    @Body('page') page: number = 1,
+    @Body('pageSize') pageSize: number = 15,
+  ): Promise<{ data: SaleEntity[]; total: number; totalPages: number }> {
+    return this.service.findSales(purchaseId, documentNumber, dateFrom, dateTo, page, pageSize);
   }
 }

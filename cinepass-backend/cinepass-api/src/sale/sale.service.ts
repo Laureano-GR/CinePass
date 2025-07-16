@@ -180,16 +180,21 @@ export class SaleService {
     purchaseId?: number,
     documentNumber?: string,
     dateFrom?: string,
-    dateTo?: string
-  ): Promise<SaleEntity[]> {
+    dateTo?: string,
+    page: number = 1,
+    pageSize: number = 15
+  ): Promise<{ data: SaleEntity[]; total: number; totalPages: number }> {
     if (
       (!purchaseId || purchaseId === 0) &&
       (!documentNumber || documentNumber.trim() === '') &&
       (!dateFrom || dateFrom.trim() === '') &&
       (!dateTo || dateTo.trim() === '')
     ) {
-      return [];
+      return { data: [], total: 0, totalPages: 0 };
     }
+
+    const skip = (page - 1) * pageSize;
+
     try {
       const query = this.saleRepository.createQueryBuilder('sale')
         .leftJoinAndSelect('sale.paymentData', 'paymentData')
@@ -212,12 +217,21 @@ export class SaleService {
         query.andWhere('DATE(sale.dateAndTime) <= :dateTo', { dateTo });
       }
 
-      return await query.getMany();
+      const [data, total] = await query
+        .orderBy('sale.dateAndTime', 'DESC')
+        .skip(skip)
+        .take(pageSize)
+        .getManyAndCount();
+
+      const totalPages = Math.ceil(total / pageSize);
+
+      return { data, total, totalPages };
     } catch (error) {
       console.error('Error finding sales:', error);
       throw new HttpException('Find sales error', 500);
     }
   }
+
 
   async updateSale(
     saleId: number,

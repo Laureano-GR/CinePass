@@ -25,6 +25,12 @@ export class SearchSalesComponent {
   selectedSale: SaleI | null = null; // Venta seleccionada para mostrar en el modal
   showDetails: ShowI | null = null; // Detalles del show
   paymentMethods: PaymentMethodI[] = []; // Métodos de pago
+  currentPage: number = 1;
+  pageSize: number = 20;
+  totalPages: number = 0;
+  jumpToPageInput: boolean = false;
+  jumpToPageModalVisible: boolean = false;
+  jumpPageTarget: number | null = null;
 
   constructor(
     private salesService: SalesService,
@@ -32,8 +38,7 @@ export class SearchSalesComponent {
     private router: Router,
   ) {} // Inyecta el servicio
 
-  onSearch(): void {
-    console.log('Buscando ventas con criterios:', this.searchCriteria);
+  onSearch(page: number = 1): void {
     const { purchaseCode, dateFrom, dateTo } = this.searchCriteria;
     let purchaseId: number | undefined;
     let documentNumber: string | undefined;
@@ -49,15 +54,19 @@ export class SearchSalesComponent {
       }
     }
 
-    this.salesService.findSales(purchaseId, documentNumber, dateFrom, dateTo).subscribe({
-      next: (sales) => {
-        this.filteredSales = sales;
+    this.currentPage = page;
+
+    this.salesService.findSales(purchaseId, documentNumber, dateFrom, dateTo, this.currentPage, this.pageSize).subscribe({
+      next: (res) => {
+        this.filteredSales = res.data;
+        this.totalPages = res.totalPages;
       },
       error: (err) => {
         console.error('Error finding sales:', err);
       }
     });
   }
+
   
   /**
    * Formatea una fecha en el formato dd-mm-yyyy.
@@ -160,5 +169,54 @@ export class SearchSalesComponent {
       sale.id.toString() === purchaseCodeSaleId &&
       sale.paymentData.IDNumber.toString() === purchaseCodeIdNumber
     );
+  }
+
+  getDisplayedPages(): number[] {
+    const pages: number[] = [];
+    const total = this.totalPages;
+    const current = this.currentPage;
+
+    if (total <= 7) {
+      for (let i = 1; i <= total; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (current <= 4) {
+        pages.push(1, 2, 3, 4, 5, -1, total); // -1 representa "..."
+      } else if (current >= total - 3) {
+        pages.push(1, -1);
+        for (let i = total - 4; i <= total; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1, -1, current - 1, current, current + 1, -2, total); // -2 también "..."
+      }
+    }
+
+    return pages;
+  }
+
+  handlePageClick(page: number) {
+    if (page < 0) {
+      this.jumpToPageModalVisible = true;
+    } else {
+      this.onSearch(page);
+    }
+  }
+
+  confirmJumpPage() {
+    if (
+      this.jumpPageTarget &&
+      this.jumpPageTarget >= 1 &&
+      this.jumpPageTarget <= this.totalPages
+    ) {
+      this.onSearch(this.jumpPageTarget);
+      this.closeJumpModal();
+    }
+  }
+
+  closeJumpModal() {
+    this.jumpToPageModalVisible = false;
+    this.jumpPageTarget = null;
   }
 }

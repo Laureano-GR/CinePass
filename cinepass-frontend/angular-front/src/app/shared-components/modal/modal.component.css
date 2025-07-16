@@ -71,3 +71,103 @@
 .modal-message {
   white-space: pre-wrap; /* Respeta los saltos de línea (\n) */
 }
+
+/* Media Queries para Responsividad */
+
+/* Tablets (768px y menos) */
+@media (max-width: 768px) {
+  .modal {
+    padding: 0.5rem;
+  }
+  
+  .modal-content {
+    padding: 1.5rem;
+    max-width: 95%;
+    font-size: 16px;
+  }
+  
+  .modal-title {
+    font-size: 20px;
+    margin-bottom: 1rem;
+  }
+  
+  .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 14px;
+    min-width: 100px;
+  }
+}
+
+/* Móviles (480px y menos) */
+@media (max-width: 480px) {
+  .modal {
+    padding: 0.25rem;
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+  
+  .modal-content {
+    padding: 1rem;
+    max-width: 98%;
+    font-size: 14px;
+    border-radius: 6px;
+  }
+  
+  .modal-title {
+    font-size: 18px;
+    margin-bottom: 0.75rem;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 1rem;
+  }
+  
+  .btn {
+    width: 100%;
+    margin-left: 0;
+    padding: 0.75rem;
+    font-size: 14px;
+    min-width: unset;
+  }
+  
+  .modal-message {
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Pantallas muy pequeñas (320px y menos) */
+@media (max-width: 320px) {
+  .modal-content {
+    padding: 0.75rem;
+    font-size: 13px;
+  }
+  
+  .modal-title {
+    font-size: 16px;
+  }
+  
+  .btn {
+    font-size: 13px;
+    padding: 0.6rem;
+  }
+}
+
+/* Pantallas grandes (1200px y más) */
+@media (min-width: 1200px) {
+  .modal-content {
+    max-width: 600px;
+    padding: 2.5rem;
+  }
+  
+  .modal-title {
+    font-size: 28px;
+  }
+  
+  .btn {
+    padding: 0.875rem 2rem;
+    min-width: 140px;
+  }
+}
