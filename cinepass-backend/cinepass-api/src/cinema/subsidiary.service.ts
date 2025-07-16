@@ -5,11 +5,15 @@ import { SubsidiaryEntity } from 'src/_entities/subsidiary.entity';
 import { DeepPartial } from "typeorm";
 import * as bcrypt from 'bcrypt';
 import { RoomEntity } from 'src/_entities/room.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SubsidiaryService {
-  repository = SubsidiaryEntity;
-  
+  constructor(
+    @InjectRepository(SubsidiaryEntity)
+    private readonly repository: Repository<SubsidiaryEntity>,
+  ) {}
   async createSubsidiary(subsidiary: DeepPartial<SubsidiaryEntity>): Promise<SubsidiaryEntity> {
     try {
       subsidiary.subsidiaryCode = await bcrypt.hash(subsidiary.subsidiaryCode, 10);
@@ -173,6 +177,7 @@ export class SubsidiaryService {
 
       return upcomingMovies;
     } catch (error) {
+      console.log(error);
       throw new HttpException('Find upcoming movies error', 500);
     }
   }

@@ -38,9 +38,9 @@ export class SalesService {
     );
   }
 
-  findSales(purchaseId?: number, documentNumber?: string, date?: string): Observable<SaleI[]> {
+  findSales(purchaseId?: number, documentNumber?: string, dateFrom?: string, dateTo?: string): Observable<SaleI[]> {
     return from(
-      axios.post<SaleI[]>(`${this.apiUrl}/sales/find`, { purchaseId, documentNumber, date }).then(response => response.data)
+      axios.post<SaleI[]>(`${this.apiUrl}/sales/find`, { purchaseId, documentNumber, dateFrom, dateTo }).then(response => response.data)
     );
   }
 

@@ -52,8 +52,9 @@ export class SaleController {
   async findSales(
     @Body('purchaseId') purchaseId?: number,
     @Body('documentNumber') documentNumber?: string,
-    @Body('date') date?: string,
+    @Body('dateFrom') dateFrom?: string,
+    @Body('dateTo') dateTo?: string,
   ): Promise<SaleEntity[]> {
-    return await this.service.findSales(purchaseId, documentNumber, date);
+    return await this.service.findSales(purchaseId, documentNumber, dateFrom, dateTo);
   }
 }

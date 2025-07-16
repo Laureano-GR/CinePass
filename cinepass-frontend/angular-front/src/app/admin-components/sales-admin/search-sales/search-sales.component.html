@@ -5,20 +5,32 @@
   <div class="search-bar">
     <form (ngSubmit)="onSearch()">
       <div class="row g-2">
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-4">
+          <label for="dateFrom" class="form-label">Fecha desde</label>
           <input
-            [(ngModel)]="searchCriteria.purchaseCode"
-            name="purchaseCode"
-            placeholder="Codigo de Compra"
+            type="date"
+            id="dateFrom"
+            [(ngModel)]="searchCriteria.dateFrom"
+            name="dateFrom"
+            class="form-control"
+          />
+        </div>
+        <div class="col-12 col-md-4">
+          <label for="dateTo" class="form-label">Fecha hasta</label>
+          <input
+            type="date"
+            id="dateTo"
+            [(ngModel)]="searchCriteria.dateTo"
+            name="dateTo"
             class="form-control"
           />
         </div>
         <div class="col-12 col-md-6">
+          <label for="purchaseCode" class="form-label">Código de Compra</label>
           <input
-            type="date"
-            [(ngModel)]="searchCriteria.date"
-            name="date"
-            placeholder="Buscar por fecha"
+            id="purchaseCode"
+            [(ngModel)]="searchCriteria.purchaseCode"
+            name="purchaseCode"
             class="form-control"
           />
         </div>

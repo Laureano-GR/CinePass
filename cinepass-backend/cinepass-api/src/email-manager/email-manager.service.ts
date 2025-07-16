@@ -13,7 +13,10 @@ export class EmailManagerService {
       auth: {
         user: "cinepass2024@gmail.com",
         pass: "dfii lrtn cyih zdfw"
-      }
+      },
+      tls: { 
+        rejectUnauthorized: false, //FIXME esto es inseguro, pero necesario para evitar errores de certificado, esto no deberia pasar de ningun modo a produccion
+      },
     });
   }
 

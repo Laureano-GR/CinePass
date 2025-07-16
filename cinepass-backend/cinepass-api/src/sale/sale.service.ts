@@ -176,7 +176,20 @@ export class SaleService {
     }
   }
 
-  async findSales(purchaseId?: number, documentNumber?: string, date?: string): Promise<SaleEntity[]> {
+  async findSales(
+    purchaseId?: number,
+    documentNumber?: string,
+    dateFrom?: string,
+    dateTo?: string
+  ): Promise<SaleEntity[]> {
+    if (
+      (!purchaseId || purchaseId === 0) &&
+      (!documentNumber || documentNumber.trim() === '') &&
+      (!dateFrom || dateFrom.trim() === '') &&
+      (!dateTo || dateTo.trim() === '')
+    ) {
+      return [];
+    }
     try {
       const query = this.saleRepository.createQueryBuilder('sale')
         .leftJoinAndSelect('sale.paymentData', 'paymentData')
@@ -191,8 +204,12 @@ export class SaleService {
       if (documentNumber) {
         query.andWhere('paymentData.IDNumber = :documentNumber', { documentNumber });
       }
-      if (date) {
-        query.andWhere('DATE(sale.dateAndTime) = :date', { date });
+      if (dateFrom && dateTo) {
+        query.andWhere('DATE(sale.dateAndTime) BETWEEN :dateFrom AND :dateTo', { dateFrom, dateTo });
+      } else if (dateFrom) {
+        query.andWhere('DATE(sale.dateAndTime) >= :dateFrom', { dateFrom });
+      } else if (dateTo) {
+        query.andWhere('DATE(sale.dateAndTime) <= :dateTo', { dateTo });
       }
 
       return await query.getMany();

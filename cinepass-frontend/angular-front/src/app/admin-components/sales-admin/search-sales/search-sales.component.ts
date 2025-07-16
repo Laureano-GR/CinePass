@@ -19,7 +19,8 @@ export class SearchSalesComponent {
   canceledSaleId: number | null = null; // Almacena el ID de la venta cancelada
   searchCriteria = {
     purchaseCode: '',
-    date: ''
+    dateFrom: '',
+    dateTo: ''
   }; // Criterios de búsqueda
   selectedSale: SaleI | null = null; // Venta seleccionada para mostrar en el modal
   showDetails: ShowI | null = null; // Detalles del show
@@ -33,7 +34,7 @@ export class SearchSalesComponent {
 
   onSearch(): void {
     console.log('Buscando ventas con criterios:', this.searchCriteria);
-    const { purchaseCode, date } = this.searchCriteria;
+    const { purchaseCode, dateFrom, dateTo } = this.searchCriteria;
     let purchaseId: number | undefined;
     let documentNumber: string | undefined;
 
@@ -48,7 +49,7 @@ export class SearchSalesComponent {
       }
     }
 
-    this.salesService.findSales(purchaseId, documentNumber, date).subscribe({
+    this.salesService.findSales(purchaseId, documentNumber, dateFrom, dateTo).subscribe({
       next: (sales) => {
         this.filteredSales = sales;
       },
@@ -71,7 +72,8 @@ export class SearchSalesComponent {
   resetFilters(): void {
     this.searchCriteria = {
       purchaseCode: '',
-      date: ''
+      dateFrom: '',
+      dateTo: ''
     };
     this.onSearch()
   }

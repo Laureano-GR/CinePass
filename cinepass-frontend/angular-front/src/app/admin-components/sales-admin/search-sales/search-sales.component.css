@@ -26,6 +26,22 @@
   color: var(--color-texto-oscuro);
 }
 
+label {
+  display: block;
+  background-color: var(--color-boton);
+  margin-bottom: 4px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  border: var(--color-principal) 1px solid;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+
 .search-bar .btn-primary {
   background-color: var(--color-boton);
   border: none;
