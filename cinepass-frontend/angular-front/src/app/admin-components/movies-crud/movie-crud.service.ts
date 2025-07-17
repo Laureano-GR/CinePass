@@ -8,6 +8,7 @@ import { ContentRatingI } from '../../interfaces/contentRating';
 import { GenreI } from '../../interfaces/genre';
 import { CreateMovieDto } from '../../interfaces/createMovieDTO';
 import { UpdateMovieDto } from '../../interfaces/updateMovieDTO';
+import { ShowTypeI } from '../../interfaces/showType';
 
 @Injectable({
   providedIn: 'root',
@@ -56,6 +57,10 @@ export class MovieService {
 
   getGenres(): Observable<GenreI[]> {
     return from(this.axiosInstance.get<GenreI[]>('/genres').then(res => res.data));
+  }
+
+  getShowTypes(): Observable<any[]> {
+    return from(this.axiosInstance.get<ShowTypeI[]>('/show-types').then(res => res.data));
   }
 
   uploadPoster(file: File, fileName: string): Observable<any> {

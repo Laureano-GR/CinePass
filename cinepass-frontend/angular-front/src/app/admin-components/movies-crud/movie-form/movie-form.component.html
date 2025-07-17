@@ -54,6 +54,15 @@
         <option *ngFor="let genre of genres" [value]="genre.id">{{ genre.name }}</option>
       </select>
     </div>
+    <div class="mb-3">
+      <label for="showType" class="form-label">Tipo de Función</label>
+      <div id="showType" class="form-check">
+        <div *ngFor="let type of showTypes" class="form-check">
+          <input class="form-check-input" type="checkbox" [value]="type.id" (change)="onShowTypeChange($event)">
+          <label class="form-check-label">{{ type.name }}</label>
+        </div>
+      </div>
+    </div>
     <button type="submit" class="btn btn-primary w-100">{{ isEditMode ? 'Actualizar' : 'Crear' }}</button>
   </form>
 

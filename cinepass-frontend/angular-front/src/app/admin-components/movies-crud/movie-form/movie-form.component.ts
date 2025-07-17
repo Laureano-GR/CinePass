@@ -9,6 +9,7 @@ import { GenreI } from '../../../interfaces/genre';
 import { CreateMovieDto } from '../../../interfaces/createMovieDTO';
 import { UpdateMovieDto } from '../../../interfaces/updateMovieDTO';
 import { LoadingService } from '../../../shared-components/loading-screen/loading.service';
+import { ShowTypeI } from '../../../interfaces/showType';
 
 @Component({
   selector: 'app-movie-form',
@@ -23,6 +24,8 @@ export class MovieFormComponent implements OnInit {
   languages: LanguageI[] = [];
   contentRatings: ContentRatingI[] = [];
   selectedLanguages: number[] = [];
+  showTypes: any[] = [];
+  selectedShowTypes: number[] = [];
   genres: GenreI[] = [];
   selectedFile: File | null = null;
   filePreview: string | ArrayBuffer | null = null;
@@ -33,7 +36,7 @@ export class MovieFormComponent implements OnInit {
   createdMovieId: number | null = null; // Nuevo campo para almacenar el ID de la película creada
   updatedMovieId: number | null = null; // Nuevo campo para almacenar el ID de la película actualizada
   movieDetails: MovieI | null = null; // Nuevo campo para almacenar los detalles de la película cargada
-
+  
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -49,7 +52,8 @@ export class MovieFormComponent implements OnInit {
       duration: ['', Validators.required],
       languageIds: [[], Validators.required],
       genreId: ['', Validators.required],
-      contentRatingId: ['', Validators.required]
+      contentRatingId: ['', Validators.required],
+      showTypeIds: [[], Validators.required]
     });
   }
 
@@ -78,6 +82,7 @@ export class MovieFormComponent implements OnInit {
     this.loadLanguages();
     this.loadContentRatings();
     this.loadGenres();
+    this.loadShowTypes();
   }
 
   loadMovie(): void {
@@ -91,7 +96,8 @@ export class MovieFormComponent implements OnInit {
           duration: movie.duration,
           languageIds: movie.languages.map(lang => lang.id),
           genreId: movie.genre.id,
-          contentRatingId: movie.contentRating.id
+          contentRatingId: movie.contentRating.id,
+          showTypesIds: movie.showTypes.map(type => type.id)
         });
 
         // Cargar la vista previa del póster
@@ -120,6 +126,12 @@ export class MovieFormComponent implements OnInit {
   loadGenres(): void {
     this.service.getGenres().subscribe((genres: GenreI[]) => {
       this.genres = genres;
+    });
+  }
+
+  loadShowTypes(): void {
+    this.service.getShowTypes().subscribe((types: ShowTypeI[]) => {
+      this.showTypes = types;
     });
   }
 
@@ -258,5 +270,18 @@ export class MovieFormComponent implements OnInit {
     } else {
       this.errorMessage = 'Por favor, ingresa el ID de la película a cargar.';
     }
+  }
+
+  onShowTypeChange(event: any): void {
+    const typeId = +event.target.value;
+    if (event.target.checked) {
+      this.selectedShowTypes.push(typeId);
+    } else {
+      const index = this.selectedShowTypes.indexOf(typeId);
+      if (index > -1) {
+        this.selectedShowTypes.splice(index, 1);
+      }
+    }
+    this.movieForm.patchValue({ showTypeIds: this.selectedShowTypes });
   }
 }

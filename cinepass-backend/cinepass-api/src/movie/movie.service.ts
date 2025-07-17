@@ -9,8 +9,8 @@ import { CreateMovieDto } from 'src/_interfaces/createMovie.dto';
 import { DeepPartial } from "typeorm";
 import { UpdateMovieDto } from 'src/_interfaces/updateMovie.dto';
 import { join } from 'path';
-import { existsSync } from 'fs';
-
+import { existsSync } from 'fs'; 
+import { ShowTypeEntity } from 'src/_entities/showType.entity';
 
 @Injectable()
 export class MovieService {
@@ -26,6 +26,9 @@ export class MovieService {
     
     @InjectRepository(ContentRatingEntity)
     private contentRatingRepository: Repository<ContentRatingEntity>,
+    
+    @InjectRepository(ShowTypeEntity)
+    private showTypeRepository: Repository<ShowTypeEntity>,
   ) {}
 
 
@@ -40,7 +43,9 @@ export class MovieService {
         where: { id: createMovieDto.contentRatingId },
       });
 
-      if (!genre || !languages.length || !contentRating) {
+      const showTypes = await this.showTypeRepository.findByIds(createMovieDto.showTypeIds);
+
+      if (!genre || !languages.length || !contentRating || !showTypes.length) {
         throw new HttpException('Invalid genres, languages or content rating', 400);
       }
 
@@ -51,8 +56,9 @@ export class MovieService {
         description: createMovieDto.description,
         duration: createMovieDto.duration,
         languages: languages,
+        showTypes: showTypes,
         genre: genre,
-        contentRating: contentRating,
+        contentRating: contentRating
       });
 
       // Guardar la película
@@ -89,6 +95,9 @@ export class MovieService {
       // Cargar los idiomas, género y calificación de contenido si están presentes en el DTO
       if (updateMovieDto.languageIds) {
         movie.languages = await this.languageRepository.findByIds(updateMovieDto.languageIds);
+      }
+      if (updateMovieDto.showTypeIds) {
+        movie.showTypes = await this.showTypeRepository.findByIds(updateMovieDto.showTypeIds);
       }
       if (updateMovieDto.genreId) {
         movie.genre = await this.genreRepository.findOne({

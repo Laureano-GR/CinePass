@@ -12,12 +12,15 @@ import { MovieEntity } from 'src/_entities/movie.entity';
 import { LanguageEntity } from 'src/_entities/language.entity';
 import { GenreEntity } from 'src/_entities/genre.entity';
 import { ContentRatingEntity } from 'src/_entities/contentRating.entity';
+import { ShowTypeEntity } from 'src/_entities/showType.entity';
+import { ShowTypeController } from 'src/show/showType.controller';
+import { ShowTypeService } from 'src/show/showType.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([MovieEntity, LanguageEntity, GenreEntity, ContentRatingEntity]),
+    TypeOrmModule.forFeature([MovieEntity, LanguageEntity, GenreEntity, ContentRatingEntity, ShowTypeEntity]),
   ],
-  controllers: [MovieController, GenreController, ContentRatingController, LanguageController],
-  providers: [MovieService, GenreService, ContentRatingService, LanguageService]
+  controllers: [MovieController, GenreController, ContentRatingController, LanguageController, ShowTypeController],
+  providers: [MovieService, GenreService, ContentRatingService, LanguageService, ShowTypeService],
 })
 export class MovieModule {}
