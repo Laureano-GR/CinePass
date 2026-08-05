@@ -289,7 +289,7 @@ La autenticación usa **bcrypt** para hashear las contraseñas y **JWT** para la
 
 ## Proyecto académico
 
-CinePass nació como el **proyecto integrador final** de la cátedra **Seminario Integrador** (2024) de la carrera de **Analista de Sistemas**, desarrollado en conjunto por dos personas (roles de backend y frontend respectivamente). El objetivo era poner en práctica el ciclo de vida completo de un desarrollo de software:
+CinePass nació como el **proyecto integrador final** de la cátedra **Seminario Integrador** (2024) de la carrera de **Analista de Sistemas**, desarrollado en conjunto por dos personas. El objetivo era poner en práctica el ciclo de vida completo de un desarrollo de software:
 
 - Análisis y relevamiento de requerimientos de un caso real (venta de entradas de cine).
 - Diseño del modelo de datos y de la arquitectura de la solución.
