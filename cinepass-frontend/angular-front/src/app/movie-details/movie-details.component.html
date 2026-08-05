@@ -1,0 +1,69 @@
+<app-loading-screen [loadingText]="'Cargando información de la película...'"></app-loading-screen>
+
+<div *ngIf="movie" class="container movie-details-container my-4">
+  <div class="row">
+    <div class="col-12 col-md-5">
+      <div class="movie-banner">
+        <img [src]="loadPosterPreview(movie.id)" [alt]="movie.name" class="img-fluid rounded">
+      </div>
+    </div>
+        <div class="col-12 col-md-7">
+          <div class="movie-info">
+            <h1 class="text-center">{{ movie.name }}</h1>
+            <p class="text-justify">{{ movie.description }}</p>
+          </div>
+          <div class="d-flex col-md-7">
+            <div class="movie-details-grid">
+              <div class="mb-3">
+                <h5><i class="fas fa-clock"></i> Duración</h5>
+                <p>{{ movie.duration }} minutos</p>
+              </div>
+              <div class="mb-3" *ngIf="movie.genre">
+                <h5><i class="fas fa-theater-masks"></i> Género</h5>
+                <p>{{ movie.genre.name }}</p>
+                <p class="text-muted">{{ movie.genre.description }}</p>
+              </div>
+              <div class="mb-3" *ngIf="movie.contentRating">
+                <h5><i class="fas fa-exclamation-circle"></i> Clasificación</h5>
+                <p>{{ movie.contentRating.name }}</p>
+              </div>
+              <div class="mb-3" *ngIf="movie.languages">
+                <h5><i class="fas fa-language"></i> Idiomas</h5>
+                <p>{{ getLanguages() }}</p>
+              </div>
+              <div class="mb-3" *ngIf="movie.showTypes">
+                <h5><i class="fas fa-video"></i> Tipos de función</h5>
+                <p>{{ getShowTypes() }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
+  
+  <div class="showtimes mt-4">
+  <h2 class="text-center">Funciones en esta sucursal</h2>
+  <div *ngIf="shows.length === 0" class="text-center text-muted">
+    <p>No hay funciones disponibles para esta película en esta sucursal en este momento.</p>
+  </div>
+  <div *ngIf="shows.length > 0" class="overflow-auto">
+    <div class="days d-flex flex-wrap justify-content-center gap-2 mb-3">
+      <button 
+        *ngFor="let day of objectKeys(showMatrix)" 
+        (click)="selectDay(day)" 
+        [class.selected]="selectedDay === day" 
+        [disabled]="!showMatrix[day] || showMatrix[day].length === 0" 
+        class="btn btn-outline-primary">
+        {{ formatDate(day) }}
+      </button>
+    </div>
+    <div *ngIf="selectedDay" class="shows text-center">
+      <div *ngFor="let show of showMatrix[selectedDay]" 
+           (click)="navigateToShowDetails(show.id)" 
+           class="cursor-pointer mb-2">
+        {{ show.time }} - Sala: {{ show.room.roomNumber }} - {{ show.showType.name }} - {{ show.selectedLanguage.name }}
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div *ngIf="error" class="alert alert-danger text-center">{{ error }}</div>

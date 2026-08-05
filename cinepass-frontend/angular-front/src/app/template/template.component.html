@@ -1,0 +1,59 @@
+<div class="app-container">
+  <header class="app-header">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand" routerLink="/">
+          <img src="assets/logo.png" alt="CinePass Logo" style="height: 40px; color: white;">
+        </a>
+
+        <!-- Botón de Toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+          aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Contenido de la navbar -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item" style="align-self: center;" *ngIf="subsidiaryName$ | async as subsidiaryName">
+              <span class="branch-label">
+                <i class="fa-solid fa-map-marker-alt"></i> Sucursal: {{ subsidiaryName }}
+              </span>
+            </li>
+            <li class="nav-item" *ngIf="isLoggedIn">
+              <button class="btn btn-primary" (click)="goToAdminDashboard()">Admin Dashboard</button>
+            </li>
+            <li class="nav-item">
+              <button class="btn btn-secondary" (click)="changeSubsidiary()">Cambiar Sucursal</button>
+            </li>
+            <li class="nav-item" *ngIf="isLoggedIn">
+              <button class="btn btn-primary" (click)="logOut()">Cerrar Sesión</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="app-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 offset-md-4 text-center">
+          <h5>Contacto</h5>
+          <p><i class="fa-solid fa-envelope"></i> cinepass2024&#64;gmail.com</p>
+          <p><i class="fa-solid fa-phone-alt"></i> +54 9 11 1234-5678</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 offset-md-4 text-center">
+          <p>&copy; 2024 CinePass. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

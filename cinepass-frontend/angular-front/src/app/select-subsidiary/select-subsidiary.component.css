@@ -1,0 +1,81 @@
+.container-fluid {
+  text-align: center;
+  background-color: var(--color-principal);
+  min-height: 100vh; /* Para ocupar toda la altura */
+}
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.logo {
+  width: 90%;
+  max-width: 500px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+h3 {
+  font-family: var(--fuente-titulos);
+  color: var(--color-texto-claro);
+  margin-bottom: 15px;
+}
+
+.select-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.dropdown-toggle {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid var(--color-boton-borde);
+  border-radius: 5px;
+  font-family: var(--fuente-texto);
+  background-color: var(--color-fondo-claro);
+  color: var(--color-texto-oscuro);
+  transition: all 0.3s ease;
+  box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho total */
+}
+
+.dropdown-toggle:focus,
+.dropdown-toggle[aria-expanded="true"] {
+  border-color: var(--color-acento);
+  box-shadow: 0 0 5px var(--color-sombra-secundario);
+}
+
+.dropdown-menu {
+  width: 100%;
+  box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho total */
+}
+
+.dropdown-item {
+  white-space: nowrap; /* Evita que el texto se desborde */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Añade puntos suspensivos si el texto es demasiado largo */
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--color-acento);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .logo {
+    width: 95%;
+  }
+}

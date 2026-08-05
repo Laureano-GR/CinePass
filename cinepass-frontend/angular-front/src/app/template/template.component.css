@@ -1,0 +1,215 @@
+/* ===== ESTILOS GENERALES ===== */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: var(--fuente-texto);
+  background-color: var(--color-fondo-claro);
+}
+
+/* ===== HEADER ===== */
+.app-header {
+  background-color: var(--color-principal);
+  color: var(--color-texto-claro);
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-header nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.app-header nav ul li a {
+  color: var(--color-texto-claro);
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.app-header nav ul li a:hover {
+  color: #999;
+}
+
+.app-header .subsidiary-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.app-header .subsidiary-info button {
+  background-color: var(--color-boton);
+  color: var(--color-texto-claro);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.app-header .subsidiary-info button:hover {
+  background-color: #777;
+}
+
+/* ===== MAIN ===== */
+.app-main {
+  flex-grow: 1;
+  padding: 0;
+  background-color: var(--color-fondo-claro);
+  margin: 0;
+  border-radius: 8px;
+}
+
+/* ===== FOOTER ===== */
+.app-footer {
+  background-color: var(--color-principal);
+  color: var(--color-texto-claro);
+  text-align: center;
+  padding: 1rem 2rem;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: auto;
+}
+
+.app-footer .container {
+  padding: 0;
+}
+
+.app-footer p {
+  margin: 0.5rem 0;
+  font-size: 16px;
+}
+
+.app-footer i {
+  margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .app-footer .row {
+    text-align: center;
+  }
+
+  .app-footer .col-md-4 {
+    margin-bottom: 1rem;
+  }
+
+  .app-footer p {
+    font-size: 12px;
+  }
+}
+
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .app-header nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .app-main {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 0.5rem 1rem;
+    align-items: center;
+  }
+
+  .app-header nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .app-header nav ul li a {
+    font-size: 14px;
+  }
+
+  .app-header .subsidiary-info {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .app-main {
+    margin: 0;
+    padding: 0;
+  }
+
+  .app-footer {
+    padding: 0.5rem 1rem;
+  }
+
+  .app-footer p {
+    font-size: 16px;
+  }
+}
+
+/* ===== ESTILOS DE NAVBAR (Bootstrap) ===== */
+.navbar {
+  width: 100%;
+  background-color: var(--color-principal);
+}
+
+.navbar .container-fluid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.navbar-collapse {
+  justify-content: flex-end;
+}
+
+/* Botones dentro de la navbar */
+.navbar .btn {
+  background-color: var(--color-boton);
+  border-color: var(--color-boton);
+  color: var(--color-texto-claro);
+  margin-left: 0.5rem;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.navbar .btn:hover {
+  background-color: var(--color-boton-hover);
+  border-color: var(--color-boton-hover);
+}
+.navbar .btn:focus{
+  box-shadow: none;
+}
+/* Botón toggler */
+.navbar-toggler {
+  background-color: var(--color-boton);
+  border: 1px solid var(--color-boton-borde);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255,0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Estilo para la etiqueta de sucursal */
+.branch-label {
+  font-family: var(--fuente-titulos);
+  font-weight: 600;
+  color: var(--color-texto-claro);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.branch-label i {
+  color: var(--color-secundario);
+}

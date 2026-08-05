@@ -1,0 +1,284 @@
+/* MODAL STYLES */
+.modal-content {
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow for better focus */
+}
+
+.modal-header {
+  border-bottom: 1px solid #dee2e6;
+  background-color: var(--color-fondo-claro);
+}
+
+.modal-body {
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Estilo para el contenedor de información del reporte */
+.report-info {
+  position: sticky; 
+  top: 0; 
+  z-index: 1000; 
+  background-color: var(--color-fondo-claro); 
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  margin-bottom: 20px;
+}
+
+/* Estilo para el título del reporte */
+.report-info h3 {
+  margin: 0 0 10px 0; 
+  font-size: 1.5rem; 
+  font-weight: bold; 
+  color: var(--color-secundario); 
+}
+
+/* Estilo para los parámetros del reporte */
+.report-info p {
+  margin: 0; 
+  font-size: 0.9rem; 
+  color: #6c757d; 
+}
+
+/* Estilo para los parámetros individuales */
+.report-info span {
+  display: inline-block; 
+  margin-right: 5px; 
+}
+
+/* Button styles */
+button.btn-outline {
+  padding: 10px 20px;
+  color: var(--color-secundario);
+  font-size: 14px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: 2px solid var(--color-secundario); 
+}
+
+button.btn-outline:hover {
+  background-color: var(--color-secundario);
+  color: var(--color-texto-claro);
+}
+
+.btn-outline:focus {
+  outline: none;
+  box-shadow: 0px 0px 4px var(--color-sombra-secundario);
+  background-color: var(--color-secundario);
+  color: var(--color-texto-claro);
+  border: 2px solid var(--color-secundario); 
+}
+
+button.btn-generate {
+  background-color: var(--color-boton);
+  color: var(--color-texto-claro);
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button.btn-generate:hover {
+  background-color: var(--color-boton-hover);
+  color: var(--color-texto-claro);
+}
+
+button.btn-generate:focus,
+button.btn-generate:active {
+  outline: none;
+  box-shadow: 0px 0px 4px;
+  background-color: var(--color-boton-hover);
+  color: var(--color-texto-claro);
+}
+
+button.btn-download {
+  background-color: var(--color-secundario);
+  color: var(--color-texto-claro);
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 2px solid var(--color-secundario);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+button.btn-download:hover {
+  background-color: var(--color-secundario-hover);
+  border: 2px solid var(--color-secundario-hover);
+}
+button.btn-download:focus,
+button.btn-download:active {
+  background-color: var(--color-secundario);
+  color: var(--color-texto-claro);
+  border: 2px solid var(--color-secundario);
+  box-shadow: 0px 0px 4px var(--color-sombra-secundario);
+}
+
+/* General styles for the component */
+.report-tables,
+.report-charts {
+  margin-top: 20px;
+  padding: 0 15px; 
+  text-align: center; 
+}
+
+/* Table styles */
+.report-tables {
+  display: block; /* Allow tables to scroll horizontally */
+  width: 100%; /* Use full width of the container */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling for touch devices */
+}
+
+.report-tables table {
+  min-width: 600px; /* Set a minimum width for better readability */
+  max-width: 100%; /* Prevent tables from exceeding container width */
+  margin: 0 auto; /* Center tables horizontally */
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  table-layout: auto;
+  background-color: #ffffff; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+  border-radius: 12px; /* Rounded corners */
+  overflow: hidden; /* Ensure rounded corners apply */
+}
+
+.report-tables th {
+  text-align: center; /* Center table headers */
+  background-color: var(--color-boton); /* Primary color for headers */
+  color: var(--color-texto-claro); /* White text for headers */
+  font-weight: bold;
+  padding: 12px;
+  border: 1px solid #dee2e6; /* Border for headers */
+  word-wrap: break-word; /* Break long words to prevent overflow */
+  white-space: normal; /* Allow text to wrap within cells */
+}
+
+.report-tables td {
+  padding: 12px;
+  border: 1px solid #dee2e6; /* Border for cells */
+  text-align: left; /* Align cell content to the left */
+  vertical-align: middle; /* Center content vertically */
+  word-wrap: break-word; /* Break long words to prevent overflow */
+  white-space: normal; /* Allow text to wrap within cells */
+}
+
+.report-tables tr:nth-child(even) {
+  background-color: #f8f9fa; /* Alternate row background color */
+}
+
+.report-tables tr:hover {
+  background-color: #e9ecef; /* Highlight row on hover */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+/* Center titles above tables */
+.report-tables h4 {
+  text-align: center; /* Center the titles */
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px; /* Add spacing below the title */
+  color: #333; /* Darker color for better readability */
+}
+
+/* Responsive table styles */
+@media (max-width: 768px) {
+  .report-tables table {
+    min-width: 100%; /* Adjust minimum width for smaller screens */
+  }
+
+  .report-tables th,
+  .report-tables td {
+    font-size: 0.9rem; /* Adjust font size for smaller screens */
+    padding: 8px; /* Reduce padding for better fit */
+  }
+}
+
+@media (max-width: 576px) {
+  .report-tables th,
+  .report-tables td {
+    font-size: 0.8rem; /* Further reduce font size for very small screens */
+    padding: 6px; /* Further reduce padding */
+  }
+}
+
+/* Chart container styles */
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px; 
+  margin: 20px auto; 
+  padding: 15px;
+  background-color: #ffffff; 
+  border-radius: 8px; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+/* Center titles above charts */
+.report-charts h4 {
+  text-align: center; 
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px; /* Add spacing below the title */
+  color: #333; /* Darker color for better readability */
+}
+
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto; /* Make charts responsive */
+}
+
+/* Responsive styles for report-info */
+@media (max-width: 768px) {
+  .report-info {
+    flex-direction: column; /* Stack elements vertically */
+    align-items: flex-start; /* Align items to the start */
+    text-align: left; /* Align text to the left */
+    padding: 10px; /* Reduce padding */
+  }
+
+  .report-info > div:first-child {
+    width: 100%; /* Make the report name and parameters take full width */
+    margin-bottom: 10px; /* Add spacing below the parameters */
+    font-size: 0%;
+  }
+
+  .report-info .d-flex {
+    flex-direction: row; /* Display buttons side by side */
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 10px; /* Add spacing between buttons */
+    width: 100%; /* Ensure buttons container takes full width */
+  }
+
+  .report-info button {
+    flex: 1; /* Make buttons take equal width */
+    max-width: 150px; /* Set a maximum width for buttons */
+  }
+}
+
+@media (max-width: 576px) {
+  .report-info h3 {
+    text-align: center; 
+    font-size: 1.5rem; 
+    font-weight: bold;
+    margin-bottom: 10px; 
+    color: var(--color-secundario);
+  }
+
+  .report-info p {
+    text-align: center; 
+    font-size: 1rem; 
+    color: #6c757d;
+    margin-bottom: 15px; 
+  }
+
+  .report-info button {
+    max-width: 100%; 
+  }
+}
+

@@ -1,0 +1,41 @@
+<div *ngIf="loading" class="text-center py-3">
+  <i class="fas fa-spinner fa-spin fa-2x"></i>
+  <p class="mt-2">Cargando...</p>
+</div>
+
+<div *ngIf="!loading && show" class="container show-details-container my-4 p-4">
+  <div class="row align-items-center">
+    <!-- Póster de la película -->
+    <div class="col-12 col-md-4 text-center">
+      <img [src]="loadPosterPreview(show.movie.id)" [alt]="show.movie.name" class="img-fluid rounded shadow">
+    </div>
+    
+    <!-- Información del show -->
+    <div class="col-12 col-md-8">
+      <h1 class="text-center">{{ show.movie.name }}</h1>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><i class="fas fa-video"></i> <strong> Tipo de función:</strong> {{ show.showType.name }}</li>
+        <li class="list-group-item"><i class="fas fa-clock"></i> <strong> Horario:</strong> {{ show.dateAndTime | date: 'shortTime' }}</li>
+        <li class="list-group-item"><i class="fas fa-calendar-alt"></i> <strong> Día: </strong> <span class="capitalize">{{ show.dateAndTime | date: 'EEEE, d MMMM' }}</span></li>
+        <li class="list-group-item"><i class="fas fa-language"></i> <strong> Idioma:</strong> {{ show.selectedLanguage.name }}</li>
+        <li class="list-group-item"><i class="fas fa-door-open"></i> <strong> Sala:</strong> {{ show.room.roomNumber }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Selección de entradas -->
+  <div class="ticket-selection text-center mt-4">
+    <label for="ticketQuantity" class="form-label"><i class="fas fa-ticket-alt"></i> <strong> Cantidad de entradas:</strong></label>
+    <input type="number" id="ticketQuantity" class="form-control d-inline w-auto ms-2" [(ngModel)]="ticketQuantity" [max]="availableTickets" min="1">
+    <p class="mt-2"><strong>Precio total:</strong> {{ ticketQuantity * ticketPrice | currency: 'ARS' }}</p>
+  </div>
+
+  <!-- Botón de compra -->
+  <div class="text-center mt-3">
+    <button class="btn btn-primary" (click)="buyTickets()" [disabled]="ticketQuantity <= 0 || ticketQuantity > availableTickets">
+      <i class="fas fa-shopping-cart"></i> Comprar Entradas
+    </button>
+  </div>
+</div>
+
+<div *ngIf="!loading && error" class="alert alert-danger text-center mt-3">{{ error }}</div>

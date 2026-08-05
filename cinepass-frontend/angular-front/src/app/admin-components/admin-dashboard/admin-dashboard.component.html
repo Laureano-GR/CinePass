@@ -1,0 +1,45 @@
+<div class="dashboard-container">
+  <h1>Admin Dashboard</h1>
+
+  <h2>Administración</h2>
+  <div class="dashboard-grid">
+    <div class="dashboard-card" [class.selected]="selectedCard === 'sales'" (click)="selectCard('sales')">
+      <h3>Ventas</h3>
+      <p>Gestionar ventas</p>
+      <div *ngIf="selectedCard === 'sales'" class="sub-options">
+        <button (click)="navigateTo('/admin/sales/select-sale-data')">Realizar</button>
+        <button (click)="navigateTo('/admin/sales/search')">Buscar</button>
+      </div>
+    </div>
+    <div class="dashboard-card" [class.selected]="selectedCard === 'movies'" (click)="selectCard('movies')">
+      <h3>Películas</h3>
+      <p>Gestionar películas</p>
+      <div *ngIf="selectedCard === 'movies'" class="sub-options">
+        <button (click)="navigateTo('/admin/movies/create')">Crear</button>
+        <button (click)="navigateTo('/admin/movies/read')">Mostrar</button>
+        <button (click)="navigateTo('/admin/movies/update')">Actualizar</button>
+      </div>
+    </div>
+    <div class="dashboard-card" [class.selected]="selectedCard === 'shows'" (click)="selectCard('shows')">
+      <h3>Funciones</h3>
+      <p>Gestionar funciones</p>
+      <div *ngIf="selectedCard === 'shows'" class="sub-options">
+        <button (click)="navigateTo('/admin/shows/create')">Crear</button>
+        <button (click)="navigateTo('/admin/shows/read')">Mostrar</button>
+        <button (click)="navigateTo('/admin/shows/update')">Actualizar</button>
+      </div>
+    </div>
+  </div>
+
+  <h2>Reportes</h2>
+  <div class="dashboard-grid">
+    <div class="dashboard-card" (click)="navigateTo('/admin/reports/subsidiary-monthly')">
+      <h3>Ventas de la sucursal</h3>
+      <p>Mensual</p>
+    </div>
+    <div class="dashboard-card" (click)="navigateTo('/admin/reports/cinema-yearly')">
+      <h3>Ventas del cine</h3>
+      <p>Anual</p>
+    </div>
+  </div>
+</div>

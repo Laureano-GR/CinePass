@@ -1,0 +1,98 @@
+<!-- Pantalla de carga -->
+<app-loading-screen [loadingText]="'Generando reporte...'"></app-loading-screen>
+
+<!-- Modal -->
+<div class="modal fade show d-block bg-dark bg-opacity-50" tabindex="-1" *ngIf="isModalVisible">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-sm rounded-4">
+      <div class="modal-header bg-white border-0">
+        <h5 class="modal-title">{{ modalData.title }}</h5>
+      </div>
+      <hr class="my-0 mx-3" />
+      <div class="modal-body bg-white">
+        <form *ngIf="modalData.fields" (ngSubmit)="submitForm(form.value)" #form="ngForm">
+          <div *ngFor="let field of modalData.fields">
+            <div class="mb-3" *ngIf="!field.hidden">
+              <label [for]="field.name" class="form-label">{{ field.label }}</label>
+              <input
+                [type]="field.type"
+                class="form-control"
+                [name]="field.name"
+                [id]="field.name"
+                [value]="field.value || ''"
+                ngModel
+                [pattern]="field.name === 'month' ? '^(0[1-9]|1[0-2])$' : field.name === 'year' ? '^\\d{4}$' : ''"
+                #inputField="ngModel"
+                required
+              />
+              <div *ngIf="inputField.invalid && inputField.touched" class="text-danger small mt-1">
+                <div *ngIf="inputField.errors?.['required']">El campo {{ field.label }} es requerido.</div>
+                <div *ngIf="inputField.errors?.['pattern']">
+                  {{ field.name === 'month' ? 'El mes debe estar entre (01-12).' : 'El año debe estar en formato YYYY.' }}
+                </div>
+              </div>
+            </div>
+            <input *ngIf="field.hidden" type="hidden" [name]="field.name" [(ngModel)]="field.value" />
+          </div>
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-generate px-4" [disabled]="form.invalid">Generar Reporte</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="reportData.length > 0" class="report-info mb-4 d-flex align-items-center justify-content-between">
+  <div>
+    <h3 class="m-0">{{ modalData.title }}</h3>
+    <p *ngIf="reportParameters.length > 0" class="text-muted report-parameters m-0">
+      <span *ngFor="let param of reportParameters; let last = last">
+        <ng-container *ngIf="param.includes('Sucursal:'); else defaultParam">
+          Sucursal: {{ getSubsidiaryName() }}
+        </ng-container>
+        <ng-template #defaultParam>
+          {{ param }}
+        </ng-template>
+        <ng-container *ngIf="!last">|</ng-container>
+      </span>
+    </p>
+  </div>
+  <div class="d-flex align-items-center">
+    <button class="btn btn-outline me-2" (click)="toggleChartView()">
+      {{ showCharts ? 'Ver como tablas' : 'Ver como gráficos' }}
+    </button>
+    <button class="btn btn-download" (click)="downloadReport()">
+      Descargar
+    </button>
+  </div>
+</div>
+
+<!-- VISTA DE TABLAS -->
+<div *ngIf="!showCharts && reportData.length > 0" class="report-tables">
+  <div *ngFor="let table of reportData">
+    <h4 class="mb-3 mt-4">{{ table[0] }}</h4>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th *ngFor="let header of table[1]">{{ header }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of table.slice(2)">
+          <td *ngFor="let cell of row">{{ cell }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- VISTA DE GRÁFICOS -->
+<div *ngIf="showCharts && reportData.length > 0" class="report-charts">
+  <div *ngFor="let table of reportData; let i = index">
+    <h4 class="mb-3 mt-4">{{ table[0] }}</h4>
+    <div *ngIf="showCharts" class="chart-container my-4">
+      <canvas class="report-chart"></canvas>
+    </div>
+  </div>
+</div>

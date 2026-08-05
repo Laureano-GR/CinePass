@@ -1,0 +1,66 @@
+import { Injectable } from '@angular/core';
+import { Observable, from, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { IDTypeI } from '../interfaces/idType';
+import { CreateSaleDTO } from '../interfaces/createSaleDTO';
+import { PaymentDataDTO } from '../interfaces/paymentDataDTO';
+import { PaymentMethodI } from '../interfaces/paymentMethod';
+import axios from 'axios';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProcessSaleService {
+  private apiUrl = 'http://localhost:3001';
+  
+  constructor() {}
+
+  getDocumentTypes(): Observable<IDTypeI[]> {
+    return from(axios.get<IDTypeI[]>(`${this.apiUrl}/id-types`)).pipe(
+      map(response => response.data),
+      catchError(error => {
+        console.error('Error getting document types:', error);
+        return of([]);
+      })
+    );
+  }
+
+  getShow(showId: number): Observable<any> {
+    return from(axios.get(`${this.apiUrl}/shows/${showId}`)).pipe(
+      map(response => response.data),
+      catchError(error => {
+        console.error('Error getting show:', error);
+        return of(null);
+      })
+    );
+  }
+
+  async createSale(saleData: CreateSaleDTO): Promise<string | null> {
+    try {
+      const response = await axios.post<string>(`${this.apiUrl}/sales`, saleData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  getPaymentMethods(isOnline: boolean): Observable<PaymentMethodI[]> { // Este metodo trae todos los metodos de pago menos el de efectivo en caso de que no sea online
+    if (isOnline) {
+      return from(axios.get<PaymentMethodI[]>(`${this.apiUrl}/payment-methods`)).pipe(
+        map(response => response.data.filter(method => method.name !== 'Efectivo')),
+        catchError(error => {
+          console.error('Error getting payment methods:', error);
+          return of([]);
+        })
+      );
+    } else {
+      return from(axios.get<PaymentMethodI[]>(`${this.apiUrl}/payment-methods`)).pipe(
+        map(response => response.data),
+        catchError(error => {
+          console.error('Error getting payment methods:', error);
+          return of([]);
+        })
+      );
+    }
+  }
+}

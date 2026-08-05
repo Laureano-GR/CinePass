@@ -1,0 +1,17 @@
+<div *ngIf="showModal" class="modal fade show" tabindex="-1" style="display: block;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{ title }}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body text-center">
+        <i class="fa fa-check-circle fa-7x text-success mb-3"></i>
+        <p class="modal-message">{{ message }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" (click)="navigate()">Volver a Inicio</button>
+      </div>
+    </div>
+  </div>
+</div>

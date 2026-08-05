@@ -1,0 +1,65 @@
+<div class="container-fluid">
+  <div class="mb-3">
+    <select (change)="onFilterChange($event)" class="form-select">
+      <option value="inTheaters">Películas en cartelera para esta sucursal</option>
+      <option value="subsidiary">Películas para esta sucursal</option>
+      <option value="all">Todas las películas</option>
+    </select>
+  </div>
+  
+  <div *ngIf="filter === 'subsidiary'" class="text-center">
+    <h1 class="title">Películas de esta sucursal</h1>
+    <p>Aquí se muestran las películas con al menos una función en cualquier momento para esta sucursal</p>
+  </div>
+  <div *ngIf="filter === 'all'" class="text-center">
+    <h1 class="title">Películas</h1>
+    <p>Aquí se muestran todas las peliculas</p>
+  </div>
+  <div *ngIf="filter === 'inTheaters'" class="text-center">
+    <h1 class="title">Películas en cartelera para esta sucursal</h1>
+    <p>Aquí se muestran las películas con al menos una función para las proximas dos semanas para esta sucursal</p>
+  </div>
+  <div *ngIf="movies.length > 0; else noMovies">
+    <div class="table-responsive">
+      <button [disabled]="!selectedMovie" (click)="editMovie()" class="edit-button">
+        <i class="fas fa-edit"></i> Actualizar
+      </button>
+      <table class="movie-table table-hover align-middle">
+        <thead>
+          <tr>
+            <th (click)="sort('id')">ID <span [class]="getSortIcon('id')" class="sortable"></span></th>
+            <th>Póster</th>
+            <th (click)="sort('name')">Nombre <span [class]="getSortIcon('name')" class="sortable"></span></th>
+            <th>Descripción</th>
+            <th (click)="sort('duration')">Duración <span [class]="getSortIcon('duration')" class="sortable"></span></th>
+            <th (click)="sort('languages')">Idiomas <span [class]="getSortIcon('languages')" class="sortable"></span></th>
+            <th (click)="sort('showTypes')">Tipos de funcion <span [class]="getSortIcon('showTypes')" class="sortable"></span></th>
+            <th (click)="sort('contentRating')">Clasificación <span [class]="getSortIcon('contentRating')" class="sortable"></span></th>
+            <th (click)="sort('genre')">Género <span [class]="getSortIcon('genre')" class="sortable"></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let movie of movies" (click)="selectMovie(movie)" [class.selected]="movie === selectedMovie">
+            <td>{{ movie.id }}</td>
+            <td class="movie-poster">
+              <img [src]="loadPosterPreview(movie.id)" [alt]="movie.name">
+            </td>
+            <td>{{ movie.name }}</td>
+            <td>{{ movie.description }}</td>
+            <td>{{ movie.duration }} minutos</td>
+            <td>{{ getLanguages(movie) }}</td>
+            <td>{{ getShowTypes(movie) }}</td>
+            <td>{{ movie.contentRating.name }}</td>
+            <td>{{ movie.genre.name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <ng-template #noMovies>
+    <div class="alert alert-warning text-center" role="alert">
+      <i class="fas fa-exclamation-triangle"></i> No hay películas disponibles para esta sucursal.
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,165 @@
+<!-- Carrusel Swiper -->
+<div *ngIf="banners.length > 0" class="swiper">
+  <!-- Wrapper de Swiper -->
+  <div class="swiper-wrapper">
+    <!-- Slides -->
+    <div *ngFor="let banner of banners" class="swiper-slide">
+      <img [src]="banner" class="d-block w-100" alt="Banner">
+    </div>
+  </div>
+
+  <!-- Controles de navegación (flechas) -->
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+
+</div>
+
+<div class="container home-container py-4">  
+  <!-- Subtítulo -->
+  <h1 class="text-center mb-4">Películas en Cartelera</h1>
+
+  <!-- Barra de búsqueda avanzada -->
+  <div class="search-bar mb-4">
+    <form (ngSubmit)="onSearch()">
+      <div class="row g-2">
+        <div class="col-12 col-md-2">
+          <input type="text" class="form-control" placeholder="Nombre" [(ngModel)]="searchCriteria.name" name="name">
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.name" 
+            (click)="clearFilter('name')">
+            X
+          </button>
+        </div>
+        <div class="col-12 col-md-2">
+          <select class="form-control" [(ngModel)]="searchCriteria.contentRating" name="contentRating">
+            <option value="">Clasificación</option>
+            <option *ngFor="let rating of contentRatings" [value]="rating.name">{{ rating.name }}</option>
+          </select>
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.contentRating" 
+            (click)="clearFilter('contentRating')">
+            X
+          </button>
+        </div>
+        <div class="col-12 col-md-2">
+          <select class="form-control" [(ngModel)]="searchCriteria.genre" name="genre">
+            <option value="">Género</option>
+            <option *ngFor="let genre of genres" [value]="genre.name">{{ genre.name }}</option>
+          </select>
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.genre" 
+            (click)="clearFilter('genre')">
+            X
+          </button>
+        </div>
+        <div class="col-12 col-md-2">
+          <select class="form-control" [(ngModel)]="searchCriteria.language" name="language">
+            <option value="">Idioma</option>
+            <option *ngFor="let language of languages" [value]="language.name">{{ language.name }}</option>
+          </select>
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.language" 
+            (click)="clearFilter('language')">
+            X
+          </button>
+        </div>
+        <div class="col-12 col-md-2">
+          <select class="form-control" [(ngModel)]="searchCriteria.showType" name="showType" >
+            <option value="">Tipo de función</option>
+            <option *ngFor="let showType of showTypes" [value]="showType.name">{{ showType.name }}</option>
+          </select>
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.showType" 
+            (click)="clearFilter('showType')">
+            X
+          </button>
+        </div>
+        <div class="col-12 col-md-2">
+          <select class="form-control" [(ngModel)]="searchCriteria.duration" name="duration">
+            <option *ngFor="let option of durationOptions" [value]="option.value">{{ option.label }}</option>
+          </select>
+          <button 
+            type="button" 
+            class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2" 
+            *ngIf="searchCriteria.duration" 
+            (click)="clearFilter('duration')">
+            X
+          </button>
+        </div>
+      </div>
+      <div class="btn-row row g-2">
+        <div class="col-12 col-md-2">
+          <button type="submit" class="btn btn-primary w-100">Buscar</button>
+        </div>
+        <div class="col-12 col-md-2">
+          <button type="button" class="btn btn-outline-secondary w-100" (click)="resetFilters()">Limpiar</button>
+        </div>        
+      </div>
+    </form>
+    
+    <div *ngIf="filtersApplied" class="filter-alert">
+      <strong>Filtros aplicados: </strong>
+      <span *ngIf="activeFilters.name">
+        <i class="fas fa-film"></i> Nombre: {{ activeFilters.name }}
+      </span>
+      <span *ngIf="activeFilters.genre">
+        <i class="fas fa-theater-masks"></i> Género: {{ activeFilters.genre }}
+      </span>
+      <span *ngIf="activeFilters.contentRating">
+        <i class="fas fa-star"></i> Clasificación: {{ activeFilters.contentRating }}
+      </span>
+      <span *ngIf="activeFilters.language">
+        <i class="fas fa-language"></i> Idioma: {{ activeFilters.language }}
+      </span>
+      <span *ngIf="activeFilters.showType">
+        <i class="fas fa-ticket-alt"></i> Tipo de función: {{ activeFilters.showType }}
+      </span>
+      <span *ngIf="activeFilters.duration">
+        <i class="fas fa-clock"></i> Duración: {{ getDurationLabel(activeFilters.duration) }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Grid de películas -->
+  <div class="row g-4 movies-grid">
+    <div 
+      *ngFor="let movie of filteredMovies" 
+      class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="card movie-card h-100" (click)="navigateToMovieDetails(movie.id)" style="cursor: pointer;">
+        <img [src]="loadPosterPreview(movie.id)" [alt]="movie.name" class="card-img-top movie-poster">
+        <div class="card-body">
+          <h3 class="card-title">{{ movie.name }}</h3>
+          <!-- Detalles en una sola línea -->
+          <div class="details-row mt-2">
+            <div class="detail-box">
+              <p class="mb-0">{{ movie.duration }} min</p>
+            </div>
+            <div class="detail-box">
+              <p class="mb-0">{{ movie.genre.name }}</p>
+            </div>
+            <div class="detail-box">
+              <p class="mb-0">{{ movie.contentRating.name }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje en caso de no haber películas -->
+  <ng-template #noMovies>
+    <div class="no-movies-message text-center mt-4">
+      No hay películas disponibles para esta sucursal en este momento.
+    </div>
+  </ng-template>
+</div>

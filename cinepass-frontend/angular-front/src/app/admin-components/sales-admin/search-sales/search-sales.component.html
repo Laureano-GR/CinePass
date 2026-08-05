@@ -1,0 +1,244 @@
+<app-loading-screen [loadingText]="'Cargando...'"></app-loading-screen>
+
+<div class="search-sales-container">
+  <h1 class="text-center">Buscar Ventas</h1>
+  <div class="search-bar">
+    <form (ngSubmit)="onSearch()">
+      <div class="row g-2">
+        <div class="col-12 col-md-4">
+          <label for="dateFrom" class="form-label">Fecha desde</label>
+          <input
+            type="date"
+            id="dateFrom"
+            [(ngModel)]="searchCriteria.dateFrom"
+            name="dateFrom"
+            class="form-control"
+          />
+        </div>
+        <div class="col-12 col-md-4">
+          <label for="dateTo" class="form-label">Fecha hasta</label>
+          <input
+            type="date"
+            id="dateTo"
+            [(ngModel)]="searchCriteria.dateTo"
+            name="dateTo"
+            class="form-control"
+          />
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="purchaseCode" class="form-label">Código de Compra</label>
+          <input
+            id="purchaseCode"
+            [(ngModel)]="searchCriteria.purchaseCode"
+            name="purchaseCode"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="btn-row row g-2 mt-2">
+        <div class="col-12 col-md-3">
+          <button type="submit" class="btn btn-primary w-100">Buscar</button>
+        </div>
+        <div class="col-12 col-md-3">
+          <button type="button" class="btn btn-outline-secondary w-100" (click)="resetFilters()">Limpiar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="sales-list mt-4 text-center">
+    <div *ngIf="filteredSales.length === 0" class="no-results">
+      No se encontraron resultados.
+    </div>
+
+    <nav *ngIf="totalPages > 1" class="custom-pagination mt-3 mb-3">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="onSearch(currentPage - 1)">Anterior</button>
+        </li>
+
+        <li
+          class="page-item"
+          *ngFor="let page of getDisplayedPages()"
+          [class.active]="page === currentPage"
+        >
+          <ng-container *ngIf="page < 0">
+            <button class="page-link" (click)="handlePageClick(page)">...</button>
+          </ng-container>
+          <ng-container *ngIf="page > 0">
+            <button
+              class="page-link"
+              [disabled]="page === currentPage"
+              (click)="onSearch(page)"
+            >
+              {{ page }}
+            </button>
+          </ng-container>
+        </li>
+
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="onSearch(currentPage + 1)">Siguiente</button>
+        </li>
+      </ul>
+    </nav>
+
+    <ul *ngIf="filteredSales.length > 0" class="list-unstyled">
+      <li *ngFor="let sale of filteredSales" class="sale-item mb-4">
+        <div class="d-flex justify-content-center">
+          <div class="sale-details me-3 text-start">
+            <strong>ID:</strong> {{ sale.id }} <br />
+            <strong>Fecha:</strong> {{ sale.dateAndTime | date: 'short' }} <br />
+            <strong>Cancelado:</strong> {{ sale.canceled ? 'Sí' : 'No' }} <br />
+            <strong>Código de compra:</strong> CINEPASS-{{ sale.id }}-{{ sale.paymentData.IDNumber }} <br />
+          </div>
+          <div class="customer-details ms-3 text-start">
+            <strong>Cliente:</strong> {{ sale.paymentData.name }} <br />
+            <strong>Tipo Documento:</strong> {{ sale.paymentData.IDType.name }} <br />
+            <strong>Nro. Documento:</strong> {{ sale.paymentData.IDNumber }} <br />
+          </div>
+        </div>
+        <div class="text-center mt-2">
+          <button class="btn btn-primary btn-sm" (click)="openDetails(sale)">Ver Detalles</button>
+        </div>
+      </li>
+    </ul>
+
+    <nav *ngIf="totalPages > 1" class="custom-pagination mt-3 mb-3">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="onSearch(currentPage - 1)">Anterior</button>
+        </li>
+        <li
+          class="page-item"
+          *ngFor="let page of getDisplayedPages()"
+          [class.active]="page === currentPage"
+        >
+          <ng-container *ngIf="page < 0">
+            <button class="page-link" (click)="handlePageClick(page)">...</button>
+          </ng-container>
+          <ng-container *ngIf="page > 0">
+            <button
+              class="page-link"
+              [disabled]="page === currentPage"
+              (click)="onSearch(page)"
+            >
+              {{ page }}
+            </button>
+          </ng-container>
+        </li>
+
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="onSearch(currentPage + 1)">Siguiente</button>
+        </li>
+      </ul>
+
+      <div *ngIf="jumpToPageInput" class="jump-to-page mt-2 text-center">
+        <input
+          type="number"
+          min="1"
+          [max]="totalPages"
+          [(ngModel)]="jumpPageTarget"
+          placeholder="Ir a página..."
+          class="form-control d-inline-block w-auto me-2"
+        />
+        <button class="btn btn-sm btn-primary" (click)="confirmJumpPage()">Ir</button>
+      </div>
+    </nav>
+
+  <!-- Modal para mostrar detalles -->
+  <div class="modal" tabindex="-1" [class.show]="selectedSale" *ngIf="selectedSale">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><strong>Detalles de la Venta</strong></h5>
+          <button type="button" class="btn-close" (click)="closeDetails()"></button>
+        </div>
+        <div class="modal-body">
+          <h5 class='text-center'><strong>Datos de la venta</strong></h5>
+          <p><strong>ID:</strong> {{ selectedSale.id }}</p>
+          <p><strong>Fecha:</strong> {{ selectedSale.dateAndTime | date: 'short' }}</p>
+          <p><strong>Boletos:</strong> {{ selectedSale.ticketsAmount }}</p>
+          <p><strong>Total:</strong> ${{ selectedSale.totalPrice }}</p>
+          <p><strong>Cancelado:</strong> {{ selectedSale.canceled ? 'Sí' : 'No' }}</p>
+          <p><strong>Código de compra:</strong> CINEPASS-{{selectedSale.id}}-{{selectedSale.paymentData.IDNumber }}</p>
+          <hr />
+          <h5 class='text-center'><strong>Datos del cliente</strong></h5>
+          <p><strong>Cliente:</strong> {{ selectedSale.paymentData.name }}</p>
+          <p><strong>Email:</strong> {{ selectedSale.paymentData.email }}</p>
+          <p><strong>Tipo Documento:</strong> {{ selectedSale.paymentData.IDType.name }}</p>
+          <p><strong>Nro. Documento:</strong> {{ selectedSale.paymentData.IDNumber }}</p>
+          <p><strong>Método de Pago:</strong> {{ selectedSale.paymentData.paymentMethod.name }}</p>
+          <hr />
+          <h5 class='text-center'><strong>Datos de la Función</strong></h5>
+          <div class="show-details">
+            <p *ngIf="!showDetails">Cargando detalles del show...</p>
+            <div *ngIf="showDetails">
+              <p><strong>ID:</strong> {{ showDetails.id }}</p>
+              <p><strong>Fecha y Hora:</strong> {{ showDetails.dateAndTime | date: 'short' }}</p>
+              <p><strong>Pelicula:</strong> {{ showDetails.movie.name }}</p>
+              <p><strong>Tipo de Funcion:</strong> {{ showDetails.showType.name }}</p>
+              <p><strong>Idioma:</strong> {{ showDetails.selectedLanguage.name }}</p>
+              <p><strong>Sala:</strong> {{ showDetails.room.roomNumber }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button
+            class="btn btn-danger btn-sm"
+            (click)="cancelSale(selectedSale.id)"
+            [disabled]="selectedSale.canceled"> <!-- Deshabilita el botón si la venta está cancelada -->
+            Cancelar Venta
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE CANCELACION -->
+<app-modal
+  [showModal]="showModal"
+  [title]="'Cancelación Exitosa'"
+  [message]="'La venta con ID: ' + canceledSaleId + ' ha sido cancelada con éxito.'"
+  (closeModalEvent)="closeModal()"
+  (navigateEvent)="navigate()">
+</app-modal>
+
+<!-- Modal para ir a una página específica -->
+<div
+  class="modal fade show d-block"
+  tabindex="-1"
+  *ngIf="jumpToPageModalVisible"
+  style="background-color: rgba(0, 0, 0, 0.5)"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-header">
+        <h5 class="modal-title">Ir a página</h5>
+        <button type="button" class="btn-close" (click)="closeJumpModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Ingresá un número entre 1 y {{ totalPages }}:</p>
+        <input
+          type="number"
+          class="form-control w-50 mx-auto"
+          [(ngModel)]="jumpPageTarget"
+          [min]="1"
+          [max]="totalPages"
+          placeholder="N° de página"
+        />
+        <div *ngIf="jumpPageTarget && (jumpPageTarget < 1 || jumpPageTarget > totalPages)" class="text-danger mt-2">
+          Número fuera de rango (1 - {{ totalPages }})
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button
+          class="btn btn-primary"
+          [disabled]="!jumpPageTarget || jumpPageTarget < 1 || jumpPageTarget > totalPages"
+          (click)="confirmJumpPage()"
+        >
+          Ir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

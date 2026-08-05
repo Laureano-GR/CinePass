@@ -1,13 +1,28 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CinemasModule } from './cinemas/cinemas.module';
-import { MoviesModule } from './movies/movies.module';
-import { ShowsModule } from './shows/shows.module';
-import { SalesModule } from './sales/sales.module';
+import { CinemaModule } from './cinema/cinema.module';
+import { MovieModule } from './movie/movie.module';
+import { ShowModule } from './show/show.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { SaleModule } from './sale/sale.module';
+import { entities } from './_entities';
+import { EmailManagerModule } from './email-manager/email-manager.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
+import { ReportsGeneratorModule } from './reports-generator/reports-generator.module';
 
 @Module({
-  imports: [CinemasModule, MoviesModule, ShowsModule, SalesModule],
+  imports: [CinemaModule, MovieModule, ShowModule, SaleModule,
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'cinepass.db',
+      entities,
+      synchronize: true,
+    }),
+    EmailManagerModule,
+    FileUploadModule,
+    ReportsGeneratorModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
